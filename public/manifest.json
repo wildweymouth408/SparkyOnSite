@@ -1,0 +1,17 @@
+{
+  "name": "Sparky - Electrician Field Management",
+  "short_name": "Sparky",
+  "description": "Professional electrician calculators, job tracking, and NEC code reference.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1115",
+  "theme_color": "#ff6b00",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import {
   WIRE_AREAS, K_FACTOR, AMPACITY_TABLE, WIRE_CROSS_SECTION,
   CONDUIT_AREAS, getConduitFillLimit, BOX_FILL_ALLOWANCE,
   BEND_MULTIPLIERS, getConduitDerating, INSULATION_TEMP,
+  TEMP_CORRECTION, STANDARD_BOXES,
 } from './calculator-data'
 
 // ── Voltage Drop ──────────────────────────────────
@@ -383,7 +384,6 @@ export function calculateBoxFill(inputs: BoxFillInputs): BoxFillResult {
   // Get box volume
   let boxCapacity = customVolume || 0
   if (boxType !== 'custom') {
-    const { STANDARD_BOXES } = require('./calculator-data')
     boxCapacity = STANDARD_BOXES[boxType]?.volume || 0
   }
 

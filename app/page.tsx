@@ -7,7 +7,7 @@ import { JobsTab } from '@/components/jobs-tab'
 import { CodeTab } from '@/components/code-tab'
 import { MoreTab } from '@/components/more-tab'
 import { getSettings, type UserRole } from '@/lib/storage'
-import { Toaster } from 'sonner'
+
 
 export default function SparkyApp() {
   const [activeTab, setActiveTab] = useState<TabId>('tools')
@@ -60,19 +60,6 @@ export default function SparkyApp() {
 
   return (
     <div className="flex h-dvh flex-col bg-[#0f1115] text-[#f0f0f0]">
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          style: {
-            background: '#1a1a1a',
-            border: '1px solid #333',
-            color: '#f0f0f0',
-            borderRadius: '0',
-            fontSize: '12px',
-          },
-        }}
-      />
-
       {/* Top header */}
       <header className="flex items-center justify-between border-b border-[#333] bg-[#0f1115] px-4 py-3">
         <div className="flex items-center gap-2.5">

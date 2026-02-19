@@ -140,8 +140,8 @@
 
 /* Custom animations */
 @keyframes electron-flow {
-  0% { stroke-dashoffset: 24; }
-  100% { stroke-dashoffset: 0; }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
 }
 
 @keyframes pulse-glow {
