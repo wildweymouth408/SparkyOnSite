@@ -1,15 +1,43 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import { BottomNav, type TabId } from '@/components/bottom-nav'
 import { ToolsTab } from '@/components/tools-tab'
-import { CodeTab } from '@/components/code-tab'
 import { CalcsTab } from '@/components/calcs-tab'
-import { SymbolsTab } from '@/components/symbols-tab'
 import { AskSparkyTab } from '@/components/ask-sparky-tab'
 
+// Temporary placeholders — we'll build these in the next steps
+function HomeTab() {
+  return (
+    <div className="flex flex-col items-center justify-center h-full gap-3 text-[#555]">
+      <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#ff6b00]" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+      </svg>
+      <span className="text-sm uppercase tracking-widest">Home — Coming Next</span>
+    </div>
+  )
+}
+
+function ReferenceTab() {
+  return (
+    <div className="flex flex-col items-center justify-center h-full gap-3 text-[#555]">
+      <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#00ff88]" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+      <span className="text-sm uppercase tracking-widest">Reference — Coming Next</span>
+    </div>
+  )
+}
+
+function MoreTab() {
+  return (
+    <div className="flex flex-col items-center justify-center h-full gap-3 text-[#555]">
+      <span className="text-sm uppercase tracking-widest">More — Coming Soon</span>
+    </div>
+  )
+}
+
 export default function SparkyApp() {
-  const [activeTab, setActiveTab] = useState<TabId>('tools')
+  const [activeTab, setActiveTab] = useState<TabId>('home')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -29,19 +57,20 @@ export default function SparkyApp() {
     )
   }
 
-  // Tab accent colors for the top bar
   const tabAccentColor: Record<TabId, string> = {
-    tools: '#ff6b00',
-    code: '#00ff88',
-    calcs: '#00d4ff',
-    sparky: '#ff6b00',
+    home:      '#ff6b00',
+    tools:     '#00d4ff',
+    reference: '#00ff88',
+    sparky:    '#ff6b00',
+    more:      '#888888',
   }
 
   const tabTitle: Record<TabId, string> = {
-    tools: 'Tools',
-    code: 'NEC Code',
-    calcs: 'Calcs',
-    sparky: 'Ask Sparky',
+    home:      'Home',
+    tools:     'Tools',
+    reference: 'Reference',
+    sparky:    'Ask Sparky',
+    more:      'More',
   }
 
   return (
@@ -60,8 +89,6 @@ export default function SparkyApp() {
             / {tabTitle[activeTab]}
           </span>
         </div>
-
-        {/* Electron flow animation in header */}
         <div className="h-1 w-16 overflow-hidden bg-[#222]">
           <div
             className="h-full w-4"
@@ -75,11 +102,11 @@ export default function SparkyApp() {
 
       {/* Content area */}
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-24">
-        {activeTab === 'tools' && <ToolsTab />}
-        {activeTab === 'code' && <CodeTab />}
-        {activeTab === 'calcs' && <CalcsTab />}
-        {activeTab === 'symbols' && <SymbolsTab />}
-        {activeTab === 'sparky' && <AskSparkyTab />}
+        {activeTab === 'home'      && <HomeTab />}
+        {activeTab === 'tools'     && <ToolsTab />}
+        {activeTab === 'reference' && <ReferenceTab />}
+        {activeTab === 'sparky'    && <AskSparkyTab />}
+        {activeTab === 'more'      && <MoreTab />}
       </main>
 
       {/* Bottom navigation */}
