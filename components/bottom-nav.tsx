@@ -2,18 +2,19 @@
 import { Zap, BookOpen, Calculator, MessageCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-export type TabId = 'tools' | 'code' | 'calcs' | 'sparky'
+export type TabId = 'tools' | 'code' | 'calcs' | 'symbols' | 'sparky
 
 interface BottomNavProps {
   activeTab: TabId
   onTabChange: (tab: TabId) => void
 }
 
-const tabs: { id: TabId; label: string; icon: typeof Zap; accentColor: string; activeColor: string }[] = [
-  { id: 'tools', label: 'Tools', icon: Zap, accentColor: 'text-[#ff6b00]', activeColor: '#ff6b00' },
-  { id: 'code', label: 'Code', icon: BookOpen, accentColor: 'text-[#00ff88]', activeColor: '#00ff88' },
-  { id: 'calcs', label: 'Calcs', icon: Calculator, accentColor: 'text-[#00d4ff]', activeColor: '#00d4ff' },
-  { id: 'sparky', label: 'Ask AI', icon: MessageCircle, accentColor: 'text-[#ff6b00]', activeColor: '#ff6b00' },
+const tabs = [
+  { id: 'tools', label: 'Tools', icon: Zap, color: '#ff6b00' },
+  { id: 'code', label: 'Code', icon: BookOpen, color: '#00ff88' },
+  { id: 'calcs', label: 'Calcs', icon: Calculator, color: '#00d4ff' },
+  { id: 'symbols', label: 'Symbols', icon: Grid3X3, color: '#ffaa00' }, // NEW
+  { id: 'sparky', label: 'Ask AI', icon: MessageCircle, color: '#ff6b00' },
 ]
 
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
