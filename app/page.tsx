@@ -5,16 +5,6 @@ import { ToolsTab } from '@/components/tools-tab'
 import { ReferenceTab } from '@/components/reference-tab'
 import { AskSparkyTab } from '@/components/ask-sparky-tab'
 import { HomeTab } from '@/components/home-tab'
-function HomeTab() {
-  return (
-    <div className="flex flex-col items-center justify-center h-full gap-3 text-[#555]">
-      <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#ff6b00]" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-      </svg>
-      <span className="text-sm uppercase tracking-widest">Home — Coming Next</span>
-    </div>
-  )
-}
 
 function MoreTab() {
   return (
