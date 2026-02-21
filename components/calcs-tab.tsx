@@ -7,7 +7,6 @@ import {
   AlertTriangle, 
   Check, 
   Settings,
-  ChevronRight,
   Grid3X3,
   List
 } from 'lucide-react'
@@ -252,7 +251,7 @@ export function CalcsTab() {
                 <option value={208}>208V</option>
                 <option value={230}>230V</option>
                 <option value={460}>460V</option>
-                <option value={575">575V</option>
+                <option value={575}>575V</option>
               </select>
             </div>
           </div>
