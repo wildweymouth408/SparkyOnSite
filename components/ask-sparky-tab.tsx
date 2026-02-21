@@ -62,10 +62,8 @@ export function AskSparkyTab() {
   const [speakEnabled, setSpeakEnabled] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [speechSupported, setSpeechSupported] = useState(false)
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
-
-  // ── KEY FIX: store voices once they load ──────────────────────────────────
   const voicesRef = useRef<SpeechSynthesisVoice[]>([])
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
 
   const bottomRef = useRef<HTMLDivElement>(null)
 
@@ -75,19 +73,13 @@ export function AskSparkyTab() {
 
     if ('speechSynthesis' in window) {
       setSpeechSupported(true)
-
-      // Load voices — they may already be ready or need the event
       const loadVoices = () => {
         const v = window.speechSynthesis.getVoices()
         if (v.length > 0) voicesRef.current = v
       }
-
-      loadVoices() // try immediately
-      window.speechSynthesis.addEventListener('voiceschanged', loadVoices) // fires when ready
-
-      return () => {
-        window.speechSynthesis.removeEventListener('voiceschanged', loadVoices)
-      }
+      loadVoices()
+      window.speechSynthesis.addEventListener('voiceschanged', loadVoices)
+      return () => window.speechSynthesis.removeEventListener('voiceschanged', loadVoices)
     }
   }, [])
 
@@ -104,10 +96,7 @@ export function AskSparkyTab() {
     recognition.interimResults = true
     recognition.lang = 'en-US'
 
-    recognition.onstart = () => {
-      setIsListening(true)
-      setTranscript('')
-    }
+    recognition.onstart = () => { setIsListening(true); setTranscript('') }
 
     recognition.onresult = (event) => {
       let interim = ''
@@ -121,16 +110,8 @@ export function AskSparkyTab() {
       if (final) setInput(prev => prev + (prev ? ' ' : '') + final)
     }
 
-    recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error)
-      setIsListening(false)
-      setTranscript('')
-    }
-
-    recognition.onend = () => {
-      setIsListening(false)
-      setTranscript('')
-    }
+    recognition.onerror = () => { setIsListening(false); setTranscript('') }
+    recognition.onend = () => { setIsListening(false); setTranscript('') }
 
     recognitionRef.current = recognition
     recognition.start()
@@ -142,12 +123,6 @@ export function AskSparkyTab() {
     setTranscript('')
   }, [])
 
-  const toggleListening = () => {
-    if (isListening) stopListening()
-    else startListening()
-  }
-
-  // ── Voice Output — fixed ──────────────────────────────────────────────────
   const speak = useCallback((text: string) => {
     if (!speechSupported || !speakEnabled) return
     window.speechSynthesis.cancel()
@@ -162,7 +137,6 @@ export function AskSparkyTab() {
     utterance.pitch = 1.0
     utterance.volume = 1.0
 
-    // Use the pre-loaded voices from ref — not getVoices() inline
     const preferred = voicesRef.current.find(v =>
       v.lang.startsWith('en') &&
       (v.name.includes('Google') || v.name.includes('Samantha') ||
@@ -199,11 +173,10 @@ export function AskSparkyTab() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, userMessage] }),
       })
-
       const data = await response.json()
       const reply = data.reply || 'Something went wrong. Try again.'
       setMessages(prev => [...prev, { role: 'assistant', content: reply }])
-      // iOS requires direct tap to trigger audio — handled by tap-to-hear button
+      // Note: no auto-speak here — iOS requires direct user tap to play audio
 
     } catch {
       setMessages(prev => [...prev, { role: 'assistant', content: 'Connection error. Check your signal and try again.' }])
@@ -221,32 +194,33 @@ export function AskSparkyTab() {
 
   return (
     <div className="flex flex-col h-full">
+
+      {/* Top bar */}
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center gap-1.5 text-[10px] text-[#555] uppercase tracking-wider">
           <Zap className="h-3 w-3 text-[#ff6b00]" />
           Ask Sparky AI
         </div>
-        <div className="flex items-center gap-2">
-          {speechSupported && (
-            <button
-              onClick={() => { setSpeakEnabled(v => !v); if (isSpeaking) stopSpeaking() }}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 border text-[10px] uppercase tracking-wider font-bold transition-all ${
-                speakEnabled
-                  ? 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff12]'
-                  : 'border-[#333] text-[#555]'
-              }`}
-            >
-              {isSpeaking
-                ? <><Volume2 className="h-3 w-3 animate-pulse" /> Speaking...</>
-                : speakEnabled
-                  ? <><Volume2 className="h-3 w-3" /> Voice On</>
-                  : <><VolumeX className="h-3 w-3" /> Voice Off</>
-              }
-            </button>
-          )}
-        </div>
+        {speechSupported && (
+          <button
+            onClick={() => { setSpeakEnabled(v => !v); if (isSpeaking) stopSpeaking() }}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 border text-[10px] uppercase tracking-wider font-bold transition-all ${
+              speakEnabled
+                ? 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff12]'
+                : 'border-[#333] text-[#555]'
+            }`}
+          >
+            {isSpeaking
+              ? <><Volume2 className="h-3 w-3 animate-pulse" /> Speaking...</>
+              : speakEnabled
+                ? <><Volume2 className="h-3 w-3" /> Voice On</>
+                : <><VolumeX className="h-3 w-3" /> Voice Off</>
+            }
+          </button>
+        )}
       </div>
 
+      {/* Messages */}
       <div className="flex flex-col gap-3 pb-4 flex-1 overflow-y-auto">
         {messages.map((msg, i) => (
           <div key={i} className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
@@ -255,25 +229,27 @@ export function AskSparkyTab() {
                 <Zap className="h-3.5 w-3.5 text-[#0f1115]" />
               </div>
             )}
-            <div className={`max-w-[82%] px-3 py-2.5 text-sm leading-relaxed relative group ${
+            <div className={`max-w-[82%] px-3 py-2.5 text-sm leading-relaxed ${
               msg.role === 'user'
                 ? 'bg-[#1a1f2e] text-[#f0f0f0] border border-[#333]'
                 : 'bg-[#111] text-[#e0e0e0] border border-[#2a2a2a]'
             }`}>
               {msg.content}
-              
+
+              {/* Tap to hear — visible on all assistant messages when voice is on */}
+              {msg.role === 'assistant' && speechSupported && speakEnabled && (
+                <button
+                  onClick={() => speak(msg.content)}
+                  className="mt-2 flex items-center gap-1.5 text-[10px] text-[#00d4ff] uppercase tracking-wider font-bold"
+                >
+                  <Volume2 className="h-3 w-3" />
+                  Tap to hear
+                </button>
+              )}
             </div>
           </div>
         ))}
-{msg.role === 'assistant' && speechSupported && speakEnabled && (
-  <button
-    onClick={() => speak(msg.content)}
-    className="mt-2 flex items-center gap-1.5 text-[10px] text-[#00d4ff] uppercase tracking-wider font-bold"
-  >
-    <Volume2 className="h-3 w-3" />
-    Tap to hear
-  </button>
-)}
+
         {isListening && transcript && (
           <div className="flex gap-2.5 flex-row-reverse">
             <div className="max-w-[82%] px-3 py-2.5 text-sm text-[#888] border border-dashed border-[#444] bg-[#111] italic">
@@ -299,6 +275,7 @@ export function AskSparkyTab() {
         <div ref={bottomRef} />
       </div>
 
+      {/* Input area */}
       <div className="border-t border-[#222] pt-3">
         {isListening && (
           <div className="flex items-center gap-2 mb-2 px-1">
@@ -315,23 +292,33 @@ export function AskSparkyTab() {
 
         <div className="flex gap-2">
           {voiceSupported && (
-            <button onClick={toggleListening} disabled={loading}
+            <button
+              onClick={() => isListening ? stopListening() : startListening()}
+              disabled={loading}
               className={`flex h-11 w-11 shrink-0 items-center justify-center border transition-all ${
                 isListening
                   ? 'border-[#ff6b00] bg-[#ff6b0020] text-[#ff6b00] animate-pulse'
                   : 'border-[#333] text-[#555] hover:border-[#ff6b00] hover:text-[#ff6b00]'
-              } disabled:opacity-40`}>
+              } disabled:opacity-40`}
+            >
               {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
             </button>
           )}
 
-          <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown}
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={isListening ? 'Listening...' : 'Ask an electrical question...'}
             className="flex-1 h-11 border border-[#333] bg-[#111] px-3 text-sm text-[#f0f0f0] placeholder-[#555] focus:border-[#ff6b00] focus:outline-none"
-            disabled={loading} />
+            disabled={loading}
+          />
 
-          <button onClick={sendMessage} disabled={loading || !input.trim()}
-            className="flex h-11 w-11 items-center justify-center bg-[#ff6b00] text-[#0f1115] disabled:opacity-40 disabled:cursor-not-allowed transition-opacity shrink-0">
+          <button
+            onClick={sendMessage}
+            disabled={loading || !input.trim()}
+            className="flex h-11 w-11 items-center justify-center bg-[#ff6b00] text-[#0f1115] disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+          >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </button>
         </div>
