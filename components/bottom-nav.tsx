@@ -1,8 +1,8 @@
 'use client'
-import { Zap, ClipboardList, BookOpen, Menu, MessageCircle } from 'lucide-react'
+import { Zap, BookOpen, Calculator, MessageCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-export type TabId = 'tools' | 'jobs' | 'code' | 'sparky' | 'more'
+export type TabId = 'tools' | 'code' | 'calcs' | 'sparky'
 
 interface BottomNavProps {
   activeTab: TabId
@@ -11,10 +11,9 @@ interface BottomNavProps {
 
 const tabs: { id: TabId; label: string; icon: typeof Zap; accentColor: string; activeColor: string }[] = [
   { id: 'tools', label: 'Tools', icon: Zap, accentColor: 'text-[#ff6b00]', activeColor: '#ff6b00' },
-  { id: 'jobs', label: 'Jobs', icon: ClipboardList, accentColor: 'text-[#00d4ff]', activeColor: '#00d4ff' },
   { id: 'code', label: 'Code', icon: BookOpen, accentColor: 'text-[#00ff88]', activeColor: '#00ff88' },
+  { id: 'calcs', label: 'Calcs', icon: Calculator, accentColor: 'text-[#00d4ff]', activeColor: '#00d4ff' },
   { id: 'sparky', label: 'Ask AI', icon: MessageCircle, accentColor: 'text-[#ff6b00]', activeColor: '#ff6b00' },
-  { id: 'more', label: 'More', icon: Menu, accentColor: 'text-[#888888]', activeColor: '#888' },
 ]
 
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
