@@ -5,6 +5,7 @@ import { BottomNav, type TabId } from '@/components/bottom-nav'
 import { ToolsTab } from '@/components/tools-tab'
 import { CodeTab } from '@/components/code-tab'
 import { CalcsTab } from '@/components/calcs-tab'
+import { SymbolsTab } from '@/components/symbols-tab'
 import { AskSparkyTab } from '@/components/ask-sparky-tab'
 
 export default function SparkyApp() {
@@ -77,6 +78,7 @@ export default function SparkyApp() {
         {activeTab === 'tools' && <ToolsTab />}
         {activeTab === 'code' && <CodeTab />}
         {activeTab === 'calcs' && <CalcsTab />}
+        {activeTab === 'symbols' && <SymbolsTab />}
         {activeTab === 'sparky' && <AskSparkyTab />}
       </main>
 
