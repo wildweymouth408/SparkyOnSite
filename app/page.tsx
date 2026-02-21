@@ -3,12 +3,9 @@
 import { useState, useEffect } from 'react'
 import { BottomNav, type TabId } from '@/components/bottom-nav'
 import { ToolsTab } from '@/components/tools-tab'
-import { JobsTab } from '@/components/jobs-tab'
 import { CodeTab } from '@/components/code-tab'
+import { CalcsTab } from '@/components/calcs-tab'
 import { AskSparkyTab } from '@/components/ask-sparky-tab'
-import { MoreTab } from '@/components/more-tab'
-import { getSettings, type UserRole } from '@/lib/storage'
-
 
 export default function SparkyApp() {
   const [activeTab, setActiveTab] = useState<TabId>('tools')
@@ -16,20 +13,7 @@ export default function SparkyApp() {
 
   useEffect(() => {
     setMounted(true)
-    // Set default tab based on user role
-    const settings = getSettings()
-    if (settings.role === 'foreman') {
-      setActiveTab('jobs')
-    }
   }, [])
-
-  function handleRoleChange(role: UserRole) {
-    if (role === 'foreman') {
-      setActiveTab('jobs')
-    } else {
-      setActiveTab('tools')
-    }
-  }
 
   if (!mounted) {
     return (
@@ -47,18 +31,16 @@ export default function SparkyApp() {
   // Tab accent colors for the top bar
   const tabAccentColor: Record<TabId, string> = {
     tools: '#ff6b00',
-    jobs: '#00d4ff',
     code: '#00ff88',
+    calcs: '#00d4ff',
     sparky: '#ff6b00',
-    more: '#888',
   }
 
   const tabTitle: Record<TabId, string> = {
     tools: 'Tools',
-    jobs: 'Jobs',
     code: 'NEC Code',
+    calcs: 'Calcs',
     sparky: 'Ask Sparky',
-    more: 'More',
   }
 
   return (
@@ -93,10 +75,9 @@ export default function SparkyApp() {
       {/* Content area */}
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-24">
         {activeTab === 'tools' && <ToolsTab />}
-        {activeTab === 'jobs' && <JobsTab />}
         {activeTab === 'code' && <CodeTab />}
+        {activeTab === 'calcs' && <CalcsTab />}
         {activeTab === 'sparky' && <AskSparkyTab />}
-        {activeTab === 'more' && <MoreTab onRoleChange={handleRoleChange} />}
       </main>
 
       {/* Bottom navigation */}
