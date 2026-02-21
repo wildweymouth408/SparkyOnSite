@@ -203,7 +203,7 @@ export function AskSparkyTab() {
       const data = await response.json()
       const reply = data.reply || 'Something went wrong. Try again.'
       setMessages(prev => [...prev, { role: 'assistant', content: reply }])
-      if (speakEnabled) speak(reply)
+      // iOS requires direct tap to trigger audio — handled by tap-to-hear button
 
     } catch {
       setMessages(prev => [...prev, { role: 'assistant', content: 'Connection error. Check your signal and try again.' }])
@@ -261,18 +261,19 @@ export function AskSparkyTab() {
                 : 'bg-[#111] text-[#e0e0e0] border border-[#2a2a2a]'
             }`}>
               {msg.content}
-              {msg.role === 'assistant' && speechSupported && speakEnabled && (
-                <button
-                  onClick={() => speak(msg.content)}
-                  className="absolute -bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-[#0f1115] border border-[#333] p-1"
-                >
-                  <Volume2 className="h-3 w-3 text-[#555]" />
-                </button>
-              )}
+              
             </div>
           </div>
         ))}
-
+{msg.role === 'assistant' && speechSupported && speakEnabled && (
+  <button
+    onClick={() => speak(msg.content)}
+    className="mt-2 flex items-center gap-1.5 text-[10px] text-[#00d4ff] uppercase tracking-wider font-bold"
+  >
+    <Volume2 className="h-3 w-3" />
+    Tap to hear
+  </button>
+)}
         {isListening && transcript && (
           <div className="flex gap-2.5 flex-row-reverse">
             <div className="max-w-[82%] px-3 py-2.5 text-sm text-[#888] border border-dashed border-[#444] bg-[#111] italic">
