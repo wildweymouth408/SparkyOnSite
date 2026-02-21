@@ -4,6 +4,7 @@ import { BottomNav, type TabId } from '@/components/bottom-nav'
 import { ToolsTab } from '@/components/tools-tab'
 import { ReferenceTab } from '@/components/reference-tab'
 import { AskSparkyTab } from '@/components/ask-sparky-tab'
+import { HomeTab } from '@/components/home-tab'
 
 function HomeTab() {
   return (
