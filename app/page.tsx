@@ -5,6 +5,7 @@ import { BottomNav, type TabId } from '@/components/bottom-nav'
 import { ToolsTab } from '@/components/tools-tab'
 import { JobsTab } from '@/components/jobs-tab'
 import { CodeTab } from '@/components/code-tab'
+import { AskSparkyTab } from '@/components/ask-sparky-tab'
 import { MoreTab } from '@/components/more-tab'
 import { getSettings, type UserRole } from '@/lib/storage'
 
@@ -48,6 +49,7 @@ export default function SparkyApp() {
     tools: '#ff6b00',
     jobs: '#00d4ff',
     code: '#00ff88',
+    sparky: '#ff6b00',
     more: '#888',
   }
 
@@ -55,6 +57,7 @@ export default function SparkyApp() {
     tools: 'Tools',
     jobs: 'Jobs',
     code: 'NEC Code',
+    sparky: 'Ask Sparky',
     more: 'More',
   }
 
@@ -92,6 +95,7 @@ export default function SparkyApp() {
         {activeTab === 'tools' && <ToolsTab />}
         {activeTab === 'jobs' && <JobsTab />}
         {activeTab === 'code' && <CodeTab />}
+        {activeTab === 'sparky' && <AskSparkyTab />}
         {activeTab === 'more' && <MoreTab onRoleChange={handleRoleChange} />}
       </main>
 
