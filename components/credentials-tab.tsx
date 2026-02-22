@@ -44,15 +44,12 @@ export function CredentialsTab() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
       setUserId(user.id)
-
       const { data, error } = await supabase
         .from('credentials')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-
       if (error || !data) { setLoading(false); return }
-
       const withUrls = await Promise.all(
         data.map(async (cred) => ({
           ...cred,
@@ -61,7 +58,6 @@ export function CredentialsTab() {
           licenseDecrypted: null,
         }))
       )
-
       setCredentials(withUrls)
       setLoading(false)
     }
@@ -71,50 +67,39 @@ export function CredentialsTab() {
   function toggleLicense(id: string) {
     const cred = credentials.find(c => c.id === id)
     if (!cred) return
-
     if (cred.showLicense) {
       setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: false } : c))
       return
     }
-
     if (!cred.license_number) {
       setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true } : c))
       return
     }
-
     if (cred.licenseDecrypted) {
       setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true } : c))
       return
     }
-
     decryptField(cred.license_number)
       .then(decrypted => {
-        setCredentials(prev => prev.map(c =>
-          c.id === id ? { ...c, showLicense: true, licenseDecrypted: decrypted } : c
-        ))
+        setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true, licenseDecrypted: decrypted } : c))
       })
       .catch(() => {
-        setCredentials(prev => prev.map(c =>
-          c.id === id ? { ...c, showLicense: true, licenseDecrypted: 'Unable to decrypt' } : c
-        ))
+        setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true, licenseDecrypted: 'Unable to decrypt' } : c))
       })
   }
 
   async function handleSave() {
     if (!userId || !form.name) return
     setSaving(true)
-
     try {
       let file_path: string | null = null
       if (form.file) {
         file_path = await uploadCertificate(userId, form.file)
       }
-
       let encrypted_license: string | null = null
       if (form.license_number.trim()) {
         encrypted_license = await encryptField(form.license_number.trim())
       }
-
       const { error } = await supabase.from('credentials').insert({
         user_id: userId,
         name: form.name,
@@ -124,15 +109,12 @@ export function CredentialsTab() {
         license_number: encrypted_license,
         file_path,
       })
-
       if (error) throw error
-
       const { data } = await supabase
         .from('credentials')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
-
       if (data) {
         const withUrls = await Promise.all(
           data.map(async (cred) => ({
@@ -144,7 +126,6 @@ export function CredentialsTab() {
         )
         setCredentials(withUrls)
       }
-
       setForm({ name: '', issuer: '', issue_date: '', expiry_date: '', license_number: '', file: null })
       setShowForm(false)
     } catch (err) {
@@ -182,16 +163,12 @@ export function CredentialsTab() {
 
   return (
     <div className="flex flex-col gap-4 max-w-lg mx-auto">
-
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">Credential Wallet</h2>
           <p className="text-[11px] text-[#555] mt-0.5">Licenses, certs and cards — encrypted</p>
         </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 rounded border border-[#ff6b00]/40 bg-[#ff6b00]/10 px-3 py-2 text-xs font-medium uppercase tracking-wider text-[#ff6b00]"
-        >
+        <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 rounded border border-[#ff6b00]/40 bg-[#ff6b00]/10 px-3 py-2 text-xs font-medium uppercase tracking-wider text-[#ff6b00]">
           <Plus className="h-3.5 w-3.5" />
           Add
         </button>
@@ -201,65 +178,27 @@ export function CredentialsTab() {
         <div className="rounded border border-[#ff6b00]/20 bg-[#13161a] p-4 flex flex-col gap-3">
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs font-bold uppercase tracking-wider text-[#ff6b00]">New Credential</span>
-            <button onClick={() => setShowForm(false)}>
-              <X className="h-4 w-4 text-[#555]" />
-            </button>
+            <button onClick={() => setShowForm(false)}><X className="h-4 w-4 text-[#555]" /></button>
           </div>
-          <input
-            placeholder="Name (e.g. OSHA 30, CA Electrician License)"
-            value={form.name}
-            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-            className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]/40"
-          />
-          <input
-            placeholder="Issuer (e.g. CSLB, IBEW)"
-            value={form.issuer}
-            onChange={e => setForm(f => ({ ...f, issuer: e.target.value }))}
-            className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]/40"
-          />
-          <input
-            placeholder="License / Certificate Number (encrypted)"
-            value={form.license_number}
-            onChange={e => setForm(f => ({ ...f, license_number: e.target.value }))}
-            className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]/40"
-          />
+          <input placeholder="Name (e.g. OSHA 30, CA Electrician License)" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]/40" />
+          <input placeholder="Issuer (e.g. CSLB, IBEW)" value={form.issuer} onChange={e => setForm(f => ({ ...f, issuer: e.target.value }))} className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]/40" />
+          <input placeholder="License / Certificate Number (encrypted)" value={form.license_number} onChange={e => setForm(f => ({ ...f, license_number: e.target.value }))} className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]/40" />
           <div className="flex gap-2">
             <div className="flex flex-col gap-1 flex-1">
               <label className="text-[10px] text-[#444] uppercase tracking-wider">Issue Date</label>
-              <input
-                type="date"
-                value={form.issue_date}
-                onChange={e => setForm(f => ({ ...f, issue_date: e.target.value }))}
-                className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] focus:outline-none focus:border-[#ff6b00]/40"
-              />
+              <input type="date" value={form.issue_date} onChange={e => setForm(f => ({ ...f, issue_date: e.target.value }))} className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] focus:outline-none focus:border-[#ff6b00]/40" />
             </div>
             <div className="flex flex-col gap-1 flex-1">
               <label className="text-[10px] text-[#444] uppercase tracking-wider">Expiry Date</label>
-              <input
-                type="date"
-                value={form.expiry_date}
-                onChange={e => setForm(f => ({ ...f, expiry_date: e.target.value }))}
-                className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] focus:outline-none focus:border-[#ff6b00]/40"
-              />
+              <input type="date" value={form.expiry_date} onChange={e => setForm(f => ({ ...f, expiry_date: e.target.value }))} className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] focus:outline-none focus:border-[#ff6b00]/40" />
             </div>
           </div>
           <label className="flex items-center gap-2 rounded border border-dashed border-[#333] bg-[#0d1014] px-3 py-3 cursor-pointer hover:border-[#ff6b00]/30 transition-colors">
             <Upload className="h-4 w-4 text-[#555]" />
-            <span className="text-xs text-[#555]">
-              {form.file ? form.file.name : 'Upload certificate image (optional)'}
-            </span>
-            <input
-              type="file"
-              accept="image/*,.pdf"
-              className="hidden"
-              onChange={e => setForm(f => ({ ...f, file: e.target.files?.[0] ?? null }))}
-            />
+            <span className="text-xs text-[#555]">{form.file ? form.file.name : 'Upload certificate image (optional)'}</span>
+            <input type="file" accept="image/*,.pdf" className="hidden" onChange={e => setForm(f => ({ ...f, file: e.target.files?.[0] ?? null }))} />
           </label>
-          <button
-            onClick={handleSave}
-            disabled={saving || !form.name}
-            className="flex items-center justify-center gap-2 rounded bg-[#ff6b00] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-black disabled:opacity-50"
-          >
+          <button onClick={handleSave} disabled={saving || !form.name} className="flex items-center justify-center gap-2 rounded bg-[#ff6b00] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-black disabled:opacity-50">
             {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
             {saving ? 'Saving...' : 'Save Credential'}
           </button>
@@ -278,25 +217,13 @@ export function CredentialsTab() {
             const expired = cred.expiry_date ? isExpired(cred.expiry_date) : false
             const expiringSoon = cred.expiry_date ? isExpiringSoon(cred.expiry_date) : false
             return (
-              <div
-                key={cred.id}
-                className={`rounded border bg-[#13161a] p-4 flex flex-col gap-3 ${
-                  expired ? 'border-red-900/40' :
-                  expiringSoon ? 'border-yellow-700/40' :
-                  'border-[#222]'
-                }`}
-              >
+              <div key={cred.id} className={`rounded border bg-[#13161a] p-4 flex flex-col gap-3 ${expired ? 'border-red-900/40' : expiringSoon ? 'border-yellow-700/40' : 'border-[#222]'}`}>
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex flex-col gap-0.5 min-w-0">
                     <span className="text-sm font-semibold text-[#f0f0f0] truncate">{cred.name}</span>
-                    {cred.issuer && (
-                      <span className="text-[11px] text-[#ff6b00] uppercase tracking-wider">{cred.issuer}</span>
-                    )}
+                    {cred.issuer && <span className="text-[11px] text-[#ff6b00] uppercase tracking-wider">{cred.issuer}</span>}
                   </div>
-                  <button
-                    onClick={() => handleDelete(cred)}
-                    className="shrink-0 p-1 rounded text-[#444] hover:text-red-400 transition-colors"
-                  >
+                  <button onClick={() => handleDelete(cred)} className="shrink-0 p-1 rounded text-[#444] hover:text-red-400 transition-colors">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
@@ -311,9 +238,7 @@ export function CredentialsTab() {
                     <div className="flex flex-col gap-0.5">
                       <span className="text-[10px] text-[#444] uppercase tracking-wider">Expires</span>
                       <span className={`text-xs ${expired ? 'text-red-400' : expiringSoon ? 'text-yellow-400' : 'text-[#888]'}`}>
-                        {cred.expiry_date}
-                        {expired && ' · EXPIRED'}
-                        {expiringSoon && !expired && ' · SOON'}
+                        {cred.expiry_date}{expired && ' · EXPIRED'}{expiringSoon && !expired && ' · SOON'}
                       </span>
                     </div>
                   )}
@@ -322,28 +247,18 @@ export function CredentialsTab() {
                   <div className="flex items-center gap-2">
                     <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                       <span className="text-[10px] text-[#444] uppercase tracking-wider">License #</span>
-                      <span className="text-xs text-[#888] font-mono truncate">
-                        {cred.showLicense ? (cred.licenseDecrypted ?? '...') : '••••••••••••'}
-                      </span>
+                      <span className="text-xs text-[#888] font-mono truncate">{cred.showLicense ? (cred.licenseDecrypted ?? '...') : '••••••••••••'}</span>
                     </div>
-                    <button
-                      onClick={() => toggleLicense(cred.id)}
-                      className="shrink-0 p-1.5 rounded border border-[#222] text-[#555] hover:text-[#ff6b00] transition-colors"
-                    >
+                    <button onClick={() => toggleLicense(cred.id)} className="shrink-0 p-1.5 rounded border border-[#222] text-[#555] hover:text-[#ff6b00] transition-colors">
                       {cred.showLicense ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                     </button>
                   </div>
                 )}
                 {cred.imageUrl && (
-                  
-                    href={cred.imageUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-xs text-[#555] hover:text-[#ff6b00] hover:border-[#ff6b00]/20 transition-colors"
-                  >
+                  <button onClick={() => window.open(cred.imageUrl!, '_blank')} className="flex items-center gap-2 rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-xs text-[#555] hover:text-[#ff6b00] hover:border-[#ff6b00]/20 transition-colors w-full">
                     <Upload className="h-3.5 w-3.5" />
                     View Certificate Image
-                  </a>
+                  </button>
                 )}
               </div>
             )
