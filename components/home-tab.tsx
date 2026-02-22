@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Zap, User, Award, AlertTriangle, ChevronRight,
   Plus, Trash2, Calendar, Shield, Clock, Lightbulb, Edit2, Check, X,
-  Calculator, BookOpen, MessageSquare, Cylinder, Triangle, Ruler, Cable, Gauge, Box, Settings, HardHat
+  Calculator, BookOpen, MessageSquare, Cylinder, Triangle, Ruler, Cable, Gauge, Box, Settings, HardHat,
+  Camera, Image, Expand, Upload
 } from 'lucide-react'
 import { getTipOfTheDay } from '@/lib/tips'
 import { getTopTools, hasUsageData } from '@/lib/usage'
@@ -27,6 +28,7 @@ interface Credential {
   issueDate: string
   expiryDate: string
   category: string
+  imageUrl?: string
 }
 
 type TabId = 'home' | 'tools' | 'reference' | 'sparky' | 'more'
@@ -47,7 +49,7 @@ const CREDENTIAL_CATEGORIES = ['License','OSHA','Safety','Manufacturer','First A
 
 const DEFAULT_CREDENTIALS: Credential[] = []
 
-// ─── TOOL DEFINITIONS (mirrors Tools tab) ────────────────────────────────────
+// ─── TOOL DEFINITIONS ────────────────────────────────────────────────────────
 
 const ALL_TOOLS = [
   { id: 'voltage-drop',  label: 'Voltage Drop',  desc: 'V, A, length, wire',      icon: Zap,       color: '#ff6b00', tab: 'tools' as TabId },
@@ -61,12 +63,11 @@ const ALL_TOOLS = [
   { id: 'construction',  label: 'Construction',  desc: 'Fractions, feet & inches', icon: HardHat,   color: '#ffaa00', tab: 'tools' as TabId },
 ]
 
-// Fallback quick actions shown before any usage data exists
 const DEFAULT_QUICK_ACTIONS = [
-  { id: 'sparky-chat',  label: 'Ask Sparky',   desc: 'Get a code answer fast', icon: MessageSquare, color: '#ff6b00', tab: 'sparky'     as TabId },
-  { id: 'voltage-drop', label: 'Voltage Drop', desc: 'Most-used calculator',   icon: Zap,           color: '#00d4ff', tab: 'tools'      as TabId },
-  { id: 'nec-ref',      label: 'NEC Reference',desc: 'Look up an article',     icon: BookOpen,      color: '#00ff88', tab: 'reference'  as TabId },
-  { id: 'box-fill',     label: 'Box Fill',     desc: 'NEC 314.16 volumes',     icon: Box,           color: '#ffaa00', tab: 'tools'      as TabId },
+  { id: 'sparky-chat',  label: 'Ask Sparky',    desc: 'Get a code answer fast', icon: MessageSquare, color: '#ff6b00', tab: 'sparky'    as TabId },
+  { id: 'voltage-drop', label: 'Voltage Drop',  desc: 'Most-used calculator',   icon: Zap,           color: '#00d4ff', tab: 'tools'     as TabId },
+  { id: 'nec-ref',      label: 'NEC Reference', desc: 'Look up an article',     icon: BookOpen,      color: '#00ff88', tab: 'reference' as TabId },
+  { id: 'box-fill',     label: 'Box Fill',      desc: 'NEC 314.16 volumes',     icon: Box,           color: '#ffaa00', tab: 'tools'     as TabId },
 ]
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -134,7 +135,6 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
         <h1 className="text-2xl font-bold text-[#ff6b00] uppercase tracking-wider">Sparky</h1>
         <p className="text-[11px] text-[#555] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
       </div>
-
       <div className="flex flex-col gap-4">
         <div>
           <label className={lbl}>Email</label>
@@ -146,14 +146,11 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
           <input className={inp} type="password" value={password}
             onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
         </div>
-
         {error && <p className="text-xs text-[#ff4444]">{error}</p>}
-
         <button onClick={handleSubmit} disabled={loading || !email || !password}
           className="w-full py-3.5 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider disabled:opacity-40 mt-2">
           {loading ? 'Please wait...' : isLogin ? 'Sign In →' : 'Create Account →'}
         </button>
-
         <button onClick={() => setIsLogin(!isLogin)}
           className="text-xs text-[#555] underline text-center">
           {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
@@ -266,12 +263,31 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
   )
 }
 
+// ─── IMAGE VIEWER MODAL ───────────────────────────────────────────────────────
+
+function ImageViewerModal({ url, name, onClose }: { url: string; name: string; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-black/95" onClick={onClose}>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#222]"
+        onClick={e => e.stopPropagation()}>
+        <span className="text-xs font-bold uppercase tracking-wider text-[#f0f0f0]">{name}</span>
+        <button onClick={onClose}><X className="h-5 w-5 text-[#555]" /></button>
+      </div>
+      <div className="flex-1 flex items-center justify-center p-4" onClick={e => e.stopPropagation()}>
+        <img src={url} alt={name}
+          className="max-w-full max-h-full object-contain rounded border border-[#222]" />
+      </div>
+    </div>
+  )
+}
+
 // ─── CREDENTIAL CARD ─────────────────────────────────────────────────────────
 
-function CredentialCard({ cred, onEdit, onDelete }: {
+function CredentialCard({ cred, onEdit, onDelete, onImageClick }: {
   cred: Credential
   onEdit: (cred: Credential) => void
   onDelete: (id: string) => void
+  onImageClick: (url: string, name: string) => void
 }) {
   const days = daysUntilExpiry(cred.expiryDate)
   const color = expiryColor(days)
@@ -280,6 +296,27 @@ function CredentialCard({ cred, onEdit, onDelete }: {
   return (
     <div className="bg-[#111] border border-[#2a2a35] p-3 flex items-center gap-3"
       style={{ borderLeftColor: color, borderLeftWidth: 3 }}>
+
+      {/* Thumbnail */}
+      {cred.imageUrl ? (
+        <button
+          onClick={() => onImageClick(cred.imageUrl!, cred.name)}
+          className="shrink-0 w-12 h-12 rounded border border-[#2a2a35] overflow-hidden relative group"
+        >
+          <img src={cred.imageUrl} alt={cred.name} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+            <Expand className="h-3.5 w-3.5 text-white" />
+          </div>
+        </button>
+      ) : (
+        <button
+          onClick={() => onEdit(cred)}
+          className="shrink-0 w-12 h-12 rounded border border-dashed border-[#2a2a35] flex items-center justify-center text-[#333] hover:border-[#ff6b00] hover:text-[#ff6b00] transition-colors"
+        >
+          <Camera className="h-4 w-4" />
+        </button>
+      )}
+
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-[#f0f0f0] truncate">{cred.name}</span>
@@ -296,6 +333,7 @@ function CredentialCard({ cred, onEdit, onDelete }: {
           <span className="text-[10px] text-[#444] mt-1 block">Tap edit to add dates</span>
         )}
       </div>
+
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => onEdit(cred)} className="text-[#555] hover:text-[#ff6b00] transition-colors p-1">
           <Edit2 className="h-3.5 w-3.5" />
@@ -310,8 +348,9 @@ function CredentialCard({ cred, onEdit, onDelete }: {
 
 // ─── EDIT CREDENTIAL MODAL ────────────────────────────────────────────────────
 
-function EditCredentialModal({ cred, onSave, onClose }: {
+function EditCredentialModal({ cred, userId, onSave, onClose }: {
   cred: Credential | null
+  userId: string
   onSave: (cred: Credential) => void
   onClose: () => void
 }) {
@@ -320,14 +359,48 @@ function EditCredentialModal({ cred, onSave, onClose }: {
   const [category, setCategory] = useState(cred?.category || 'Other')
   const [issueDate, setIssueDate] = useState(cred?.issueDate || '')
   const [expiryDate, setExpiryDate] = useState(cred?.expiryDate || '')
+  const [imageUrl, setImageUrl] = useState(cred?.imageUrl || '')
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none'
   const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none appearance-none'
   const lbl = 'block text-[10px] uppercase tracking-wider text-[#555] mb-1.5'
 
+  async function handleImageUpload(file: File) {
+    if (!file) return
+    setUploading(true)
+    setUploadError('')
+    try {
+      const ext = file.name.split('.').pop()
+      const path = `${userId}/${Date.now()}.${ext}`
+      const { error: uploadError } = await supabase.storage
+        .from('certificates')
+        .upload(path, file, { upsert: true })
+      if (uploadError) throw uploadError
+
+      const { data } = supabase.storage
+        .from('certificates')
+        .getPublicUrl(path)
+
+      // For private buckets, use signed URL instead
+      const { data: signedData, error: signedError } = await supabase.storage
+        .from('certificates')
+        .createSignedUrl(path, 60 * 60 * 24 * 365) // 1 year
+
+      if (signedError) throw signedError
+      setImageUrl(signedData.signedUrl)
+    } catch (e: any) {
+      setUploadError('Upload failed. Try again.')
+      console.error(e)
+    }
+    setUploading(false)
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={onClose}>
-      <div className="w-full bg-[#0f1115] border-t border-[#2a2a35] p-4 flex flex-col gap-4"
+      <div className="w-full bg-[#0f1115] border-t border-[#2a2a35] p-4 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">
@@ -335,17 +408,20 @@ function EditCredentialModal({ cred, onSave, onClose }: {
           </span>
           <button onClick={onClose}><X className="h-4 w-4 text-[#555]" /></button>
         </div>
+
         <div>
           <label className={lbl}>Name</label>
           <input className={inp} value={name} onChange={e => setName(e.target.value)}
             placeholder="e.g. OSHA 30, C-10 License..." />
         </div>
+
         <div>
           <label className={lbl}>Category</label>
           <select className={sel} value={category} onChange={e => setCategory(e.target.value)}>
             {CREDENTIAL_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={lbl}>Issue Date</label>
@@ -356,15 +432,61 @@ function EditCredentialModal({ cred, onSave, onClose }: {
             <input className={inp} type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} />
           </div>
         </div>
+
+        {/* Image upload */}
+        <div>
+          <label className={lbl}>Certificate Image</label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={e => {
+              const file = e.target.files?.[0]
+              if (file) handleImageUpload(file)
+            }}
+          />
+          {imageUrl ? (
+            <div className="flex items-center gap-3">
+              <img src={imageUrl} alt="Certificate"
+                className="w-20 h-20 object-cover rounded border border-[#2a2a35]" />
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="text-xs text-[#ff6b00] uppercase tracking-wider font-bold border border-[#ff6b0033] px-3 py-1.5 hover:border-[#ff6b00] transition-colors">
+                  Replace
+                </button>
+                <button
+                  onClick={() => setImageUrl('')}
+                  className="text-xs text-[#ff4444] uppercase tracking-wider font-bold border border-[#ff444433] px-3 py-1.5 hover:border-[#ff4444] transition-colors">
+                  Remove
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="w-full flex items-center justify-center gap-2 border border-dashed border-[#2a2a35] py-4 text-xs text-[#555] uppercase tracking-wider hover:border-[#ff6b00] hover:text-[#ff6b00] transition-colors disabled:opacity-50">
+              {uploading
+                ? <><Upload className="h-4 w-4 animate-pulse" /> Uploading...</>
+                : <><Camera className="h-4 w-4" /> Tap to add photo or take a picture</>
+              }
+            </button>
+          )}
+          {uploadError && <p className="text-xs text-[#ff4444] mt-1">{uploadError}</p>}
+        </div>
+
         <button
           onClick={() => {
             if (!name.trim()) return
             onSave({
               id: cred?.id && !isNew ? cred.id : Date.now().toString(),
-              name: name.trim(), category, issueDate, expiryDate
+              name: name.trim(), category, issueDate, expiryDate, imageUrl
             })
           }}
-          disabled={!name.trim()}
+          disabled={!name.trim() || uploading}
           className="w-full py-3 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider disabled:opacity-40">
           Save
         </button>
@@ -383,17 +505,15 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   const [showEditProfile, setShowEditProfile] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [quickActions, setQuickActions] = useState(DEFAULT_QUICK_ACTIONS)
+  const [viewingImage, setViewingImage] = useState<{ url: string; name: string } | null>(null)
   const tip = getTipOfTheDay()
 
-  // Build quick actions from usage data
   useEffect(() => {
     if (hasUsageData()) {
       const topIds = getTopTools(4)
       const topTools = topIds
         .map(id => ALL_TOOLS.find(t => t.id === id))
         .filter(Boolean) as typeof ALL_TOOLS
-
-      // If we have fewer than 4 top tools, fill remaining with defaults that aren't already in the list
       if (topTools.length < 4) {
         const extras = ALL_TOOLS
           .filter(t => !topIds.includes(t.id))
@@ -405,7 +525,6 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
     }
   }, [])
 
-  // Check auth on mount
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
@@ -414,7 +533,6 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
       }
       setLoaded(true)
     })
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUserId(session.user.id)
@@ -442,7 +560,8 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
     if (creds && creds.length > 0) {
       setCredentials(creds.map(c => ({
         id: c.id, name: c.name, issueDate: c.issue_date || '',
-        expiryDate: c.expiry_date || '', category: c.issuer || 'Other'
+        expiryDate: c.expiry_date || '', category: c.issuer || 'Other',
+        imageUrl: c.image_url || ''
       })))
     }
   }
@@ -462,13 +581,15 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
     if (isNew) {
       const { data } = await supabase.from('credentials').insert({
         user_id: userId, name: saved.name, issuer: saved.category,
-        issue_date: saved.issueDate || null, expiry_date: saved.expiryDate || null
+        issue_date: saved.issueDate || null, expiry_date: saved.expiryDate || null,
+        image_url: saved.imageUrl || null
       }).select().single()
       if (data) setCredentials(prev => [...prev, { ...saved, id: data.id }])
     } else {
       await supabase.from('credentials').update({
         name: saved.name, issuer: saved.category,
-        issue_date: saved.issueDate || null, expiry_date: saved.expiryDate || null
+        issue_date: saved.issueDate || null, expiry_date: saved.expiryDate || null,
+        image_url: saved.imageUrl || null
       }).eq('id', saved.id)
       setCredentials(prev => prev.map(c => c.id === saved.id ? saved : c))
     }
@@ -480,14 +601,8 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   }
 
   if (!loaded) return null
-
-  if (!userId) {
-    return <AuthScreen onAuth={() => {}} />
-  }
-
-  if (!profile) {
-    return <OnboardingScreen onComplete={p => saveProfile(p)} />
-  }
+  if (!userId) return <AuthScreen onAuth={() => {}} />
+  if (!profile) return <OnboardingScreen onComplete={p => saveProfile(p)} />
 
   const alerts = credentials.filter(c => {
     const d = daysUntilExpiry(c.expiryDate)
@@ -602,7 +717,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
             <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#888]">Credentials</h2>
           </div>
           <button
-            onClick={() => setEditingCred({ id: 'new', name: '', issueDate: '', expiryDate: '', category: 'Other' })}
+            onClick={() => setEditingCred({ id: 'new', name: '', issueDate: '', expiryDate: '', category: 'Other', imageUrl: '' })}
             className="flex items-center gap-1.5 text-[10px] text-[#ff6b00] uppercase tracking-wider font-bold border border-[#ff6b0033] px-2.5 py-1.5 hover:border-[#ff6b00] transition-colors">
             <Plus className="h-3 w-3" /> Add
           </button>
@@ -610,25 +725,37 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
         {credentials.length === 0 ? (
           <div className="border border-dashed border-[#2a2a35] p-6 text-center">
             <p className="text-[11px] text-[#444]">No credentials added yet</p>
-            <p className="text-[10px] text-[#333] mt-1">Add your OSHA card, license, and certifications</p>
+            <p className="text-[10px] text-[#333] mt-1">Add any certifications here — OSHA cards, licenses, manufacturer certs, and more</p>
           </div>
         ) : (
           <div className="flex flex-col gap-2">
             {credentials.map(c => (
               <CredentialCard key={c.id} cred={c}
                 onEdit={setEditingCred}
-                onDelete={deleteCred} />
+                onDelete={deleteCred}
+                onImageClick={(url, name) => setViewingImage({ url, name })}
+              />
             ))}
           </div>
         )}
       </div>
 
       {/* Edit credential modal */}
-      {editingCred && (
+      {editingCred && userId && (
         <EditCredentialModal
           cred={editingCred}
+          userId={userId}
           onSave={saved => { saveCred(saved); setEditingCred(null) }}
           onClose={() => setEditingCred(null)}
+        />
+      )}
+
+      {/* Image viewer */}
+      {viewingImage && (
+        <ImageViewerModal
+          url={viewingImage.url}
+          name={viewingImage.name}
+          onClose={() => setViewingImage(null)}
         />
       )}
 
