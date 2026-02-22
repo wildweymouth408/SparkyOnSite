@@ -41,6 +41,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var field = localStorage.getItem('sparky_field_mode');
+              if (field === 'true') document.documentElement.classList.add('field-mode');
+            } catch(e) {}
+          })();
+        `}} />
+      </head>
       <body className={`${geistSans.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         {children}
         <Toaster
