@@ -369,34 +369,26 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
   const lbl = 'block text-[10px] uppercase tracking-wider text-[#555] mb-1.5'
 
   async function handleImageUpload(file: File) {
-    if (!file) return
-    setUploading(true)
-    setUploadError('')
-    try {
-      const ext = file.name.split('.').pop()
-      const path = `${userId}/${Date.now()}.${ext}`
-      const { error: uploadError } = await supabase.storage
-        .from('certificates')
-        .upload(path, file, { upsert: true })
-      if (uploadError) throw uploadError
-
-      const { data } = supabase.storage
-        .from('certificates')
-        .getPublicUrl(path)
-
-      // For private buckets, use signed URL instead
-      const { data: signedData, error: signedError } = await supabase.storage
-        .from('certificates')
-        .createSignedUrl(path, 60 * 60 * 24 * 365) // 1 year
-
-      if (signedError) throw signedError
-      setImageUrl(signedData.signedUrl)
-    } catch (e: any) {
-      setUploadError('Upload failed. Try again.')
-      console.error(e)
-    }
-    setUploading(false)
+  if (!file) return
+  setUploading(true)
+  setUploadError('')
+  try {
+    const ext = file.name.split('.').pop() || 'jpg'
+    const path = `${userId}/${Date.now()}.${ext}`
+    const { error: uploadErr } = await supabase.storage
+      .from('certificates')
+      .upload(path, file, { upsert: true })
+    if (uploadErr) throw uploadErr
+    const { data } = supabase.storage
+      .from('certificates')
+      .getPublicUrl(path)
+    setImageUrl(data.publicUrl)
+  } catch (e: any) {
+    setUploadError(`Upload failed: ${e.message}`)
+    console.error(e)
   }
+  setUploading(false)
+}
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={onClose}>
