@@ -474,10 +474,10 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
             {uploadError && <p className="text-xs text-[#ff4444] mt-1">{uploadError}</p>}
           </div>
         </div>
-
+<div className="p-4 border-t border-[#1a1d22] pb-8">
         {/* Save pinned above nav */}
-        <div className="p-4 border-t border-[#1a1d22]" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-          <button
+
+        <button
             onClick={() => {
               if (!name.trim()) return
               onSave({
