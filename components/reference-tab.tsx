@@ -722,12 +722,12 @@ function CodeSection() {
 
   return (
     <div>
-      <div className="sticky top-0 bg-[#0f1115] z-10 pb-3 border-b border-[#1e2028] mb-4">
+     <div className="sticky top-0 bg-[#0f1115] field-mode:bg-black z-10 pb-3 border-b border-[#1e2028] field-mode:border-yellow-400/20 mb-4">
         <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555]" />
-          <input type="text" placeholder="Search NEC articles..." value={searchQuery}
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555] field-mode:text-yellow-400/50" />
+          <input type="text" placeholder="Search symbols..." value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-[#111] border border-[#2a2a35] pl-9 pr-10 py-2.5 text-sm text-white placeholder-[#555] focus:border-[#00ff88] focus:outline-none" />
+            className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-3 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#555] focus:border-[#ff6b00] focus:outline-none" />
           <button onClick={startVoiceSearch}
             className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-[#00ff88]'}`}>
             <Mic className="h-4 w-4" />
@@ -745,7 +745,7 @@ function CodeSection() {
 
       {/* Ampacity table */}
       {(activeFilter === "Wire Size" || searchQuery.toLowerCase().includes("wire") || searchQuery.toLowerCase().includes("ampacity")) && (
-        <div className="mb-4 bg-[#111] border border-[#2a2a35] p-3 overflow-x-auto">
+        <div className="mb-4 bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 p-3 overflow-x-auto">
           <div className="flex items-center gap-2 mb-2">
             <Zap className="h-4 w-4 text-[#00ff88]" />
             <span className="font-bold text-white text-sm">Ampacity (310.16) — Copper</span>
@@ -776,12 +776,12 @@ function CodeSection() {
       {/* Article cards */}
       <div className="space-y-4">
         {filteredArticles.map(article => (
-          <div key={article.article} className="bg-[#111] border border-[#2a2a35] overflow-hidden">
-            <div className="bg-[#161b24] p-3 border-b border-[#2a2a35] flex items-start justify-between">
+          <div key={article.article} className="bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 overflow-hidden">
+            <div className="bg-[#161b24] field-mode:bg-black p-3 border-b border-[#2a2a35] field-mode:border-yellow-400/20 flex items-start justify-between">
               <div>
-                <span className="text-[#00ff88] font-bold text-sm font-mono">{article.article}</span>
-                <h3 className="text-white font-semibold text-sm mt-0.5">{article.title}</h3>
-                <p className="text-[#666] text-xs mt-0.5">{article.scope}</p>
+                <span className="text-[#00ff88] field-mode:text-yellow-300 font-bold text-sm font-mono">{article.article}</span>
+                <h3 className="text-white field-mode:text-yellow-100 font-semibold text-sm mt-0.5">{article.title}</h3>
+                <p className="text-[#666] field-mode:text-yellow-400/50 text-xs mt-0.5">{article.scope}</p>
               </div>
               <button onClick={() => setBookmarked(prev =>
                 prev.includes(article.article) ? prev.filter(a => a !== article.article) : [...prev, article.article])}>
@@ -790,11 +790,11 @@ function CodeSection() {
             </div>
             <div className="p-3 space-y-2">
               {article.keyPoints.map(kp => (
-                <div key={kp.id} className="bg-[#0a0b0e] p-2.5 border-l-2 border-[#00ff88]">
-                  <span className="text-[#00ff88] text-xs font-mono font-bold">{kp.id}</span>
-                  <p className="text-white text-sm font-medium mt-1">{kp.plainEnglish}</p>
-                  <p className="text-[#555] text-xs italic mt-0.5">"{kp.text}"</p>
-                  <p className="text-[#00d4ff] text-xs mt-1">→ {kp.application}</p>
+                <div key={kp.id} className="bg-[#0a0b0e] field-mode:bg-black p-2.5 border-l-2 border-[#00ff88] field-mode:border-yellow-400">
+                  <span className="text-[#00ff88] field-mode:text-yellow-300 text-xs font-mono font-bold">{kp.id}</span>
+                  <p className="text-white field-mode:text-yellow-100 text-sm font-medium mt-1">{kp.plainEnglish}</p>
+                  <p className="text-[#555] field-mode:text-yellow-400/40 text-xs italic mt-0.5">"{kp.text}"</p>
+                  <p className="text-[#00d4ff] field-mode:text-yellow-300/80 text-xs mt-1">→ {kp.application}</p>
                 </div>
               ))}
             </div>
@@ -909,12 +909,12 @@ function InspectSection() {
           return (
             <div key={item.id} className="border overflow-hidden" style={{ borderColor: isExpanded ? SEVERITY_COLOR[item.severity] : '#2a2a35' }}>
               {/* Card header */}
-              <button className="w-full p-3 text-left bg-[#111] flex items-start gap-3"
+              <button className="w-full p-3 text-left bg-[#111] field-mode:bg-black flex items-start gap-3"
                 onClick={() => setExpandedId(isExpanded ? null : item.id)}>
                 <div className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: SEVERITY_COLOR[item.severity] }} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-white">{item.title}</span>
+                   <button className="w-full p-3 text-left bg-[#111] field-mode:bg-black flex items-start gap-3"
                     <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 border"
                       style={{ color: SEVERITY_COLOR[item.severity], borderColor: SEVERITY_COLOR[item.severity] + '40' }}>
                       {SEVERITY_LABEL[item.severity]}
@@ -1122,7 +1122,7 @@ export function ReferenceTab() {
   return (
     <div className="flex flex-col h-full">
       {/* Section switcher */}
-      <div className="flex gap-0 mb-5 border border-[#2a2a35]">
+      <div className="flex gap-0 mb-5 border border-[#2a2a35] field-mode:border-yellow-400/30">
         {sections.map(s => (
           <button key={s.id} onClick={() => setSection(s.id)}
             className="flex-1 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-all"
