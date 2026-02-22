@@ -369,118 +369,127 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
   const lbl = 'block text-[10px] uppercase tracking-wider text-[#555] mb-1.5'
 
   async function handleImageUpload(file: File) {
-  if (!file) return
-  setUploading(true)
-  setUploadError('')
-  try {
-    const ext = file.name.split('.').pop() || 'jpg'
-    const path = `${userId}/${Date.now()}.${ext}`
-    const { error: uploadErr } = await supabase.storage
-      .from('certificates')
-      .upload(path, file, { upsert: true })
-    if (uploadErr) throw uploadErr
-    const { data } = supabase.storage
-      .from('certificates')
-      .getPublicUrl(path)
-    setImageUrl(data.publicUrl)
-  } catch (e: any) {
-    setUploadError(`Upload failed: ${e.message}`)
-    console.error(e)
+    if (!file) return
+    setUploading(true)
+    setUploadError('')
+    try {
+      const ext = file.name.split('.').pop() || 'jpg'
+      const path = `${userId}/${Date.now()}.${ext}`
+      const { error: uploadErr } = await supabase.storage
+        .from('certificates')
+        .upload(path, file, { upsert: true })
+      if (uploadErr) throw uploadErr
+      const { data } = supabase.storage
+        .from('certificates')
+        .getPublicUrl(path)
+      setImageUrl(data.publicUrl)
+    } catch (e: any) {
+      setUploadError(`Upload failed: ${e.message}`)
+      console.error(e)
+    }
+    setUploading(false)
   }
-  setUploading(false)
-}
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={onClose}>
-      <div className="w-full bg-[#0f1115] border-t border-[#2a2a35] p-4 p-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto"
-        onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">
-            {isNew ? 'Add Credential' : 'Edit Credential'}
-          </span>
-          <button onClick={onClose}><X className="h-4 w-4 text-[#555]" /></button>
-        </div>
-
-        <div>
-          <label className={lbl}>Name</label>
-          <input className={inp} value={name} onChange={e => setName(e.target.value)}
-            placeholder="e.g. OSHA 30, C-10 License..." />
-        </div>
-
-        <div>
-          <label className={lbl}>Category</label>
-          <select className={sel} value={category} onChange={e => setCategory(e.target.value)}>
-            {CREDENTIAL_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className={lbl}>Issue Date</label>
-            <input className={inp} type="date" value={issueDate} onChange={e => setIssueDate(e.target.value)} />
+      <div
+        className="w-full bg-[#0f1115] border-t border-[#2a2a35] flex flex-col"
+        style={{ maxHeight: 'calc(88vh - env(safe-area-inset-bottom))' }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">
+              {isNew ? 'Add Credential' : 'Edit Credential'}
+            </span>
+            <button onClick={onClose}><X className="h-4 w-4 text-[#555]" /></button>
           </div>
-          <div>
-            <label className={lbl}>Expiry Date</label>
-            <input className={inp} type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} />
-          </div>
-        </div>
 
-        {/* Image upload */}
-        <div>
-          <label className={lbl}>Certificate Image</label>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={e => {
-              const file = e.target.files?.[0]
-              if (file) handleImageUpload(file)
-            }}
-          />
-          {imageUrl ? (
-            <div className="flex items-center gap-3">
-              <img src={imageUrl} alt="Certificate"
-                className="w-20 h-20 object-cover rounded border border-[#2a2a35]" />
-              <div className="flex flex-col gap-2">
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="text-xs text-[#ff6b00] uppercase tracking-wider font-bold border border-[#ff6b0033] px-3 py-1.5 hover:border-[#ff6b00] transition-colors">
-                  Replace
-                </button>
-                <button
-                  onClick={() => setImageUrl('')}
-                  className="text-xs text-[#ff4444] uppercase tracking-wider font-bold border border-[#ff444433] px-3 py-1.5 hover:border-[#ff4444] transition-colors">
-                  Remove
-                </button>
-              </div>
+          <div>
+            <label className={lbl}>Name</label>
+            <input className={inp} value={name} onChange={e => setName(e.target.value)}
+              placeholder="e.g. OSHA 30, C-10 License..." />
+          </div>
+
+          <div>
+            <label className={lbl}>Category</label>
+            <select className={sel} value={category} onChange={e => setCategory(e.target.value)}>
+              {CREDENTIAL_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={lbl}>Issue Date</label>
+              <input className={inp} type="date" value={issueDate} onChange={e => setIssueDate(e.target.value)} />
             </div>
-          ) : (
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
-              className="w-full flex items-center justify-center gap-2 border border-dashed border-[#2a2a35] py-4 text-xs text-[#555] uppercase tracking-wider hover:border-[#ff6b00] hover:text-[#ff6b00] transition-colors disabled:opacity-50">
-              {uploading
-                ? <><Upload className="h-4 w-4 animate-pulse" /> Uploading...</>
-                : <><Camera className="h-4 w-4" /> Tap to add photo or take a picture</>
-              }
-            </button>
-          )}
-          {uploadError && <p className="text-xs text-[#ff4444] mt-1">{uploadError}</p>}
+            <div>
+              <label className={lbl}>Expiry Date</label>
+              <input className={inp} type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} />
+            </div>
+          </div>
+
+          {/* Image upload */}
+          <div>
+            <label className={lbl}>Certificate Image</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={e => {
+                const file = e.target.files?.[0]
+                if (file) handleImageUpload(file)
+              }}
+            />
+            {imageUrl ? (
+              <div className="flex items-center gap-3">
+                <img src={imageUrl} alt="Certificate"
+                  className="w-20 h-20 object-cover rounded border border-[#2a2a35]" />
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="text-xs text-[#ff6b00] uppercase tracking-wider font-bold border border-[#ff6b0033] px-3 py-1.5 hover:border-[#ff6b00] transition-colors">
+                    Replace
+                  </button>
+                  <button
+                    onClick={() => setImageUrl('')}
+                    className="text-xs text-[#ff4444] uppercase tracking-wider font-bold border border-[#ff444433] px-3 py-1.5 hover:border-[#ff4444] transition-colors">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="w-full flex items-center justify-center gap-2 border border-dashed border-[#2a2a35] py-4 text-xs text-[#555] uppercase tracking-wider hover:border-[#ff6b00] hover:text-[#ff6b00] transition-colors disabled:opacity-50">
+                {uploading
+                  ? <><Upload className="h-4 w-4 animate-pulse" /> Uploading...</>
+                  : <><Camera className="h-4 w-4" /> Tap to add photo or take a picture</>
+                }
+              </button>
+            )}
+            {uploadError && <p className="text-xs text-[#ff4444] mt-1">{uploadError}</p>}
+          </div>
         </div>
 
-        <button
-          onClick={() => {
-            if (!name.trim()) return
-            onSave({
-              id: cred?.id && !isNew ? cred.id : Date.now().toString(),
-              name: name.trim(), category, issueDate, expiryDate, imageUrl
-            })
-          }}
-          disabled={!name.trim() || uploading}
-          className="w-full py-3 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider disabled:opacity-40">
-          Save
-        </button>
+        {/* Save pinned above nav */}
+        <div className="p-4 border-t border-[#1a1d22]" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+          <button
+            onClick={() => {
+              if (!name.trim()) return
+              onSave({
+                id: cred?.id && !isNew ? cred.id : Date.now().toString(),
+                name: name.trim(), category, issueDate, expiryDate, imageUrl
+              })
+            }}
+            disabled={!name.trim() || uploading}
+            className="w-full py-3 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider disabled:opacity-40">
+            Save
+          </button>
+        </div>
       </div>
     </div>
   )
