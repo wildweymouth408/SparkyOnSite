@@ -14,6 +14,39 @@ export default function SparkyApp() {
 
   useEffect(() => {
     setMounted(true)
+
+    // Apply saved field mode class on mount
+    const savedField = localStorage.getItem('sparky_field_mode')
+    if (savedField === 'true') {
+      document.documentElement.classList.add('field-mode')
+    }
+
+    // Listen for field mode toggle from More tab
+    function handleFieldMode() {
+      const current = localStorage.getItem('sparky_field_mode')
+      if (current === 'true') {
+        document.documentElement.classList.add('field-mode')
+      } else {
+        document.documentElement.classList.remove('field-mode')
+      }
+    }
+
+    // Listen for dark mode toggle from More tab  
+    function handleDarkMode() {
+      const current = localStorage.getItem('sparky_dark_mode')
+      if (current === 'false') {
+        document.documentElement.classList.remove('dark')
+      } else {
+        document.documentElement.classList.add('dark')
+      }
+    }
+
+    window.addEventListener('sparky_field_mode_changed', handleFieldMode)
+    window.addEventListener('sparky_dark_mode_changed', handleDarkMode)
+    return () => {
+      window.removeEventListener('sparky_field_mode_changed', handleFieldMode)
+      window.removeEventListener('sparky_dark_mode_changed', handleDarkMode)
+    }
   }, [])
 
   // Called by HomeTab Quick Actions
