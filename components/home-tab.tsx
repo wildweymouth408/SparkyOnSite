@@ -45,10 +45,7 @@ const WORK_TYPES = ['Residential', 'Commercial', 'Industrial', 'Mixed']
 
 const CREDENTIAL_CATEGORIES = ['License','OSHA','Safety','Manufacturer','First Aid','Other']
 
-const DEFAULT_CREDENTIALS: Credential[] = [
-  { id: '1', name: 'State Electrical License', issueDate: '', expiryDate: '', category: 'License' },
-  { id: '2', name: 'OSHA 10', issueDate: '', expiryDate: '', category: 'OSHA' },
-]
+const DEFAULT_CREDENTIALS: Credential[] = []
 
 // ─── TOOL DEFINITIONS (mirrors Tools tab) ────────────────────────────────────
 
