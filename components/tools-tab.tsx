@@ -246,8 +246,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
     <div className="flex flex-col gap-5">
       {/* Primary calculators grid */}
       <div>
-        <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888]">Calculators</h2>
-        <div className="grid grid-cols-2 gap-2">
+ <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888] field-mode:text-yellow-300">Calculators</h2>       <div className="grid grid-cols-2 gap-2">
           {CALCULATORS.slice(0, 4).map(calc => {
             const Icon = calc.icon
             return (
@@ -266,19 +265,19 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
 
       {/* Secondary calculators list */}
       <div>
-        <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888]">More Tools</h2>
+        <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888] field-mode:text-yellow-300">More Tools</h2>
         <div className="flex flex-col gap-1">
           {CALCULATORS.slice(4).map(calc => {
             const Icon = calc.icon
             return (
               <button key={calc.id} onClick={() => openCalc(calc.id)}
-                className="flex items-center gap-3 border border-[#333] bg-[#111] p-3 text-left transition-all duration-200 hover:border-[#555] active:scale-[0.99]">
+                className="flex items-center gap-3 border border-[#333] bg-[#111] p-3 text-left transition-all duration-200 hover:border-[#555] active:scale-[0.99] field-mode:bg-black field-mode:border-yellow-400/30 field-mode:min-h-[56px]">
                 <Icon className="h-4 w-4 shrink-0" style={{ color: calc.color }} />
                 <div className="flex-1">
-                  <div className="text-xs font-medium text-[#f0f0f0]">{calc.label}</div>
-                  <div className="text-[10px] text-[#666]">{calc.desc}</div>
+                  <div className="text-xs font-medium text-[#f0f0f0] field-mode:text-yellow-100">{calc.label}</div>
+                  <div className="text-[10px] text-[#666] field-mode:text-yellow-400/60">{calc.desc}</div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-[#555]" />
+                <ChevronRight className="h-4 w-4 text-[#555] field-mode:text-yellow-400/40" />
               </button>
             )
           })}
@@ -288,17 +287,17 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
       {/* Recent Calculations */}
       {recentCalcs.length > 0 && (
         <div>
-          <h2 className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#888]">
+          <h2 className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#888] field-mode:text-yellow-300">
             <Clock className="h-3.5 w-3.5" /> Recent Calculations
           </h2>
           <div className="flex flex-col gap-1">
             {recentCalcs.map(calc => (
-              <div key={calc.id} className="flex items-center justify-between border border-[#222] bg-[#111] px-3 py-2">
+              <div key={calc.id} className="flex items-center justify-between border border-[#222] bg-[#111] px-3 py-2 field-mode:bg-black field-mode:border-yellow-400/20">
                 <div className="flex-1">
-                  <div className="text-[10px] font-medium uppercase tracking-wider text-[#888]">{calc.type}</div>
-                  <div className="text-xs text-[#ccc]">{calc.label}</div>
+                  <div className="text-[10px] font-medium uppercase tracking-wider text-[#888] field-mode:text-yellow-400/60">{calc.type}</div>
+                  <div className="text-xs text-[#ccc] field-mode:text-yellow-100">{calc.label}</div>
                 </div>
-                <div className="text-right font-mono text-xs text-[#ff6b00]">{calc.result}</div>
+                <div className="text-right font-mono text-xs text-[#ff6b00] field-mode:text-yellow-300">{calc.result}</div>
               </div>
             ))}
           </div>
