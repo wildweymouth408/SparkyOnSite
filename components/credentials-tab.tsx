@@ -54,12 +54,12 @@ export function CredentialsTab() {
       if (error || !data) { setLoading(false); return }
 
       const withUrls = await Promise.all(
-        data.map(async (cred) => {
-          const imageUrl = cred.file_path
-            ? await getCertificateUrl(cred.file_path)
-            : null
-          return { ...cred, imageUrl, showLicense: false, licenseDecrypted: null }
-        })
+        data.map(async (cred) => ({
+          ...cred,
+          imageUrl: cred.file_path ? await getCertificateUrl(cred.file_path) : null,
+          showLicense: false,
+          licenseDecrypted: null,
+        }))
       )
 
       setCredentials(withUrls)
@@ -68,43 +68,36 @@ export function CredentialsTab() {
     load()
   }, [])
 
-  async function toggleLicense(id: string) {
-    setCredentials(prev => prev.map(async (cred) => {
-      if (cred.id !== id) return cred
-      if (cred.showLicense) return { ...cred, showLicense: false }
-      if (cred.licenseDecrypted) return { ...cred, showLicense: true }
-      if (!cred.license_number) return { ...cred, showLicense: true }
-      try {
-        const decrypted = await decryptField(cred.license_number)
-        return { ...cred, showLicense: true, licenseDecrypted: decrypted }
-      } catch {
-        return { ...cred, showLicense: true, licenseDecrypted: 'Unable to decrypt' }
-      }
-    }) as unknown as CredentialDisplay[])
+  function toggleLicense(id: string) {
+    const cred = credentials.find(c => c.id === id)
+    if (!cred) return
 
-    // Re-resolve promises
-    setCredentials(prev => {
-      const updated = [...prev]
-      const idx = updated.findIndex(c => c.id === id)
-      if (idx === -1) return prev
-      const cred = updated[idx]
-      if (cred.showLicense && !cred.licenseDecrypted && cred.license_number) {
-        decryptField(cred.license_number)
-          .then(decrypted => {
-            setCredentials(p => p.map(c =>
-              c.id === id ? { ...c, showLicense: true, licenseDecrypted: decrypted } : c
-            ))
-          })
-          .catch(() => {
-            setCredentials(p => p.map(c =>
-              c.id === id ? { ...c, showLicense: true, licenseDecrypted: 'Unable to decrypt' } : c
-            ))
-          })
-      } else {
-        updated[idx] = { ...cred, showLicense: !cred.showLicense }
-      }
-      return updated
-    })
+    if (cred.showLicense) {
+      setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: false } : c))
+      return
+    }
+
+    if (!cred.license_number) {
+      setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true } : c))
+      return
+    }
+
+    if (cred.licenseDecrypted) {
+      setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true } : c))
+      return
+    }
+
+    decryptField(cred.license_number)
+      .then(decrypted => {
+        setCredentials(prev => prev.map(c =>
+          c.id === id ? { ...c, showLicense: true, licenseDecrypted: decrypted } : c
+        ))
+      })
+      .catch(() => {
+        setCredentials(prev => prev.map(c =>
+          c.id === id ? { ...c, showLicense: true, licenseDecrypted: 'Unable to decrypt' } : c
+        ))
+      })
   }
 
   async function handleSave() {
@@ -134,7 +127,6 @@ export function CredentialsTab() {
 
       if (error) throw error
 
-      // Reload
       const { data } = await supabase
         .from('credentials')
         .select('*')
@@ -164,18 +156,15 @@ export function CredentialsTab() {
 
   async function handleDelete(cred: CredentialDisplay) {
     if (!confirm(`Delete "${cred.name}"?`)) return
-
     if (cred.file_path) await deleteCertificate(cred.file_path)
-
     await supabase.from('credentials').delete().eq('id', cred.id)
-
     setCredentials(prev => prev.filter(c => c.id !== cred.id))
   }
 
   function isExpiringSoon(expiry: string) {
     if (!expiry) return false
     const diff = new Date(expiry).getTime() - Date.now()
-    return diff > 0 && diff < 60 * 24 * 60 * 60 * 1000 // 60 days
+    return diff > 0 && diff < 60 * 24 * 60 * 60 * 1000
   }
 
   function isExpired(expiry: string) {
@@ -194,11 +183,10 @@ export function CredentialsTab() {
   return (
     <div className="flex flex-col gap-4 max-w-lg mx-auto">
 
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">Credential Wallet</h2>
-          <p className="text-[11px] text-[#555] mt-0.5">Licenses, certs & cards — encrypted</p>
+          <p className="text-[11px] text-[#555] mt-0.5">Licenses, certs and cards — encrypted</p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -209,7 +197,6 @@ export function CredentialsTab() {
         </button>
       </div>
 
-      {/* Add Form */}
       {showForm && (
         <div className="rounded border border-[#ff6b00]/20 bg-[#13161a] p-4 flex flex-col gap-3">
           <div className="flex items-center justify-between mb-1">
@@ -256,7 +243,6 @@ export function CredentialsTab() {
             </div>
           </div>
 
-          {/* File Upload */}
           <label className="flex items-center gap-2 rounded border border-dashed border-[#333] bg-[#0d1014] px-3 py-3 cursor-pointer hover:border-[#ff6b00]/30 transition-colors">
             <Upload className="h-4 w-4 text-[#555]" />
             <span className="text-xs text-[#555]">
@@ -281,7 +267,6 @@ export function CredentialsTab() {
         </div>
       )}
 
-      {/* Credentials List */}
       {credentials.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3">
           <Award className="h-10 w-10 text-[#333]" />
@@ -305,3 +290,73 @@ export function CredentialsTab() {
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="text-sm font-semibold text-[#f0f0f0] truncate">{cred.name}</span>
+                    {cred.issuer && (
+                      <span className="text-[11px] text-[#ff6b00] uppercase tracking-wider">{cred.issuer}</span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => handleDelete(cred)}
+                    className="shrink-0 p-1 rounded text-[#444] hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="flex gap-4">
+                  {cred.issue_date && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[10px] text-[#444] uppercase tracking-wider">Issued</span>
+                      <span className="text-xs text-[#888]">{cred.issue_date}</span>
+                    </div>
+                  )}
+                  {cred.expiry_date && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[10px] text-[#444] uppercase tracking-wider">Expires</span>
+                      <span className={`text-xs ${expired ? 'text-red-400' : expiringSoon ? 'text-yellow-400' : 'text-[#888]'}`}>
+                        {cred.expiry_date}
+                        {expired && ' · EXPIRED'}
+                        {expiringSoon && !expired && ' · SOON'}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {cred.license_number && (
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                      <span className="text-[10px] text-[#444] uppercase tracking-wider">License #</span>
+                      <span className="text-xs text-[#888] font-mono truncate">
+                        {cred.showLicense ? (cred.licenseDecrypted ?? '...') : '••••••••••••'}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => toggleLicense(cred.id)}
+                      className="shrink-0 p-1.5 rounded border border-[#222] text-[#555] hover:text-[#ff6b00] transition-colors"
+                    >
+                      {cred.showLicense ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    </button>
+                  </div>
+                )}
+
+                {cred.imageUrl && (
+                  
+                    href={cred.imageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-xs text-[#555] hover:text-[#ff6b00] hover:border-[#ff6b00]/20 transition-colors"
+                  >
+                    <Upload className="h-3.5 w-3.5" />
+                    View Certificate Image
+                  </a>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      <div className="pb-4" />
+    </div>
+  )
+}
