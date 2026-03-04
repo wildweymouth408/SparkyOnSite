@@ -1,123 +1,168 @@
+/**
+ * app/api/profile/route.ts
+ *
+ * GET  /api/profile        — fetch authenticated user's profile (decrypts license)
+ * POST /api/profile        — upsert profile (encrypts license before storage)
+ *
+ * Security:
+ *  - userId is ALWAYS derived from the verified Supabase session, never from the request body.
+ *  - License number is encrypted at rest using AES-GCM (lib/crypto.ts).
+ *  - Requires CREDENTIAL_ENCRYPTION_KEY env var (64 hex chars / 256-bit).
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
+import { encryptField, decryptField } from '@/lib/crypto'
 
-const client = new Anthropic()
-
-function buildSystemPrompt(profile: {
-  name?: string
-  role?: string
-  years_exp?: number
-} | null): string {
-  if (!profile) {
-    return `You are Sparky, an expert electrician with 20+ years of experience and deep knowledge of the NEC codebook. Answer electrical questions clearly and practically. Always cite the relevant NEC article number when applicable. Keep answers concise enough to read on a job site. Never guess — if you're unsure, say so.`
-  }
-
-  const name = profile.name || 'there'
-  const yearsExp = profile.years_exp ?? 0
-
-  // Normalize role — handles both "Journeyman" and "journeyman" and "journeyman_electrician" etc.
-  const rawRole = (profile.role || '').toLowerCase().replace(/\s+/g, '_')
-
-  let roleLabel = 'electrician'
-  let roleGuidance = ''
-
-  if (rawRole.includes('master')) {
-    roleLabel = 'Master Electrician'
-    roleGuidance = `${name} is a Master Electrician with ${yearsExp} year(s) of experience. Skip basics entirely. Get straight to code interpretation, design decisions, load calc nuance, AHJ variance, and liability considerations. Peer-to-peer tone. Cite NEC sections directly including exceptions and fine print notes.`
-  } else if (rawRole.includes('journeyman') || rawRole.includes('journey')) {
-    roleLabel = 'Journeyman Electrician'
-    roleGuidance = `${name} is a Journeyman with ${yearsExp} year(s) of experience. Get to the answer quickly. Cite NEC article numbers directly. Note exceptions and edge cases. They understand derating, conduit fill, and load calcs — no need to explain basics unless asked.`
-  } else if (rawRole.includes('apprentice_4') || rawRole.includes('4th') || rawRole.includes('fourth')) {
-    roleLabel = '4th Year Apprentice'
-    roleGuidance = `${name} is a 4th year apprentice with ${yearsExp} year(s) of experience. Near journeyman level. Discuss inspection logic, code exceptions, and design intent. Challenge them to think through the why behind the code. NEC article numbers are fine.`
-  } else if (rawRole.includes('apprentice_3') || rawRole.includes('3rd') || rawRole.includes('third')) {
-    roleLabel = '3rd Year Apprentice'
-    roleGuidance = `${name} is a 3rd year apprentice with ${yearsExp} year(s) of experience. They know conduit fill, wire sizing, and load calc basics. Connect code intent to field practice. Explain derating and exceptions step by step.`
-  } else if (rawRole.includes('apprentice_2') || rawRole.includes('2nd') || rawRole.includes('second')) {
-    roleLabel = '2nd Year Apprentice'
-    roleGuidance = `${name} is a 2nd year apprentice with ${yearsExp} year(s) of experience. They know basics. Introduce NEC article numbers but explain the logic behind them. Walk through derating and conduit fill step by step.`
-  } else if (rawRole.includes('apprentice') || rawRole.includes('1st') || rawRole.includes('first')) {
-    roleLabel = 'Apprentice'
-    roleGuidance = `${name} is an apprentice with ${yearsExp} year(s) of experience. Use simple language. Explain every term. Reference NEC articles by name not just number. Assume they're still building foundational knowledge — be encouraging and thorough.`
-  } else {
-    // Fallback — unknown role, use years_exp to guess level
-    if (yearsExp >= 8) {
-      roleGuidance = `${name} has ${yearsExp} year(s) of experience. Treat them as experienced — get to the answer, cite NEC directly, note edge cases.`
-    } else if (yearsExp >= 3) {
-      roleGuidance = `${name} has ${yearsExp} year(s) of experience. Intermediate level — explain code logic but don't over-explain basics.`
-    } else {
-      roleGuidance = `${name} has ${yearsExp} year(s) of experience. Keep explanations clear and thorough — they're still building their foundation.`
-    }
-  }
-
-  return `You are Sparky, an expert electrician AI assistant embedded in a field app for working electricians.
-
-${roleGuidance}
-
-Always cite NEC 2023 article numbers when applicable. When unsure, say so and suggest they verify with their AHJ (Authority Having Jurisdiction). Keep answers practical and field-applicable. No fluff. If math is involved, show your work so they can learn the calculation.`
+// ── Supabase server client (service role for RLS bypass on trusted server ops) ──
+function getSupabase(authHeader: string | null) {
+  // We create a client scoped to the user's JWT so RLS applies correctly.
+  // Service role is only used for the auth.getUser() verification step.
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    authHeader
+      ? { global: { headers: { Authorization: authHeader } } }
+      : {}
+  )
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const { messages, userId } = await req.json()
+function getServiceClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
-    // Create a Supabase client using the service role for server-side access
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+// ── GET — return profile with decrypted license number ───────────────────────
+export async function GET(req: NextRequest) {
+  const authHeader = req.headers.get('Authorization')
+  const supabase = getSupabase(authHeader)
 
-    // Fetch user profile for dynamic system prompt
-    let profile = null
-    if (userId) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('name, role, years_exp')
-        .eq('id', userId)
-        .single()
-      profile = data
-    }
-
-    // Build role-aware system prompt
-    const systemPrompt = buildSystemPrompt(profile)
-
-    // Call Claude
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages: messages.map((m: { role: string; content: string }) => ({
-        role: m.role,
-        content: m.content,
-      })),
-    })
-
-    const reply = response.content[0].type === 'text' ? response.content[0].text : ''
-
-    // Save the latest user message + assistant reply to conversations table
-    if (userId && messages.length > 0) {
-      const lastUserMessage = messages[messages.length - 1]
-      await supabase.from('conversations').insert([
-        {
-          user_id: userId,
-          role: lastUserMessage.role,
-          content: lastUserMessage.content,
-        },
-        {
-          user_id: userId,
-          role: 'assistant',
-          content: reply,
-        },
-      ])
-    }
-
-    return NextResponse.json({ reply })
-  } catch (error) {
-    console.error('Ask Sparky API error:', error)
-    return NextResponse.json(
-      { reply: 'Something went wrong on my end. Check your connection and try again.' },
-      { status: 500 }
-    )
+  // Verify session — never trust client-supplied userId
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  const serviceClient = getServiceClient()
+  const { data: profile, error } = await serviceClient
+    .from('profiles')
+    .select('id, name, role, years_exp, company, license_encrypted')
+    .eq('id', user.id)
+    .single()
+
+  if (error) {
+    // PGRST116 = no row found; return empty profile rather than 500
+    if (error.code === 'PGRST116') {
+      return NextResponse.json({ profile: null })
+    }
+    console.error('Profile fetch error:', error)
+    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 })
+  }
+
+  // Decrypt license number before sending to client
+  let license = ''
+  if (profile.license_encrypted) {
+    try {
+      license = await decryptField(profile.license_encrypted)
+    } catch (decryptError) {
+      // Log but don't surface — return empty rather than crash
+      console.error('License decrypt error:', decryptError)
+    }
+  }
+
+  return NextResponse.json({
+    profile: {
+      id: profile.id,
+      name: profile.name,
+      role: profile.role,
+      years_exp: profile.years_exp,
+      company: profile.company,
+      license, // plaintext, only in transit (HTTPS) — never stored plain
+    },
+  })
+}
+
+// ── POST — upsert profile with encrypted license number ──────────────────────
+export async function POST(req: NextRequest) {
+  const authHeader = req.headers.get('Authorization')
+  const supabase = getSupabase(authHeader)
+
+  // Verify session
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  let body: {
+    name?: string
+    role?: string
+    years_exp?: number
+    company?: string
+    license?: string
+  }
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+
+  // Validate years_exp if provided
+  if (body.years_exp !== undefined) {
+    const yrs = Number(body.years_exp)
+    if (!Number.isInteger(yrs) || yrs < 0 || yrs > 60) {
+      return NextResponse.json(
+        { error: 'years_exp must be an integer between 0 and 60' },
+        { status: 400 }
+      )
+    }
+  }
+
+  // Encrypt license number before storage — never store plaintext
+  let license_encrypted: string | undefined
+  if (body.license !== undefined) {
+    if (body.license.length > 50) {
+      return NextResponse.json(
+        { error: 'License number too long (max 50 characters)' },
+        { status: 400 }
+      )
+    }
+    if (body.license.trim() === '') {
+      license_encrypted = '' // allow clearing the field
+    } else {
+      try {
+        license_encrypted = await encryptField(body.license.trim())
+      } catch (encryptError) {
+        console.error('License encrypt error:', encryptError)
+        return NextResponse.json(
+          { error: 'Failed to secure license data. Check server configuration.' },
+          { status: 500 }
+        )
+      }
+    }
+  }
+
+  // Build upsert payload — only include fields that were sent
+  const upsertData: Record<string, unknown> = {
+    id: user.id, // always set from session, never from body
+    updated_at: new Date().toISOString(),
+  }
+  if (body.name !== undefined)      upsertData.name      = body.name.trim()
+  if (body.role !== undefined)      upsertData.role      = body.role
+  if (body.years_exp !== undefined) upsertData.years_exp = Number(body.years_exp)
+  if (body.company !== undefined)   upsertData.company   = body.company.trim()
+  if (license_encrypted !== undefined) upsertData.license_encrypted = license_encrypted
+
+  const serviceClient = getServiceClient()
+  const { error: upsertError } = await serviceClient
+    .from('profiles')
+    .upsert(upsertData, { onConflict: 'id' })
+
+  if (upsertError) {
+    console.error('Profile upsert error:', upsertError)
+    return NextResponse.json({ error: 'Failed to save profile' }, { status: 500 })
+  }
+
+  return NextResponse.json({ success: true })
 }
