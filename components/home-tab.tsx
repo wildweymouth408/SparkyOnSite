@@ -543,7 +543,7 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
   const [isListening, setIsListening] = useState(false)
   const [voiceSupported, setVoiceSupported] = useState(false)
   const [usedVoice, setUsedVoice] = useState(false)
-  const [useOllama, setUseOllama] = useState(false)
+  const [modelUsed, setModelUsed] = useState<'ollama' | 'cloud' | null>(null)
   const recognitionRef = useRef<SpeechRecognition | null>(null)
   const voicesRef = useRef<SpeechSynthesisVoice[]>([])
 
@@ -557,17 +557,6 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
       return () => window.speechSynthesis.removeEventListener('voiceschanged', load)
     }
   }, [])
-
-  useEffect(() => {
-    setUseOllama(localStorage.getItem('sparky_use_ollama') === 'true')
-  }, [])
-
-  function toggleOllama() {
-    const next = !useOllama
-    setUseOllama(next)
-    localStorage.setItem('sparky_use_ollama', next ? 'true' : 'false')
-    setResponse('')
-  }
 
   function startListening() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -605,15 +594,30 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
     window.speechSynthesis.speak(utt)
   }
 
+  async function callCloud(text: string): Promise<string> {
+    const { supabase } = await import('@/lib/supabase')
+    const { data: { session } } = await supabase.auth.getSession()
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+    if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`
+    const res = await fetch('/api/ask-sparky', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ messages: [{ role: 'user', content: text }] }),
+    })
+    const data = await res.json()
+    return data.reply || 'Something went wrong.'
+  }
+
   async function ask() {
     const text = input.trim()
     if (!text || loading) return
     setLoading(true)
     setResponse('')
+    setModelUsed(null)
     try {
       let reply = ''
-      if (useOllama) {
-        // Call local Ollama directly from the browser (OpenAI-compatible API)
+      // Try Ollama first — falls back to cloud if offline
+      try {
         const res = await fetch('http://localhost:11434/v1/chat/completions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -625,31 +629,19 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
             ],
           }),
         })
-        if (!res.ok) throw new Error(`Ollama ${res.status}`)
+        if (!res.ok) throw new Error(`status ${res.status}`)
         const data = await res.json()
-        reply = data.choices?.[0]?.message?.content || 'No response from local model.'
-      } else {
-        const { supabase } = await import('@/lib/supabase')
-        const { data: { session } } = await supabase.auth.getSession()
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-        if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`
-        const res = await fetch('/api/ask-sparky', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ messages: [{ role: 'user', content: text }] }),
-        })
-        const data = await res.json()
-        reply = data.reply || 'Something went wrong.'
+        reply = data.choices?.[0]?.message?.content || ''
+        if (reply) setModelUsed('ollama')
+      } catch {
+        // Ollama offline or failed — use Claude Haiku
+        reply = await callCloud(text)
+        setModelUsed('cloud')
       }
       setResponse(reply)
       if (usedVoice) speak(reply)
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : ''
-      if (useOllama && msg.includes('fetch')) {
-        setResponse('Cannot reach Ollama. Make sure it\'s running: OLLAMA_ORIGINS=* ollama serve')
-      } else {
-        setResponse('Connection error. Check your signal.')
-      }
+    } catch {
+      setResponse('Connection error. Check your signal.')
     } finally {
       setLoading(false)
       setInput('')
@@ -669,19 +661,15 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
         <span className={`text-[11px] font-bold uppercase tracking-widest ${fieldMode ? 'text-yellow-300' : 'text-[#ff6b00]'}`}>
           Ask Sparky
         </span>
-        <button
-          onClick={toggleOllama}
-          title={useOllama ? 'Using local Ollama (Qwen 2.5 3B) — tap to switch to Claude' : 'Using Claude Haiku — tap to use local Ollama'}
-          className={`ml-auto text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border transition-colors ${
-            useOllama
-              ? 'border-green-500/60 text-green-400 bg-green-500/10'
-              : fieldMode
-                ? 'border-yellow-400/20 text-yellow-400/40'
-                : 'border-[#333] text-[#444] hover:border-[#555] hover:text-[#666]'
-          }`}
-        >
-          {useOllama ? 'Ollama' : 'Cloud'}
-        </button>
+        <span className={`ml-auto text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border ${
+          modelUsed === 'ollama'
+            ? 'border-green-500/60 text-green-400'
+            : modelUsed === 'cloud'
+              ? fieldMode ? 'border-yellow-400/20 text-yellow-400/40' : 'border-[#333] text-[#444]'
+              : fieldMode ? 'border-yellow-400/10 text-yellow-400/30' : 'border-[#222] text-[#333]'
+        }`}>
+          {modelUsed === 'ollama' ? 'Local' : modelUsed === 'cloud' ? 'Cloud' : 'Local→Cloud'}
+        </span>
         {voiceSupported && (
           <span className={`text-[9px] uppercase tracking-wider ${fieldMode ? 'text-yellow-400/40' : 'text-[#444]'}`}>
             {usedVoice ? '🎤 → spoken' : 'mic on'}
