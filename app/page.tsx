@@ -74,19 +74,19 @@ export default function SparkyApp() {
   }
 
   const tabAccentColor: Record<TabId, string> = {
-    home:      '#ff6b00',
-    tools:     '#00d4ff',
-    reference: '#00ff88',
-    sparky:    '#ff6b00',
-    more:      '#888888',
+    home:        '#ff6b00',
+    calculators: '#00d4ff',
+    nec:         '#00ff88',
+    jobs:        '#ff6b00',
+    settings:    '#888888',
   }
 
   const tabTitle: Record<TabId, string> = {
-    home:      'Home',
-    tools:     'Tools',
-    reference: 'Reference',
-    sparky:    'Ask Sparky',
-    more:      'More',
+    home:        'Home',
+    calculators: 'Calculators',
+    nec:         'NEC Reference',
+    jobs:        'Jobs',
+    settings:    'Settings',
   }
 
   return (
@@ -116,17 +116,17 @@ export default function SparkyApp() {
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-24">
-        {activeTab === 'home'      && <HomeTab onNavigate={handleNavigate} />}
-        {activeTab === 'tools'     && (
+        {activeTab === 'home'        && <HomeTab onNavigate={handleNavigate} />}
+        {activeTab === 'calculators' && (
           <ToolsTab
             initialToolId={pendingToolId}
-            key={pendingToolId ?? 'tools'}
+            key={pendingToolId ?? 'calculators'}
             onToolConsumed={handleToolConsumed}
           />
         )}
-        {activeTab === 'reference' && <ReferenceTab />}
-        {activeTab === 'sparky'    && <AskSparkyTab />}
-        {activeTab === 'more'      && <MoreTab />}
+        {activeTab === 'nec'         && <ReferenceTab />}
+        {activeTab === 'jobs'        && <MoreTab />}
+        {activeTab === 'settings'    && <MoreTab />}
       </main>
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />

@@ -7,7 +7,7 @@ import { CalculatorModal } from '@/components/tools/calculator-modal'
 import { VoltageDropCalculator } from '@/components/tools/voltage-drop'
 import { ConduitFillCalculator } from '@/components/tools/conduit-fill'
 import { OhmsLawCalculator } from '@/components/tools/ohms-law'
-import { PipeBendingCalculator } from '@/components/tools/pipe-bending'
+import { ConduitBendingChart } from '@/components/tools/conduit-bending-chart'
 import { WireSizingCalculator } from '@/components/tools/wire-sizing'
 import { AmpacityCalculator } from '@/components/tools/ampacity'
 import { BoxFillCalculator } from '@/components/tools/box-fill'
@@ -41,7 +41,7 @@ const CALCULATORS = [
   { id: 'voltage-drop' as const,  label: 'Voltage Drop',  desc: 'V, A, length, wire',       icon: Zap,      color: '#ff6b00' },
   { id: 'conduit-fill' as const,  label: 'Conduit Fill',  desc: 'Type, size, wire count',    icon: Cylinder, color: '#00d4ff' },
   { id: 'ohms-law' as const,      label: "Ohm's Law",     desc: 'V, I, R triangle',          icon: Triangle, color: '#ffaa00' },
-  { id: 'pipe-bending' as const,  label: 'Pipe Bending',  desc: 'Offsets, 90s, saddles',     icon: Ruler,    color: '#ff6b00' },
+  { id: 'pipe-bending' as const,  label: 'Conduit Bending', desc: 'Chart, brands, step-by-step', icon: Ruler, color: '#ff6b00' },
   { id: 'wire-sizing' as const,   label: 'Wire Sizing',   desc: 'Load, distance, NEC',       icon: Cable,    color: '#00ff88' },
   { id: 'ampacity' as const,      label: 'Ampacity',      desc: 'Derating & correction',     icon: Gauge,    color: '#00d4ff' },
   { id: 'box-fill' as const,      label: 'Box Fill',      desc: 'NEC 314.16 volumes',        icon: Box,      color: '#ffaa00' },
@@ -230,7 +230,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
       case 'voltage-drop':  return <VoltageDropCalculator />
       case 'conduit-fill':  return <ConduitFillCalculator />
       case 'ohms-law':      return <OhmsLawCalculator />
-      case 'pipe-bending':  return <PipeBendingCalculator />
+      case 'pipe-bending':  return <ConduitBendingChart />
       case 'wire-sizing':   return <WireSizingCalculator />
       case 'ampacity':      return <AmpacityCalculator />
       case 'box-fill':      return <BoxFillCalculator />
