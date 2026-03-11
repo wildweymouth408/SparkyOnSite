@@ -433,10 +433,10 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
         .from('Certificates')
         .upload(path, file, { upsert: true })
       if (uploadErr) throw uploadErr
-      const { data } = supabase.storage
+      const { data } = await supabase.storage
         .from('Certificates')
-        .getPublicUrl(path)
-      setImageUrl(data.publicUrl)
+        .createSignedUrl(path, 3600)
+      setImageUrl(data?.signedUrl)
     } catch (e: any) {
       setUploadError(`Upload failed: ${e.message}`)
     }
