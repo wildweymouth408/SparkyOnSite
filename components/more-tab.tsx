@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { LogOut, Bell, Sun, Moon, Zap, User, ChevronRight, Info, Wallet, Plus, Trash2, Briefcase } from 'lucide-react'
+import { LogOut, Bell, Sun, Moon, Zap, User, ChevronRight, Info, Wallet, Plus, Trash2, Briefcase, Share2, Eye, Camera } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { CredentialsTab } from './credentials-tab'
 import { getJobs, saveJob, deleteJob, generateId, type Job } from '@/lib/storage'
@@ -94,6 +94,82 @@ export function MoreTab() {
     setShowNewJob(false)
   }
 
+  function handleShareJob(job: Job) {
+    const jobDetails = `
+Job: ${job.name}
+Address: ${job.address || 'Not specified'}
+Status: ${job.status === 'complete' ? 'Complete' : job.status === 'at-risk' ? 'At Risk' : 'On Track'}
+Tasks: ${job.tasks.filter(t => t.status === 'completed').length}/${job.tasks.length} completed
+Crew: ${job.crew.length} members
+Created: ${new Date(job.createdAt).toLocaleDateString()}
+${job.notes.length > 0 ? `Notes: ${job.notes.join(', ')}` : ''}
+    `.trim()
+
+    // Create share options
+    const shareOptions = [
+      { name: 'Messages', action: () => {
+        if (/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)) {
+          window.open(`sms:&body=${encodeURIComponent(jobDetails)}`, '_blank')
+        } else {
+          window.open(`sms:?body=${encodeURIComponent(jobDetails)}`, '_blank')
+        }
+      }},
+      { name: 'Email', action: () => {
+        window.open(`mailto:?subject=Job Details: ${job.name}&body=${encodeURIComponent(jobDetails)}`, '_blank')
+      }},
+      { name: 'WhatsApp', action: () => {
+        window.open(`https://wa.me/?text=${encodeURIComponent(jobDetails)}`, '_blank')
+      }},
+      { name: 'Telegram', action: () => {
+        window.open(`https://t.me/share/url?url=&text=${encodeURIComponent(jobDetails)}`, '_blank')
+      }},
+      { name: 'Copy', action: () => {
+        navigator.clipboard.writeText(jobDetails)
+        alert('Job details copied to clipboard!')
+      }},
+    ]
+
+    // Simple implementation: show alert with options
+    const option = prompt(
+      `Share job "${job.name}" via:\n\n` +
+      `1. Messages\n` +
+      `2. Email\n` +
+      `3. WhatsApp\n` +
+      `4. Telegram\n` +
+      `5. Copy to clipboard\n\n` +
+      `Enter number (1-5):`
+    )
+    
+    const index = parseInt(option || '') - 1
+    if (index >= 0 && index < shareOptions.length) {
+      shareOptions[index].action()
+    }
+  }
+
+  function handleViewJob(job: Job) {
+    // For now, show a detailed view in an alert
+    // In a future update, this could open a modal or separate view
+    const details = `
+JOB DETAILS
+───────────
+Name: ${job.name}
+Address: ${job.address || 'Not specified'}
+Status: ${job.status === 'complete' ? '✅ Complete' : job.status === 'at-risk' ? '⚠️ At Risk' : '🟡 On Track'}
+Created: ${new Date(job.createdAt).toLocaleDateString()}
+
+CREW: ${job.crew.length} member${job.crew.length !== 1 ? 's' : ''}
+${job.crew.map(m => `  • ${m.name} (${m.role})`).join('\n') || '  None assigned'}
+
+TASKS: ${job.tasks.filter(t => t.status === 'completed').length}/${job.tasks.length} completed
+${job.tasks.map(t => `  • ${t.name} - ${t.status} (${t.priority})`).join('\n') || '  No tasks yet'}
+
+NOTES: ${job.notes.length} note${job.notes.length !== 1 ? 's' : ''}
+${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
+    `.trim()
+
+    alert(details)
+  }
+
   function handleDeleteJob(id: string) {
     deleteJob(id)
     setJobs(getJobs())
@@ -160,22 +236,68 @@ export function MoreTab() {
 
       {/* Jobs */}
       <div className="flex flex-col gap-1">
-        <span className="text-[10px] font-medium uppercase tracking-widest text-[#444] px-1 mb-1">
-          Jobs
-        </span>
+        <div className="flex items-center justify-between px-1 mb-1">
+          <span className="text-[10px] font-medium uppercase tracking-widest text-[#444]">
+            Jobs
+          </span>
+          <span className="text-[10px] text-[#666]">{jobs.length} job{jobs.length !== 1 ? 's' : ''}</span>
+        </div>
         <div className="flex flex-col gap-2">
           {jobs.map(job => (
-            <div key={job.id} className="flex items-center justify-between rounded border border-[#222] bg-[#13161a] px-4 py-3">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: job.color }} />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-sm text-[#ccc] truncate">{job.name}</span>
-                  {job.address && <span className="text-[10px] text-[#444] truncate">{job.address}</span>}
+            <div key={job.id} className="group relative rounded border border-[#222] bg-[#13161a] px-4 py-3 hover:border-[#ff6b00]/40 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: job.color }} />
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm text-[#ccc] truncate">{job.name}</span>
+                    {job.address && <span className="text-[10px] text-[#444] truncate">{job.address}</span>}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button 
+                    onClick={() => handleShareJob(job)}
+                    className="p-1 text-[#444] hover:text-[#00d4ff] transition-colors opacity-0 group-hover:opacity-100"
+                    title="Share job"
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleViewJob(job)}
+                    className="p-1 text-[#444] hover:text-[#00ff88] transition-colors opacity-0 group-hover:opacity-100"
+                    title="View job details"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteJob(job.id)}
+                    className="p-1 text-[#444] hover:text-red-400 transition-colors"
+                    title="Delete job"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
-              <button onClick={() => handleDeleteJob(job.id)} className="shrink-0 p-1 text-[#444] hover:text-red-400 transition-colors ml-2">
-                <Trash2 className="h-4 w-4" />
-              </button>
+              
+              {/* Job status and info */}
+              <div className="flex items-center gap-3 mt-2 text-[10px]">
+                <span className={`px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                  job.status === 'complete' ? 'bg-[#00ff88]/20 text-[#00ff88]' :
+                  job.status === 'at-risk' ? 'bg-[#ff3333]/20 text-[#ff3333]' :
+                  'bg-[#ffaa00]/20 text-[#ffaa00]'
+                }`}>
+                  {job.status === 'complete' ? 'Complete' : job.status === 'at-risk' ? 'At Risk' : 'On Track'}
+                </span>
+                {job.tasks.length > 0 && (
+                  <span className="text-[#666]">
+                    {job.tasks.filter(t => t.status === 'completed').length}/{job.tasks.length} tasks
+                  </span>
+                )}
+                {job.crew.length > 0 && (
+                  <span className="text-[#666]">
+                    {job.crew.length} crew
+                  </span>
+                )}
+              </div>
             </div>
           ))}
 
