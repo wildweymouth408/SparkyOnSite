@@ -39,6 +39,7 @@ export interface Job {
   crew: CrewMember[]
   tasks: Task[]
   notes: string[]
+  calculations: SavedCalculation[]
   status: 'on-track' | 'at-risk' | 'complete'
   color: string
   createdAt: string
@@ -103,7 +104,12 @@ export function saveSettings(settings: Partial<UserSettings>): UserSettings {
 
 // ── Jobs ──────────────────────────────────────────
 export function getJobs(): Job[] {
-  return getItem<Job[]>(KEYS.jobs, [])
+  const jobs = getItem<Job[]>(KEYS.jobs, [])
+  // Ensure each job has calculations array (migration for existing jobs)
+  return jobs.map(job => ({
+    ...job,
+    calculations: job.calculations || []
+  }))
 }
 
 export function saveJob(job: Job): void {
@@ -129,6 +135,21 @@ export function addNoteToJob(jobId: string, note: string): void {
     job.notes.push(note)
     setItem(KEYS.jobs, jobs)
   }
+}
+
+export function addCalculationToJob(jobId: string, calc: SavedCalculation): void {
+  const jobs = getJobs()
+  const job = jobs.find(j => j.id === jobId)
+  if (job) {
+    job.calculations.unshift(calc)
+    setItem(KEYS.jobs, jobs)
+  }
+}
+
+export function getJobCalculations(jobId: string): SavedCalculation[] {
+  const jobs = getJobs()
+  const job = jobs.find(j => j.id === jobId)
+  return job?.calculations || []
 }
 
 // ── Calculations ──────────────────────────────────

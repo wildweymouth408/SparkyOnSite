@@ -16,12 +16,16 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
     material: 'copper',
     insulationType: 'THHN',
     maxDropPercent: 3,
+    ambientTemp: 30,
+    conductorsInRaceway: 3,
   })
 
   // Input validation
   const loadError = inputs.loadAmps <= 0 ? 'Load must be greater than 0A' : inputs.loadAmps > 6000 ? 'Exceeds 6000A maximum' : null
   const distanceError = inputs.distance <= 0 ? 'Distance must be greater than 0 ft' : inputs.distance > 10000 ? 'Exceeds 10,000 ft maximum' : null
-  const hasErrors = loadError !== null || distanceError !== null
+  const ambientError = inputs.ambientTemp < -50 || inputs.ambientTemp > 150 ? 'Temperature out of range (-50°C to 150°C)' : null
+  const conductorsError = inputs.conductorsInRaceway < 1 ? 'At least 1 conductor required' : inputs.conductorsInRaceway > 100 ? 'Exceeds 100 conductors' : null
+  const hasErrors = loadError !== null || distanceError !== null || ambientError !== null || conductorsError !== null
 
   const result = hasErrors ? null : calculateWireSizing(inputs)
 
@@ -114,6 +118,33 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
               <option value={3}>3% (Branch)</option>
               <option value={5}>5% (Total)</option>
             </select>
+          </label>
+        </div>
+
+        <div className="flex gap-3">
+          <label className="flex flex-1 flex-col gap-1">
+            <span className="text-[11px] uppercase tracking-wider text-[#888]">Ambient Temp (°C)</span>
+            <input
+              type="number"
+              value={inputs.ambientTemp ?? 30}
+              min={-50}
+              max={150}
+              onChange={e => setInputs(p => ({ ...p, ambientTemp: Number(e.target.value) }))}
+              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${ambientError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
+            />
+            {ambientError && <span className="text-[10px] text-red-400">{ambientError}</span>}
+          </label>
+          <label className="flex flex-1 flex-col gap-1">
+            <span className="text-[11px] uppercase tracking-wider text-[#888]">Conductors in Raceway</span>
+            <input
+              type="number"
+              value={inputs.conductorsInRaceway ?? 3}
+              min={1}
+              max={100}
+              onChange={e => setInputs(p => ({ ...p, conductorsInRaceway: Number(e.target.value) }))}
+              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${conductorsError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
+            />
+            {conductorsError && <span className="text-[10px] text-red-400">{conductorsError}</span>}
           </label>
         </div>
       </div>

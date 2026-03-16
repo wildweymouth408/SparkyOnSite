@@ -1,10 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { LogOut, Bell, Sun, Moon, Zap, User, ChevronRight, Info, Wallet, Plus, Trash2, Briefcase, Share2, Eye, Camera } from 'lucide-react'
+import { LogOut, Bell, Sun, Moon, Zap, User, ChevronRight, Info, Wallet, Plus, Trash2, Briefcase, Share2, Eye, Camera, Calculator } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { CredentialsTab } from './credentials-tab'
-import { getJobs, saveJob, deleteJob, generateId, type Job } from '@/lib/storage'
+import { getJobs, saveJob, deleteJob, generateId, addCalculationToJob, type Job, type SavedCalculation } from '@/lib/storage'
+import { calculateWireSizing, type WireSizingInputs, type WireSizingResult } from '@/lib/calculations'
+import { SYSTEM_VOLTAGES, INSULATION_TYPES } from '@/lib/calculator-data'
+import { toast } from 'sonner'
 
 const JOB_COLORS = ['#ff6b00', '#00d4ff', '#00ff88', '#ff3333', '#aa88ff', '#ffaa00']
 
@@ -28,6 +31,20 @@ export function MoreTab() {
   const [showNewJob, setShowNewJob] = useState(false)
   const [newJobName, setNewJobName] = useState('')
   const [newJobAddress, setNewJobAddress] = useState('')
+  const [selectedJobForCalc, setSelectedJobForCalc] = useState<Job | null>(null)
+  const [showCalcModal, setShowCalcModal] = useState(false)
+  const [calcType, setCalcType] = useState<string>('wire-sizing')
+  const [wireInputs, setWireInputs] = useState<WireSizingInputs>({
+    loadAmps: 20,
+    distance: 100,
+    systemVoltage: 120,
+    material: 'copper',
+    insulationType: 'THHN',
+    maxDropPercent: 3,
+    ambientTemp: 30,
+    conductorsInRaceway: 3,
+  })
+  const [wireResult, setWireResult] = useState<WireSizingResult | null>(null)
 
   useEffect(() => {
     async function loadProfile() {
@@ -82,6 +99,7 @@ export function MoreTab() {
       crew: [],
       tasks: [],
       notes: [],
+      calculations: [],
       status: 'on-track',
       color: JOB_COLORS[jobs.length % JOB_COLORS.length],
       createdAt: new Date().toISOString(),
@@ -175,6 +193,27 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
     setJobs(getJobs())
   }
 
+  function handleWireCalc() {
+    const result = calculateWireSizing(wireInputs)
+    setWireResult(result)
+  }
+
+  function handleSaveWireCalc() {
+    if (!wireResult || !selectedJobForCalc) return
+    const calc: SavedCalculation = {
+      id: generateId(),
+      type: 'Wire Sizing',
+      label: `${wireInputs.loadAmps}A ${wireInputs.distance}ft ${wireInputs.systemVoltage}V`,
+      inputs: wireInputs as unknown as Record<string, unknown>,
+      result: `#${wireResult.recommendedSize} (${wireResult.dropPercent}%)`,
+      timestamp: new Date().toISOString(),
+    }
+    addCalculationToJob(selectedJobForCalc.id, calc)
+    toast.success('Calculation saved to job')
+    setShowCalcModal(false)
+    setWireResult(null)
+  }
+
   function toggleFieldMode() {
     const next = !fieldMode
     setFieldMode(next)
@@ -260,6 +299,13 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                     title="Share job"
                   >
                     <Share2 className="h-4 w-4" />
+                  </button>
+                  <button 
+                    onClick={() => { setSelectedJobForCalc(job); setShowCalcModal(true); }}
+                    className="p-1 text-[#444] hover:text-[#ff6b00] transition-colors opacity-0 group-hover:opacity-100"
+                    title="Add calculation"
+                  >
+                    <Calculator className="h-4 w-4" />
                   </button>
                   <button 
                     onClick={() => handleViewJob(job)}
@@ -463,6 +509,161 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
           </div>
         )}
       </div>
+
+      {/* Calculator Modal */}
+      {showCalcModal && selectedJobForCalc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md border border-[#333] bg-[#0a0a0a] p-5">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-[#f0f0f0]">Add Calculation to {selectedJobForCalc.name}</h3>
+              <button onClick={() => { setShowCalcModal(false); setWireResult(null); }} className="text-[#888] hover:text-[#f0f0f0]">
+                ✕
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <label className="mb-2 block text-[11px] uppercase tracking-wider text-[#888]">Calculator</label>
+              <select
+                value={calcType}
+                onChange={e => setCalcType(e.target.value)}
+                className="w-full border border-[#333] bg-[#111] p-3 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              >
+                <option value="wire-sizing">Wire Sizing</option>
+                {/* other calculators can be added here */}
+              </select>
+            </div>
+
+            {calcType === 'wire-sizing' && (
+              <>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase tracking-wider text-[#888]">Load (A)</span>
+                    <input
+                      type="number"
+                      value={wireInputs.loadAmps || ''}
+                      onChange={e => setWireInputs(p => ({ ...p, loadAmps: Number(e.target.value) }))}
+                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase tracking-wider text-[#888]">Distance (ft)</span>
+                    <input
+                      type="number"
+                      value={wireInputs.distance || ''}
+                      onChange={e => setWireInputs(p => ({ ...p, distance: Number(e.target.value) }))}
+                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase tracking-wider text-[#888]">Voltage</span>
+                    <select
+                      value={wireInputs.systemVoltage}
+                      onChange={e => setWireInputs(p => ({ ...p, systemVoltage: Number(e.target.value) }))}
+                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                    >
+                      {SYSTEM_VOLTAGES.map(v => <option key={v} value={v}>{v}V</option>)}
+                    </select>
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase tracking-wider text-[#888]">Material</span>
+                    <select
+                      value={wireInputs.material}
+                      onChange={e => setWireInputs(p => ({ ...p, material: e.target.value as 'copper' | 'aluminum' }))}
+                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                    >
+                      <option value="copper">Copper</option>
+                      <option value="aluminum">Aluminum</option>
+                    </select>
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase tracking-wider text-[#888]">Insulation</span>
+                    <select
+                      value={wireInputs.insulationType}
+                      onChange={e => setWireInputs(p => ({ ...p, insulationType: e.target.value }))}
+                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                    >
+                      {INSULATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase tracking-wider text-[#888]">Max Drop %</span>
+                    <select
+                      value={wireInputs.maxDropPercent}
+                      onChange={e => setWireInputs(p => ({ ...p, maxDropPercent: Number(e.target.value) }))}
+                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                    >
+                      <option value={3}>3% (Branch)</option>
+                      <option value={5}>5% (Total)</option>
+                    </select>
+                  </label>
+                </div>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase tracking-wider text-[#888]">Ambient Temp (°C)</span>
+                    <input
+                      type="number"
+                      value={wireInputs.ambientTemp ?? 30}
+                      onChange={e => setWireInputs(p => ({ ...p, ambientTemp: Number(e.target.value) }))}
+                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase tracking-wider text-[#888]">Conductors in Raceway</span>
+                    <input
+                      type="number"
+                      value={wireInputs.conductorsInRaceway ?? 3}
+                      onChange={e => setWireInputs(p => ({ ...p, conductorsInRaceway: Number(e.target.value) }))}
+                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                    />
+                  </label>
+                </div>
+
+                <button
+                  onClick={handleWireCalc}
+                  className="mb-4 w-full border border-[#333] bg-[#1a1a1a] py-3 text-sm font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#222]"
+                >
+                  Calculate
+                </button>
+
+                {wireResult && (
+                  <div className="mb-4 border border-[#333] bg-[#111] p-4">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-[11px] uppercase tracking-wider text-[#888]">Recommended Wire</span>
+                      <span className={`px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${wireResult.pass ? 'bg-[#00ff88]/10 text-[#00ff88]' : 'bg-[#ff3333]/10 text-[#ff3333]'}`}>
+                        {wireResult.pass ? 'PASS' : 'FAIL'}
+                      </span>
+                    </div>
+                    <div className="mb-2 flex items-baseline gap-2">
+                      <span className="text-2xl font-bold text-[#ff6b00]">#{wireResult.recommendedSize}</span>
+                      <span className="text-sm text-[#888]">AWG</span>
+                    </div>
+                    <div className="text-sm">
+                      <div className="flex justify-between"><span className="text-[#888]">Ampacity</span><span className="font-mono">{wireResult.ampacity}A</span></div>
+                      <div className="flex justify-between"><span className="text-[#888]">Voltage drop</span><span className="font-mono">{wireResult.voltageDrop}V ({wireResult.dropPercent}%)</span></div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => { setShowCalcModal(false); setWireResult(null); }}
+                    className="flex-1 border border-[#333] bg-[#1a1a1a] py-3 text-sm font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#222]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveWireCalc}
+                    disabled={!wireResult}
+                    className="flex-1 border border-[#ff6b00] bg-[#ff6b00]/10 py-3 text-sm font-medium uppercase tracking-wider text-[#ff6b00] hover:bg-[#ff6b00]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Save to Job
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Sign Out */}
       <div className="flex flex-col gap-1">

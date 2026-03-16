@@ -276,6 +276,8 @@ material: 'copper' | 'aluminum'
 insulationType: string
 maxDropPercent: number
 phase?: 'single' | 'three'
+ambientTemp?: number // Celsius, default 30
+conductorsInRaceway?: number // default 3
 }
 export interface WireSizingResult {
 recommendedSize: string
@@ -287,69 +289,90 @@ error?: string
 }
 
 export function calculateWireSizing(inputs: WireSizingInputs): WireSizingResult | null {
-// Input validation
-if (inputs.loadAmps <= 0) {
-return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'Load current must be greater than 0' }
-}
-if (inputs.distance <= 0) {
-return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'Distance must be greater than 0' }
-}
-if (inputs.systemVoltage <= 0) {
-return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'System voltage must be greater than 0' }
-}
-if (inputs.maxDropPercent <= 0) {
-return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'Maximum voltage drop percentage must be greater than 0' }
-}
+  // Input validation
+  if (inputs.loadAmps <= 0) {
+    return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'Load current must be greater than 0' }
+  }
+  if (inputs.distance <= 0) {
+    return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'Distance must be greater than 0' }
+  }
+  if (inputs.systemVoltage <= 0) {
+    return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'System voltage must be greater than 0' }
+  }
+  if (inputs.maxDropPercent <= 0) {
+    return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'Maximum voltage drop percentage must be greater than 0' }
+  }
 
-const { loadAmps, distance, systemVoltage, material, insulationType, maxDropPercent } = inputs
+  const { loadAmps, distance, systemVoltage, material, insulationType, maxDropPercent } = inputs
+  const ambientTemp = inputs.ambientTemp ?? 30
+  const conductorsInRaceway = inputs.conductorsInRaceway ?? 3
 
-// NEC 215.2(A)(1)(b): voltage drop factor — 2 for single-phase (2 conductors), √3 for three-phase
-const phaseFactor = inputs.phase === 'three' ? 1.732 : 2
-const tempRating = INSULATION_TEMP[insulationType] || 75
-const ampKey = material === 'copper'
-? (tempRating === 60 ? 'cu60' : tempRating === 90 ? 'cu90' : 'cu75')
-: (tempRating === 60 ? 'al60' : tempRating === 90 ? 'al90' : 'al75')
+  // NEC 215.2(A)(1)(b): voltage drop factor — 2 for single-phase (2 conductors), √3 for three-phase
+  const phaseFactor = inputs.phase === 'three' ? 1.732 : 2
+  const tempRating = INSULATION_TEMP[insulationType] || 75
+  const ampKey = material === 'copper'
+    ? (tempRating === 60 ? 'cu60' : tempRating === 90 ? 'cu90' : 'cu75')
+    : (tempRating === 60 ? 'al60' : tempRating === 90 ? 'al90' : 'al75')
 
-const sizes = Object.keys(AMPACITY_TABLE)
+  const sizes = Object.keys(AMPACITY_TABLE)
 
-for (const size of sizes) {
-const amp = AMPACITY_TABLE[size][ampKey as keyof typeof AMPACITY_TABLE[string]]
-if (amp >= loadAmps) {
-// Check voltage drop using correct phase factor (NEC 310.15)
-const cm = WIRE_AREAS[size]
-const k = K_FACTOR[material]
-const vd = (phaseFactor * k * loadAmps * distance) / cm
-const percent = (vd / systemVoltage) * 100
-if (percent <= maxDropPercent) {
-return {
-recommendedSize: size,
-ampacity: amp,
-voltageDrop: Math.round(vd * 100) / 100,
-dropPercent: Math.round(percent * 100) / 100,
-pass: true,
-}
-}
-}
-}
+  for (const size of sizes) {
+    const baseAmp = AMPACITY_TABLE[size][ampKey as keyof typeof AMPACITY_TABLE[string]]
+    // Calculate corrected ampacity using ambient temperature and conduit derating
+    const ampacityResult = calculateAmpacity({
+      wireSize: size,
+      insulationType,
+      material,
+      ambientTemp,
+      conductorsInRaceway,
+    })
+    if (!ampacityResult) continue
+    const correctedAmp = ampacityResult.correctedAmpacity
+    if (correctedAmp >= loadAmps) {
+      // Check voltage drop using correct phase factor (NEC 310.15)
+      const cm = WIRE_AREAS[size]
+      const k = K_FACTOR[material]
+      const vd = (phaseFactor * k * loadAmps * distance) / cm
+      const percent = (vd / systemVoltage) * 100
+      if (percent <= maxDropPercent) {
+        return {
+          recommendedSize: size,
+          ampacity: baseAmp,
+          voltageDrop: Math.round(vd * 100) / 100,
+          dropPercent: Math.round(percent * 100) / 100,
+          pass: true,
+        }
+      }
+    }
+  }
 
-// If no size found with acceptable drop, return largest that fits amps
-for (const size of sizes) {
-const amp = AMPACITY_TABLE[size][ampKey as keyof typeof AMPACITY_TABLE[string]]
-if (amp >= loadAmps) {
-const cm = WIRE_AREAS[size]
-const k = K_FACTOR[material]
-const vd = (phaseFactor * k * loadAmps * distance) / cm
-const percent = (vd / systemVoltage) * 100
-return {
-recommendedSize: size,
-ampacity: amp,
-voltageDrop: Math.round(vd * 100) / 100,
-dropPercent: Math.round(percent * 100) / 100,
-pass: percent <= maxDropPercent,
-}
-}
-}
-return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'No suitable wire size found for given parameters' }
+  // If no size found with acceptable drop, return largest that fits corrected ampacity
+  for (const size of sizes) {
+    const baseAmp = AMPACITY_TABLE[size][ampKey as keyof typeof AMPACITY_TABLE[string]]
+    const ampacityResult = calculateAmpacity({
+      wireSize: size,
+      insulationType,
+      material,
+      ambientTemp,
+      conductorsInRaceway,
+    })
+    if (!ampacityResult) continue
+    const correctedAmp = ampacityResult.correctedAmpacity
+    if (correctedAmp >= loadAmps) {
+      const cm = WIRE_AREAS[size]
+      const k = K_FACTOR[material]
+      const vd = (phaseFactor * k * loadAmps * distance) / cm
+      const percent = (vd / systemVoltage) * 100
+      return {
+        recommendedSize: size,
+        ampacity: baseAmp,
+        voltageDrop: Math.round(vd * 100) / 100,
+        dropPercent: Math.round(percent * 100) / 100,
+        pass: percent <= maxDropPercent,
+      }
+    }
+  }
+  return { recommendedSize: '', ampacity: 0, voltageDrop: 0, dropPercent: 0, pass: false, error: 'No suitable wire size found for given parameters' }
 }
 
 // ── Ampacity ──────────────────────────────────────
@@ -362,4 +385,153 @@ conductorsInRaceway: number
 }
 
 export interface AmpacityResult {
-baseAmpacity: number
+  baseAmpacity: number
+  tempRating: number // °C
+  tempCorrectionFactor: number
+  conduitDerating: number
+  correctedAmpacity: number
+  error?: string
+}
+
+export function calculateAmpacity(inputs: AmpacityInputs): AmpacityResult | null {
+  // Input validation
+  if (!inputs.wireSize || !inputs.insulationType || !inputs.material) {
+    return { baseAmpacity: 0, tempRating: 0, tempCorrectionFactor: 0, conduitDerating: 0, correctedAmpacity: 0, error: 'Missing required fields' }
+  }
+  if (inputs.ambientTemp < -50 || inputs.ambientTemp > 150) {
+    return { baseAmpacity: 0, tempRating: 0, tempCorrectionFactor: 0, conduitDerating: 0, correctedAmpacity: 0, error: 'Ambient temperature out of range (-50°C to 150°C)' }
+  }
+  if (inputs.conductorsInRaceway < 1) {
+    return { baseAmpacity: 0, tempRating: 0, tempCorrectionFactor: 0, conduitDerating: 0, correctedAmpacity: 0, error: 'Number of conductors must be at least 1' }
+  }
+
+  const tempRating = INSULATION_TEMP[inputs.insulationType] || 75
+  const ampKey = inputs.material === 'copper'
+    ? (tempRating === 60 ? 'cu60' : tempRating === 90 ? 'cu90' : 'cu75')
+    : (tempRating === 60 ? 'al60' : tempRating === 90 ? 'al90' : 'al75')
+
+  const baseAmp = AMPACITY_TABLE[inputs.wireSize]?.[ampKey as keyof typeof AMPACITY_TABLE[string]]
+  if (baseAmp === undefined) {
+    return { baseAmpacity: 0, tempRating: 0, tempCorrectionFactor: 0, conduitDerating: 0, correctedAmpacity: 0, error: 'Invalid wire size or insulation/material combination' }
+  }
+
+  // Temperature correction (NEC Table 310.15(B)(1))
+  let tempCorr = 1.0
+  const ambient = Math.floor(inputs.ambientTemp)
+  if (ambient <= 30) {
+    tempCorr = 1.0
+  } else if (ambient <= 36) {
+    tempCorr = tempRating === 60 ? 0.91 : tempRating === 75 ? 0.94 : 0.96
+  } else if (ambient <= 41) {
+    tempCorr = tempRating === 60 ? 0.91 : tempRating === 75 ? 0.94 : 0.96
+  } else if (ambient <= 46) {
+    tempCorr = tempRating === 60 ? 0.82 : tempRating === 75 ? 0.88 : 0.91
+  } else if (ambient <= 51) {
+    tempCorr = tempRating === 60 ? 0.71 : tempRating === 75 ? 0.82 : 0.87
+  } else if (ambient <= 56) {
+    tempCorr = tempRating === 60 ? 0.58 : tempRating === 75 ? 0.75 : 0.82
+  } else if (ambient <= 61) {
+    tempCorr = tempRating === 60 ? 0.41 : tempRating === 75 ? 0.67 : 0.76
+  } else {
+    tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.58 : 0.71
+  }
+
+  // Conduit derating (NEC Table 310.15(C)(1))
+  const conduitDerating = getConduitDerating(inputs.conductorsInRaceway)
+
+  const corrected = Math.floor(baseAmp * tempCorr * conduitDerating)
+
+  return {
+    baseAmpacity: baseAmp,
+    tempRating,
+    tempCorrectionFactor: tempCorr,
+    conduitDerating,
+    correctedAmpacity: corrected,
+  }
+}
+
+// ── Box Fill ──────────────────────────────────────
+export interface BoxFillInputs {
+  boxType: string
+  customVolume?: number
+  conductors: Array<{ size: string; count: number }>
+  clamps: number
+  supportFittings: number
+  devices: number
+  equipmentGrounds: number
+  largestGroundSize: string
+}
+
+export interface BoxFillResult {
+  boxCapacity: number
+  conductorVolume: number
+  clampVolume: number
+  supportVolume: number
+  deviceVolume: number
+  groundVolume: number
+  totalRequired: number
+  remainingVolume: number
+  pass: boolean
+  error?: string
+}
+
+export function calculateBoxFill(inputs: BoxFillInputs): BoxFillResult {
+  // Determine box capacity
+  let boxCapacity = STANDARD_BOXES[inputs.boxType]?.volume
+  if (inputs.boxType === 'custom' && inputs.customVolume !== undefined) {
+    boxCapacity = inputs.customVolume
+  }
+  if (!boxCapacity || boxCapacity <= 0) {
+    return {
+      boxCapacity: 0,
+      conductorVolume: 0,
+      clampVolume: 0,
+      supportVolume: 0,
+      deviceVolume: 0,
+      groundVolume: 0,
+      totalRequired: 0,
+      remainingVolume: 0,
+      pass: false,
+      error: 'Invalid box type or volume',
+    }
+  }
+
+  // Conductor volume
+  let conductorVolume = 0
+  for (const cond of inputs.conductors) {
+    const allowance = BOX_FILL_ALLOWANCE[cond.size] || 2.0 // fallback
+    conductorVolume += allowance * cond.count
+  }
+
+  // Clamp volume: each clamp counts as one conductor of the largest size present
+  const largestConductorSize = inputs.conductors.length > 0
+    ? inputs.conductors.reduce((max, c) => BOX_FILL_ALLOWANCE[c.size] > (BOX_FILL_ALLOWANCE[max] || 0) ? c.size : max, inputs.conductors[0].size)
+    : '14'
+  const clampAllowance = BOX_FILL_ALLOWANCE[largestConductorSize] || 2.0
+  const clampVolume = clampAllowance * inputs.clamps
+
+  // Support fittings: same as clamps
+  const supportVolume = clampAllowance * inputs.supportFittings
+
+  // Device volume: each device counts as two conductors of the largest size (NEC 314.16(B)(4))
+  const deviceVolume = clampAllowance * 2 * inputs.devices
+
+  // Ground volume: each equipment ground counts as one conductor of the largest ground size (NEC 314.16(B)(5))
+  const groundAllowance = BOX_FILL_ALLOWANCE[inputs.largestGroundSize] || 2.0
+  const groundVolume = groundAllowance * inputs.equipmentGrounds
+
+  const totalRequired = conductorVolume + clampVolume + supportVolume + deviceVolume + groundVolume
+  const remainingVolume = boxCapacity - totalRequired
+
+  return {
+    boxCapacity,
+    conductorVolume: Math.round(conductorVolume * 100) / 100,
+    clampVolume: Math.round(clampVolume * 100) / 100,
+    supportVolume: Math.round(supportVolume * 100) / 100,
+    deviceVolume: Math.round(deviceVolume * 100) / 100,
+    groundVolume: Math.round(groundVolume * 100) / 100,
+    totalRequired: Math.round(totalRequired * 100) / 100,
+    remainingVolume: Math.round(remainingVolume * 100) / 100,
+    pass: remainingVolume >= 0,
+  }
+}
