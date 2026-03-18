@@ -9,7 +9,7 @@ import { calculateWireSizing, type WireSizingInputs, type WireSizingResult } fro
 import { SYSTEM_VOLTAGES, INSULATION_TYPES } from '@/lib/calculator-data'
 import { toast } from 'sonner'
 
-const JOB_COLORS = ['#ff6b00', '#00d4ff', '#00ff88', '#ff3333', '#aa88ff', '#ffaa00']
+const JOB_COLORS = ['#f97316', '#f97316', '#f97316', '#ff3333', '#aa88ff', '#f97316']
 
 interface Profile {
   name?: string
@@ -230,17 +230,17 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
     <div className="flex flex-col gap-6 max-w-lg mx-auto">
 
       {/* Profile Card */}
-      <div className="rounded border border-[#222] bg-[#13161a] p-4">
+      <div className="rounded border border-[#27272a] bg-[#13161a] p-4">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded bg-[#ff6b00]/10 border border-[#ff6b00]/30">
-            <User className="h-6 w-6 text-[#ff6b00]" />
+          <div className="flex h-12 w-12 items-center justify-center rounded bg-[#f97316]/10 border border-[#f97316]/30">
+            <User className="h-6 w-6 text-[#f97316]" />
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-sm font-semibold text-[#f0f0f0] truncate">{displayName}</span>
             {roleLabel && (
-              <span className="text-xs text-[#ff6b00] uppercase tracking-wider mt-0.5">{roleLabel}</span>
+              <span className="text-xs text-[#f97316] uppercase tracking-wider mt-0.5">{roleLabel}</span>
             )}
-            <span className="text-[11px] text-[#555] truncate mt-0.5">{email}</span>
+            <span className="text-[11px] text-[#52525b] truncate mt-0.5">{email}</span>
           </div>
         </div>
       </div>
@@ -252,22 +252,22 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
         </span>
         <button
           onClick={() => setShowWallet(!showWallet)}
-          className="flex items-center justify-between rounded border border-[#222] bg-[#13161a] px-4 py-3 text-left w-full"
+          className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3 text-left w-full"
         >
           <div className="flex items-center gap-3">
-            <Wallet className="h-4 w-4 text-[#ff6b00]" />
+            <Wallet className="h-4 w-4 text-[#f97316]" />
             <div className="flex flex-col">
               <span className="text-sm text-[#ccc]">Credential Wallet</span>
               <span className="text-[10px] text-[#444] uppercase tracking-wider">Licenses · Certs · Cards</span>
             </div>
           </div>
           <ChevronRight
-            className={`h-4 w-4 text-[#555] transition-transform duration-200 ${showWallet ? 'rotate-90' : ''}`}
+            className={`h-4 w-4 text-[#52525b] transition-transform duration-200 ${showWallet ? 'rotate-90' : ''}`}
           />
         </button>
 
         {showWallet && (
-          <div className="rounded border border-[#222] bg-[#0d1014] px-3 py-4">
+          <div className="rounded border border-[#27272a] bg-[#0d1014] px-3 py-4">
             <CredentialsTab />
           </div>
         )}
@@ -283,7 +283,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
         </div>
         <div className="flex flex-col gap-2">
           {jobs.map(job => (
-            <div key={job.id} className="group relative rounded border border-[#222] bg-[#13161a] px-4 py-3 hover:border-[#ff6b00]/40 transition-colors">
+            <div key={job.id} className="group relative rounded border border-[#27272a] bg-[#13161a] px-4 py-3 hover:border-[#f97316]/40 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: job.color }} />
@@ -295,21 +295,21 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                 <div className="flex items-center gap-1 shrink-0">
                   <button 
                     onClick={() => handleShareJob(job)}
-                    className="p-1 text-[#444] hover:text-[#00d4ff] transition-colors opacity-0 group-hover:opacity-100"
+                    className="p-1 text-[#444] hover:text-[#f97316] transition-colors opacity-0 group-hover:opacity-100"
                     title="Share job"
                   >
                     <Share2 className="h-4 w-4" />
                   </button>
                   <button 
                     onClick={() => { setSelectedJobForCalc(job); setShowCalcModal(true); }}
-                    className="p-1 text-[#444] hover:text-[#ff6b00] transition-colors opacity-0 group-hover:opacity-100"
+                    className="p-1 text-[#444] hover:text-[#f97316] transition-colors opacity-0 group-hover:opacity-100"
                     title="Add calculation"
                   >
                     <Calculator className="h-4 w-4" />
                   </button>
                   <button 
                     onClick={() => handleViewJob(job)}
-                    className="p-1 text-[#444] hover:text-[#00ff88] transition-colors opacity-0 group-hover:opacity-100"
+                    className="p-1 text-[#444] hover:text-[#f97316] transition-colors opacity-0 group-hover:opacity-100"
                     title="View job details"
                   >
                     <Eye className="h-4 w-4" />
@@ -327,9 +327,9 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
               {/* Job status and info */}
               <div className="flex items-center gap-3 mt-2 text-[10px]">
                 <span className={`px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                  job.status === 'complete' ? 'bg-[#00ff88]/20 text-[#00ff88]' :
+                  job.status === 'complete' ? 'bg-[#f97316]/20 text-[#f97316]' :
                   job.status === 'at-risk' ? 'bg-[#ff3333]/20 text-[#ff3333]' :
-                  'bg-[#ffaa00]/20 text-[#ffaa00]'
+                  'bg-[#f97316]/20 text-[#f97316]'
                 }`}>
                   {job.status === 'complete' ? 'Complete' : job.status === 'at-risk' ? 'At Risk' : 'On Track'}
                 </span>
@@ -348,32 +348,32 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
           ))}
 
           {showNewJob ? (
-            <div className="flex flex-col gap-2 rounded border border-[#ff6b00]/20 bg-[#13161a] p-3">
+            <div className="flex flex-col gap-2 rounded border border-[#f97316]/20 bg-[#13161a] p-3">
               <input
                 placeholder="Job name (e.g. 123 Main St Panel Upgrade)"
                 value={newJobName}
                 onChange={e => setNewJobName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleCreateJob()}
                 autoFocus
-                className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]/40"
+                className="w-full rounded border border-[#27272a] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#f97316]/40"
               />
               <input
                 placeholder="Address (optional)"
                 value={newJobAddress}
                 onChange={e => setNewJobAddress(e.target.value)}
-                className="w-full rounded border border-[#222] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]/40"
+                className="w-full rounded border border-[#27272a] bg-[#0d1014] px-3 py-2 text-sm text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#f97316]/40"
               />
               <div className="flex gap-2">
                 <button
                   onClick={handleCreateJob}
                   disabled={!newJobName.trim()}
-                  className="flex-1 rounded bg-[#ff6b00] px-3 py-2 text-xs font-bold uppercase tracking-wider text-black disabled:opacity-40"
+                  className="flex-1 rounded bg-[#f97316] px-3 py-2 text-xs font-bold uppercase tracking-wider text-black disabled:opacity-40"
                 >
                   Create Job
                 </button>
                 <button
                   onClick={() => { setShowNewJob(false); setNewJobName(''); setNewJobAddress('') }}
-                  className="px-3 py-2 text-xs text-[#555] hover:text-[#888] transition-colors"
+                  className="px-3 py-2 text-xs text-[#52525b] hover:text-[#888] transition-colors"
                 >
                   Cancel
                 </button>
@@ -382,7 +382,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
           ) : (
             <button
               onClick={() => setShowNewJob(true)}
-              className="flex items-center gap-2 rounded border border-dashed border-[#333] bg-[#13161a] px-4 py-3 text-sm text-[#555] hover:border-[#ff6b00]/30 hover:text-[#ff6b00] transition-colors w-full"
+              className="flex items-center gap-2 rounded border border-dashed border-[#3f3f46] bg-[#13161a] px-4 py-3 text-sm text-[#52525b] hover:border-[#f97316]/30 hover:text-[#f97316] transition-colors w-full"
             >
               <Plus className="h-4 w-4" />
               New Job
@@ -399,19 +399,19 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
 
         {/* Field Mode */}
         <div className={`flex items-center justify-between rounded border px-4 py-3 transition-colors ${
-          fieldMode ? 'border-[#ffaa00]/40 bg-[#ffaa0008]' : 'border-[#222] bg-[#13161a]'
+          fieldMode ? 'border-[#f97316]/40 bg-[#f9731608]' : 'border-[#27272a] bg-[#13161a]'
         }`}>
           <div className="flex items-center gap-3">
-            <Sun className={`h-4 w-4 ${fieldMode ? 'text-[#ffaa00]' : 'text-[#888]'}`} />
+            <Sun className={`h-4 w-4 ${fieldMode ? 'text-[#f97316]' : 'text-[#888]'}`} />
             <div className="flex flex-col">
-              <span className={`text-sm ${fieldMode ? 'text-[#ffaa00]' : 'text-[#ccc]'}`}>Field Mode</span>
+              <span className={`text-sm ${fieldMode ? 'text-[#f97316]' : 'text-[#ccc]'}`}>Field Mode</span>
               <span className="text-[10px] text-[#444] uppercase tracking-wider">High-vis · Glove-safe</span>
             </div>
           </div>
           <button
             onClick={toggleFieldMode}
             className={`relative h-6 w-11 rounded-full transition-colors duration-200 ${
-              fieldMode ? 'bg-[#ffaa00]' : 'bg-[#333]'
+              fieldMode ? 'bg-[#f97316]' : 'bg-[#3f3f46]'
             }`}
             aria-label="Toggle field mode"
           >
@@ -424,7 +424,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
         </div>
 
         {/* Dark Mode */}
-        <div className="flex items-center justify-between rounded border border-[#222] bg-[#13161a] px-4 py-3">
+        <div className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3">
           <div className="flex items-center gap-3">
             {darkMode
               ? <Moon className="h-4 w-4 text-[#888]" />
@@ -435,7 +435,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
           <button
             onClick={toggleDarkMode}
             className={`relative h-6 w-11 rounded-full transition-colors duration-200 ${
-              darkMode ? 'bg-[#ff6b00]' : 'bg-[#333]'
+              darkMode ? 'bg-[#f97316]' : 'bg-[#3f3f46]'
             }`}
             aria-label="Toggle dark mode"
           >
@@ -448,7 +448,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
         </div>
 
         {/* Notifications */}
-        <div className="flex items-center justify-between rounded border border-[#222] bg-[#13161a] px-4 py-3">
+        <div className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3">
           <div className="flex items-center gap-3">
             <Bell className="h-4 w-4 text-[#888]" />
             <span className="text-sm text-[#ccc]">Notifications</span>
@@ -456,7 +456,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
           <button
             onClick={toggleNotifications}
             className={`relative h-6 w-11 rounded-full transition-colors duration-200 ${
-              notifications ? 'bg-[#ff6b00]' : 'bg-[#333]'
+              notifications ? 'bg-[#f97316]' : 'bg-[#3f3f46]'
             }`}
             aria-label="Toggle notifications"
           >
@@ -476,26 +476,26 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
         </span>
         <button
           onClick={() => setShowAbout(!showAbout)}
-          className="flex items-center justify-between rounded border border-[#222] bg-[#13161a] px-4 py-3 text-left w-full"
+          className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3 text-left w-full"
         >
           <div className="flex items-center gap-3">
-            <Zap className="h-4 w-4 text-[#ff6b00]" />
+            <Zap className="h-4 w-4 text-[#f97316]" />
             <span className="text-sm text-[#ccc]">About Sparky</span>
           </div>
           <ChevronRight
-            className={`h-4 w-4 text-[#555] transition-transform duration-200 ${showAbout ? 'rotate-90' : ''}`}
+            className={`h-4 w-4 text-[#52525b] transition-transform duration-200 ${showAbout ? 'rotate-90' : ''}`}
           />
         </button>
 
         {showAbout && (
-          <div className="rounded border border-[#222] bg-[#0d1014] px-4 py-4 flex flex-col gap-3">
+          <div className="rounded border border-[#27272a] bg-[#0d1014] px-4 py-4 flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-[#ff6b00]">
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-[#f97316]">
                 <Zap className="h-4 w-4 text-black" strokeWidth={2.5} />
               </div>
               <div>
-                <div className="text-xs font-bold uppercase tracking-wider text-[#ff6b00]">Sparky</div>
-                <div className="text-[10px] text-[#555] uppercase tracking-wider">Field Electrical Assistant</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-[#f97316]">Sparky</div>
+                <div className="text-[10px] text-[#52525b] uppercase tracking-wider">Field Electrical Assistant</div>
               </div>
             </div>
             <p className="text-xs text-[#777] leading-relaxed">
@@ -513,7 +513,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
       {/* Calculator Modal */}
       {showCalcModal && selectedJobForCalc && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-md border border-[#333] bg-[#0a0a0a] p-5">
+          <div className="w-full max-w-md border border-[#3f3f46] bg-[#0a0a0a] p-5">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-[#f0f0f0]">Add Calculation to {selectedJobForCalc.name}</h3>
               <button onClick={() => { setShowCalcModal(false); setWireResult(null); }} className="text-[#888] hover:text-[#f0f0f0]">
@@ -526,7 +526,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
               <select
                 value={calcType}
                 onChange={e => setCalcType(e.target.value)}
-                className="w-full border border-[#333] bg-[#111] p-3 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                className="w-full border border-[#3f3f46] bg-[#111] p-3 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
               >
                 <option value="wire-sizing">Wire Sizing</option>
                 {/* other calculators can be added here */}
@@ -542,7 +542,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                       type="number"
                       value={wireInputs.loadAmps || ''}
                       onChange={e => setWireInputs(p => ({ ...p, loadAmps: Number(e.target.value) }))}
-                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                      className="border border-[#3f3f46] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
                     />
                   </label>
                   <label className="flex flex-col gap-1">
@@ -551,7 +551,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                       type="number"
                       value={wireInputs.distance || ''}
                       onChange={e => setWireInputs(p => ({ ...p, distance: Number(e.target.value) }))}
-                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                      className="border border-[#3f3f46] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
                     />
                   </label>
                   <label className="flex flex-col gap-1">
@@ -559,7 +559,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                     <select
                       value={wireInputs.systemVoltage}
                       onChange={e => setWireInputs(p => ({ ...p, systemVoltage: Number(e.target.value) }))}
-                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                      className="border border-[#3f3f46] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
                     >
                       {SYSTEM_VOLTAGES.map(v => <option key={v} value={v}>{v}V</option>)}
                     </select>
@@ -569,7 +569,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                     <select
                       value={wireInputs.material}
                       onChange={e => setWireInputs(p => ({ ...p, material: e.target.value as 'copper' | 'aluminum' }))}
-                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                      className="border border-[#3f3f46] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
                     >
                       <option value="copper">Copper</option>
                       <option value="aluminum">Aluminum</option>
@@ -580,7 +580,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                     <select
                       value={wireInputs.insulationType}
                       onChange={e => setWireInputs(p => ({ ...p, insulationType: e.target.value }))}
-                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                      className="border border-[#3f3f46] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
                     >
                       {INSULATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
@@ -590,7 +590,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                     <select
                       value={wireInputs.maxDropPercent}
                       onChange={e => setWireInputs(p => ({ ...p, maxDropPercent: Number(e.target.value) }))}
-                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                      className="border border-[#3f3f46] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
                     >
                       <option value={3}>3% (Branch)</option>
                       <option value={5}>5% (Total)</option>
@@ -604,7 +604,7 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                       type="number"
                       value={wireInputs.ambientTemp ?? 30}
                       onChange={e => setWireInputs(p => ({ ...p, ambientTemp: Number(e.target.value) }))}
-                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                      className="border border-[#3f3f46] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
                     />
                   </label>
                   <label className="flex flex-col gap-1">
@@ -613,28 +613,28 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                       type="number"
                       value={wireInputs.conductorsInRaceway ?? 3}
                       onChange={e => setWireInputs(p => ({ ...p, conductorsInRaceway: Number(e.target.value) }))}
-                      className="border border-[#333] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                      className="border border-[#3f3f46] bg-[#111] p-2 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
                     />
                   </label>
                 </div>
 
                 <button
                   onClick={handleWireCalc}
-                  className="mb-4 w-full border border-[#333] bg-[#1a1a1a] py-3 text-sm font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#222]"
+                  className="mb-4 w-full border border-[#3f3f46] bg-[#18181b] py-3 text-sm font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#27272a]"
                 >
                   Calculate
                 </button>
 
                 {wireResult && (
-                  <div className="mb-4 border border-[#333] bg-[#111] p-4">
+                  <div className="mb-4 border border-[#3f3f46] bg-[#111] p-4">
                     <div className="mb-2 flex items-center justify-between">
                       <span className="text-[11px] uppercase tracking-wider text-[#888]">Recommended Wire</span>
-                      <span className={`px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${wireResult.pass ? 'bg-[#00ff88]/10 text-[#00ff88]' : 'bg-[#ff3333]/10 text-[#ff3333]'}`}>
+                      <span className={`px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${wireResult.pass ? 'bg-[#f97316]/10 text-[#f97316]' : 'bg-[#ff3333]/10 text-[#ff3333]'}`}>
                         {wireResult.pass ? 'PASS' : 'FAIL'}
                       </span>
                     </div>
                     <div className="mb-2 flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-[#ff6b00]">#{wireResult.recommendedSize}</span>
+                      <span className="text-2xl font-bold text-[#f97316]">#{wireResult.recommendedSize}</span>
                       <span className="text-sm text-[#888]">AWG</span>
                     </div>
                     <div className="text-sm">
@@ -647,14 +647,14 @@ ${job.notes.map((n, i) => `  ${i+1}. ${n}`).join('\n') || '  None'}
                 <div className="flex gap-3">
                   <button
                     onClick={() => { setShowCalcModal(false); setWireResult(null); }}
-                    className="flex-1 border border-[#333] bg-[#1a1a1a] py-3 text-sm font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#222]"
+                    className="flex-1 border border-[#3f3f46] bg-[#18181b] py-3 text-sm font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#27272a]"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSaveWireCalc}
                     disabled={!wireResult}
-                    className="flex-1 border border-[#ff6b00] bg-[#ff6b00]/10 py-3 text-sm font-medium uppercase tracking-wider text-[#ff6b00] hover:bg-[#ff6b00]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 border border-[#f97316] bg-[#f97316]/10 py-3 text-sm font-medium uppercase tracking-wider text-[#f97316] hover:bg-[#f97316]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Save to Job
                   </button>

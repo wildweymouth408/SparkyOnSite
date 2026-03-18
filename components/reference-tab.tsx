@@ -389,7 +389,7 @@ const inspectionItems: InspectionItem[] = [
 
 const symbolData: SymbolCategory[] = [
   {
-    id: 'power', name: 'Power & Distribution', icon: Zap, color: '#ff6b00',
+    id: 'power', name: 'Power & Distribution', icon: Zap, color: '#f97316',
     symbols: [
       { symbol: 'LP', name: 'Lighting Panel', description: 'Panelboard - Lighting' },
       { symbol: 'PP', name: 'Power Panel', description: 'Panelboard - Power' },
@@ -407,7 +407,7 @@ const symbolData: SymbolCategory[] = [
     ]
   },
   {
-    id: 'outlets', name: 'Receptacles & Outlets', icon: Cable, color: '#00d4ff',
+    id: 'outlets', name: 'Receptacles & Outlets', icon: Cable, color: '#f97316',
     symbols: [
       { symbol: '○', name: 'Duplex Receptacle', description: 'Standard 120V outlet' },
       { symbol: '○ GFCI', name: 'GFCI Receptacle', description: 'Ground fault protected' },
@@ -419,7 +419,7 @@ const symbolData: SymbolCategory[] = [
     ]
   },
   {
-    id: 'switches', name: 'Switches & Controls', icon: Settings, color: '#00ff88',
+    id: 'switches', name: 'Switches & Controls', icon: Settings, color: '#f97316',
     symbols: [
       { symbol: 'S', name: 'Single Pole Switch' },
       { symbol: 'S2', name: 'Double Pole Switch' },
@@ -457,7 +457,7 @@ const symbolData: SymbolCategory[] = [
     ]
   },
   {
-    id: 'conduit', name: 'Conduit & Wiring', icon: Cable, color: '#ffaa00',
+    id: 'conduit', name: 'Conduit & Wiring', icon: Cable, color: '#f97316',
     symbols: [
       { symbol: '- - -', name: 'Concealed Conduit', description: 'In walls/ceiling' },
       { symbol: '——', name: 'Exposed Conduit', description: 'Surface mounted' },
@@ -510,17 +510,17 @@ const abbreviations = [
 function SubpanelBondDiagram({ wrong }: { wrong: boolean }) {
   return (
     <svg viewBox="0 0 200 160" className="w-full" style={{ maxHeight: 160 }}>
-      <rect x="30" y="20" width="140" height="120" fill="#1a1f2e" stroke={wrong ? '#ff4444' : '#00ff88'} strokeWidth="2" rx="3" />
+      <rect x="30" y="20" width="140" height="120" fill="#1a1f2e" stroke={wrong ? '#ff4444' : '#f97316'} strokeWidth="2" rx="3" />
       <text x="100" y="38" textAnchor="middle" fill="#888" fontSize="9" fontFamily="monospace">SUBPANEL</text>
-      <rect x="55" y="50" width="8" height="70" fill="#00d4ff" rx="1" />
-      <text x="59" y="132" textAnchor="middle" fill="#00d4ff" fontSize="8" fontFamily="monospace">N</text>
-      <rect x="137" y="50" width="8" height="70" fill="#00ff88" rx="1" />
-      <text x="141" y="132" textAnchor="middle" fill="#00ff88" fontSize="8" fontFamily="monospace">G</text>
-      <line x1="59" y1="55" x2="40" y2="55" stroke="#00d4ff" strokeWidth="1.5" />
-      <line x1="59" y1="70" x2="40" y2="70" stroke="#00d4ff" strokeWidth="1.5" />
-      <line x1="59" y1="85" x2="40" y2="85" stroke="#00d4ff" strokeWidth="1.5" />
-      <line x1="141" y1="55" x2="160" y2="55" stroke="#00ff88" strokeWidth="1.5" />
-      <line x1="141" y1="70" x2="160" y2="70" stroke="#00ff88" strokeWidth="1.5" />
+      <rect x="55" y="50" width="8" height="70" fill="#f97316" rx="1" />
+      <text x="59" y="132" textAnchor="middle" fill="#f97316" fontSize="8" fontFamily="monospace">N</text>
+      <rect x="137" y="50" width="8" height="70" fill="#f97316" rx="1" />
+      <text x="141" y="132" textAnchor="middle" fill="#f97316" fontSize="8" fontFamily="monospace">G</text>
+      <line x1="59" y1="55" x2="40" y2="55" stroke="#f97316" strokeWidth="1.5" />
+      <line x1="59" y1="70" x2="40" y2="70" stroke="#f97316" strokeWidth="1.5" />
+      <line x1="59" y1="85" x2="40" y2="85" stroke="#f97316" strokeWidth="1.5" />
+      <line x1="141" y1="55" x2="160" y2="55" stroke="#f97316" strokeWidth="1.5" />
+      <line x1="141" y1="70" x2="160" y2="70" stroke="#f97316" strokeWidth="1.5" />
       {wrong ? (
         <>
           <line x1="63" y1="90" x2="137" y2="90" stroke="#ff4444" strokeWidth="2.5" strokeDasharray="4,2" />
@@ -530,12 +530,12 @@ function SubpanelBondDiagram({ wrong }: { wrong: boolean }) {
         </>
       ) : (
         <>
-          <text x="100" y="94" textAnchor="middle" fill="#00ff88" fontSize="7" fontFamily="monospace">ISOLATED</text>
-          <text x="100" y="105" textAnchor="middle" fill="#00ff88" fontSize="7" fontFamily="monospace">NO BOND ✓</text>
-          <line x1="80" y1="118" x2="120" y2="118" stroke="#00ff88" strokeWidth="1" />
-          <line x1="86" y1="122" x2="114" y2="122" stroke="#00ff88" strokeWidth="1" />
-          <line x1="93" y1="126" x2="107" y2="126" stroke="#00ff88" strokeWidth="1" />
-          <text x="100" y="135" textAnchor="middle" fill="#00ff88" fontSize="7" fontFamily="monospace">EARTH</text>
+          <text x="100" y="94" textAnchor="middle" fill="#f97316" fontSize="7" fontFamily="monospace">ISOLATED</text>
+          <text x="100" y="105" textAnchor="middle" fill="#f97316" fontSize="7" fontFamily="monospace">NO BOND ✓</text>
+          <line x1="80" y1="118" x2="120" y2="118" stroke="#f97316" strokeWidth="1" />
+          <line x1="86" y1="122" x2="114" y2="122" stroke="#f97316" strokeWidth="1" />
+          <line x1="93" y1="126" x2="107" y2="126" stroke="#f97316" strokeWidth="1" />
+          <text x="100" y="135" textAnchor="middle" fill="#f97316" fontSize="7" fontFamily="monospace">EARTH</text>
         </>
       )}
     </svg>
@@ -545,12 +545,12 @@ function SubpanelBondDiagram({ wrong }: { wrong: boolean }) {
 function BoxFillDiagram({ wrong }: { wrong: boolean }) {
   return (
     <svg viewBox="0 0 200 140" className="w-full" style={{ maxHeight: 140 }}>
-      <rect x="50" y="20" width="100" height="90" fill="#1a1f2e" stroke={wrong ? '#ff4444' : '#00ff88'} strokeWidth="2" rx="2" />
+      <rect x="50" y="20" width="100" height="90" fill="#1a1f2e" stroke={wrong ? '#ff4444' : '#f97316'} strokeWidth="2" rx="2" />
       <text x="100" y="14" textAnchor="middle" fill="#888" fontSize="8" fontFamily="monospace">4" SQUARE BOX</text>
       {wrong ? (
         <>
           {[30,42,54,66,78,88,98,108].map((y, i) => (
-            <line key={i} x1="60" y1={y} x2="140" y2={y} stroke={i % 2 === 0 ? '#ff6b00' : '#fff'} strokeWidth="2.5" />
+            <line key={i} x1="60" y1={y} x2="140" y2={y} stroke={i % 2 === 0 ? '#f97316' : '#fff'} strokeWidth="2.5" />
           ))}
           <text x="100" y="122" textAnchor="middle" fill="#ff4444" fontSize="8" fontFamily="monospace">OVERFILLED ✕</text>
           <text x="100" y="132" textAnchor="middle" fill="#ff4444" fontSize="7" fontFamily="monospace">Exceeds 21 cu.in.</text>
@@ -558,10 +558,10 @@ function BoxFillDiagram({ wrong }: { wrong: boolean }) {
       ) : (
         <>
           {[35,50,65].map((y, i) => (
-            <line key={i} x1="65" y1={y} x2="135" y2={y} stroke={i % 2 === 0 ? '#ff6b00' : '#fff'} strokeWidth="2.5" />
+            <line key={i} x1="65" y1={y} x2="135" y2={y} stroke={i % 2 === 0 ? '#f97316' : '#fff'} strokeWidth="2.5" />
           ))}
-          <text x="100" y="90" textAnchor="middle" fill="#00ff88" fontSize="8" fontFamily="monospace">SPACE REMAINING ✓</text>
-          <text x="100" y="122" textAnchor="middle" fill="#00ff88" fontSize="8" fontFamily="monospace">Within 21 cu.in.</text>
+          <text x="100" y="90" textAnchor="middle" fill="#f97316" fontSize="8" fontFamily="monospace">SPACE REMAINING ✓</text>
+          <text x="100" y="122" textAnchor="middle" fill="#f97316" fontSize="8" fontFamily="monospace">Within 21 cu.in.</text>
         </>
       )}
     </svg>
@@ -570,10 +570,10 @@ function BoxFillDiagram({ wrong }: { wrong: boolean }) {
 
 function ConduitFillDiagram({ wrong }: { wrong: boolean }) {
   const wires = wrong ? 12 : 4
-  const colors = ['#ff6b00', '#ffffff', '#000000', '#ff0000', '#00ff88', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#888888', '#ff8800', '#8800ff']
+  const colors = ['#f97316', '#ffffff', '#000000', '#ff0000', '#f97316', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#888888', '#ff8800', '#8800ff']
   return (
     <svg viewBox="0 0 200 100" className="w-full" style={{ maxHeight: 100 }}>
-      <ellipse cx="100" cy="50" rx="45" ry="45" fill="none" stroke={wrong ? '#ff4444' : '#00ff88'} strokeWidth="3" />
+      <ellipse cx="100" cy="50" rx="45" ry="45" fill="none" stroke={wrong ? '#ff4444' : '#f97316'} strokeWidth="3" />
       <ellipse cx="100" cy="50" rx="42" ry="42" fill="#0a0b0e" />
       {Array.from({ length: wires }).map((_, i) => {
         const angle = (i / wires) * Math.PI * 2
@@ -582,10 +582,10 @@ function ConduitFillDiagram({ wrong }: { wrong: boolean }) {
         const y = 50 + r * Math.sin(angle)
         return <circle key={i} cx={x} cy={y} r={wrong ? 5 : 7} fill={colors[i % colors.length]} />
       })}
-      <text x="100" y="54" textAnchor="middle" fill={wrong ? '#ff4444' : '#00ff88'} fontSize="9" fontWeight="bold" fontFamily="monospace">
+      <text x="100" y="54" textAnchor="middle" fill={wrong ? '#ff4444' : '#f97316'} fontSize="9" fontWeight="bold" fontFamily="monospace">
         {wrong ? `${wires} WIRES` : `${wires} WIRES`}
       </text>
-      <text x="100" y="92" textAnchor="middle" fill={wrong ? '#ff4444' : '#00ff88'} fontSize="8" fontFamily="monospace">
+      <text x="100" y="92" textAnchor="middle" fill={wrong ? '#ff4444' : '#f97316'} fontSize="8" fontFamily="monospace">
         {wrong ? '60%+ FILL ✕' : '~30% FILL ✓'}
       </text>
     </svg>
@@ -595,19 +595,19 @@ function ConduitFillDiagram({ wrong }: { wrong: boolean }) {
 function WireBreakerDiagram({ wrong }: { wrong: boolean }) {
   return (
     <svg viewBox="0 0 200 120" className="w-full" style={{ maxHeight: 120 }}>
-      <rect x="30" y="30" width="50" height="60" fill="#1a1f2e" stroke="#555" strokeWidth="1.5" rx="3" />
-      <text x="55" y="55" textAnchor="middle" fill={wrong ? '#ff4444' : '#00ff88'} fontSize="14" fontWeight="bold" fontFamily="monospace">20A</text>
+      <rect x="30" y="30" width="50" height="60" fill="#1a1f2e" stroke="#52525b" strokeWidth="1.5" rx="3" />
+      <text x="55" y="55" textAnchor="middle" fill={wrong ? '#ff4444' : '#f97316'} fontSize="14" fontWeight="bold" fontFamily="monospace">20A</text>
       <text x="55" y="70" textAnchor="middle" fill="#888" fontSize="8" fontFamily="monospace">BREAKER</text>
-      <line x1="80" y1="60" x2="140" y2="60" stroke={wrong ? '#ff4444' : '#00ff88'} strokeWidth={wrong ? 2 : 4} />
-      <rect x="120" y="20" width="55" height="35" fill="#1a1f2e" stroke={wrong ? '#ff4444' : '#00ff88'} strokeWidth="1.5" rx="2" />
-      <text x="147" y="35" textAnchor="middle" fill={wrong ? '#ff4444' : '#00ff88'} fontSize="11" fontWeight="bold" fontFamily="monospace">
+      <line x1="80" y1="60" x2="140" y2="60" stroke={wrong ? '#ff4444' : '#f97316'} strokeWidth={wrong ? 2 : 4} />
+      <rect x="120" y="20" width="55" height="35" fill="#1a1f2e" stroke={wrong ? '#ff4444' : '#f97316'} strokeWidth="1.5" rx="2" />
+      <text x="147" y="35" textAnchor="middle" fill={wrong ? '#ff4444' : '#f97316'} fontSize="11" fontWeight="bold" fontFamily="monospace">
         {wrong ? '#14' : '#12'}
       </text>
       <text x="147" y="48" textAnchor="middle" fill="#888" fontSize="8" fontFamily="monospace">AWG</text>
-      <text x="100" y="85" textAnchor="middle" fill={wrong ? '#ff4444' : '#00ff88'} fontSize="8" fontFamily="monospace">
+      <text x="100" y="85" textAnchor="middle" fill={wrong ? '#ff4444' : '#f97316'} fontSize="8" fontFamily="monospace">
         {wrong ? '15A MAX on #14 ✕' : '#12 = 20A OK ✓'}
       </text>
-      <text x="100" y="96" textAnchor="middle" fill={wrong ? '#ff4444' : '#00ff88'} fontSize="7" fontFamily="monospace">
+      <text x="100" y="96" textAnchor="middle" fill={wrong ? '#ff4444' : '#f97316'} fontSize="7" fontFamily="monospace">
         {wrong ? 'NEC 240.4 VIOLATION' : 'NEC 240.4 COMPLIANT'}
       </text>
     </svg>
@@ -690,21 +690,21 @@ function CodeSection() {
 
   return (
     <div>
-      <div className="sticky top-0 bg-[#0f1115] field-mode:bg-black z-10 pb-3 border-b border-[#1e2028] field-mode:border-yellow-400/20 mb-4">
+      <div className="sticky top-0 bg-[#09090b] field-mode:bg-black z-10 pb-3 border-b border-[#1e2028] field-mode:border-yellow-400/20 mb-4">
         <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555] field-mode:text-yellow-400/50" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b] field-mode:text-yellow-400/50" />
           <input type="text" placeholder="Search NEC articles..." value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-10 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#555] focus:border-[#00ff88] focus:outline-none" />
+            className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-10 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#52525b] focus:border-[#f97316] focus:outline-none" />
           <button onClick={startVoiceSearch}
-            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-[#00ff88]'}`}>
+            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-[#f97316]'}`}>
             <Mic className="h-4 w-4" />
           </button>
         </div>
         <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           {["GFCI","AFCI","Grounding","Wire Size","Box Fill","Clearance"].map(f => (
             <button key={f} onClick={() => setActiveFilter(activeFilter === f ? null : f)}
-              className={`px-2.5 py-1 text-xs font-medium whitespace-nowrap transition-colors border ${activeFilter === f ? 'bg-[#00ff88] text-[#0f1115] border-[#00ff88]' : 'bg-[#111] text-[#888] border-[#2a2a35]'}`}>
+              className={`px-2.5 py-1 text-xs font-medium whitespace-nowrap transition-colors border ${activeFilter === f ? 'bg-[#f97316] text-[#09090b] border-[#f97316]' : 'bg-[#111] text-[#888] border-[#2a2a35]'}`}>
               {f}
             </button>
           ))}
@@ -715,7 +715,7 @@ function CodeSection() {
       {(activeFilter === "Wire Size" || searchQuery.toLowerCase().includes("wire") || searchQuery.toLowerCase().includes("ampacity")) && (
         <div className="mb-4 bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 p-3 overflow-x-auto">
           <div className="flex items-center gap-2 mb-1">
-            <Zap className="h-4 w-4 text-[#00ff88]" />
+            <Zap className="h-4 w-4 text-[#f97316]" />
             <span className="font-bold text-white field-mode:text-yellow-100 text-sm">Ampacity (310.16) — Copper</span>
           </div>
           <div className="flex items-start gap-1.5 mb-2 bg-red-950/30 border border-red-900/40 p-2">
@@ -726,9 +726,9 @@ function CodeSection() {
           </div>
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-[#333] text-[#555]">
+              <tr className="border-b border-[#3f3f46] text-[#52525b]">
                 <th className="text-left py-1">Size</th>
-                <th className="text-center py-1 text-[#00ff88] field-mode:text-yellow-300">75°C Amp</th>
+                <th className="text-center py-1 text-[#f97316] field-mode:text-yellow-300">75°C Amp</th>
                 <th className="text-center py-1 text-red-400">Max OCPD</th>
               </tr>
             </thead>
@@ -744,7 +744,7 @@ function CodeSection() {
                         <AlertTriangle className="h-3 w-3" />
                       </span>
                     ) : (
-                      <span className="text-[#555] font-mono text-[10px]">—</span>
+                      <span className="text-[#52525b] font-mono text-[10px]">—</span>
                     )}
                   </td>
                 </tr>
@@ -761,22 +761,22 @@ function CodeSection() {
           <div key={article.article} className="bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 overflow-hidden">
             <div className="bg-[#161b24] field-mode:bg-black p-3 border-b border-[#2a2a35] field-mode:border-yellow-400/20 flex items-start justify-between">
               <div>
-                <span className="text-[#00ff88] field-mode:text-yellow-300 font-bold text-sm font-mono">{article.article}</span>
+                <span className="text-[#f97316] field-mode:text-yellow-300 font-bold text-sm font-mono">{article.article}</span>
                 <h3 className="text-white field-mode:text-yellow-100 font-semibold text-sm mt-0.5">{article.title}</h3>
                 <p className="text-[#666] field-mode:text-yellow-400/50 text-xs mt-0.5">{article.scope}</p>
               </div>
               <button onClick={() => setBookmarked(prev =>
                 prev.includes(article.article) ? prev.filter(a => a !== article.article) : [...prev, article.article])}>
-                <Bookmark className={`h-4 w-4 ${bookmarked.includes(article.article) ? 'fill-[#00ff88] text-[#00ff88]' : 'text-[#555]'}`} />
+                <Bookmark className={`h-4 w-4 ${bookmarked.includes(article.article) ? 'fill-[#f97316] text-[#f97316]' : 'text-[#52525b]'}`} />
               </button>
             </div>
             <div className="p-3 space-y-2">
               {article.keyPoints.map(kp => (
-                <div key={kp.id} className="bg-[#0a0b0e] field-mode:bg-black p-2.5 border-l-2 border-[#00ff88] field-mode:border-yellow-400">
-                  <span className="text-[#00ff88] field-mode:text-yellow-300 text-xs font-mono font-bold">{kp.id}</span>
+                <div key={kp.id} className="bg-[#0a0b0e] field-mode:bg-black p-2.5 border-l-2 border-[#f97316] field-mode:border-yellow-400">
+                  <span className="text-[#f97316] field-mode:text-yellow-300 text-xs font-mono font-bold">{kp.id}</span>
                   <p className="text-white field-mode:text-yellow-100 text-sm font-medium mt-1">{kp.plainEnglish}</p>
-                  <p className="text-[#555] field-mode:text-yellow-400/40 text-xs italic mt-0.5">"{kp.text}"</p>
-                  <p className="text-[#00d4ff] field-mode:text-yellow-300/80 text-xs mt-1">→ {kp.application}</p>
+                  <p className="text-[#52525b] field-mode:text-yellow-400/40 text-xs italic mt-0.5">"{kp.text}"</p>
+                  <p className="text-[#f97316] field-mode:text-yellow-300/80 text-xs mt-1">→ {kp.application}</p>
                 </div>
               ))}
             </div>
@@ -793,8 +793,8 @@ function CodeSection() {
                       <p className="text-red-300 text-xs">{v.scenario}</p>
                     </div>
                     <div className="flex items-start gap-1.5 mt-1 pl-5">
-                      <Check className="h-3.5 w-3.5 text-[#00ff88] mt-0.5 shrink-0" />
-                      <p className="text-[#00ff88] field-mode:text-yellow-300 text-xs">{v.fix}</p>
+                      <Check className="h-3.5 w-3.5 text-[#f97316] mt-0.5 shrink-0" />
+                      <p className="text-[#f97316] field-mode:text-yellow-300 text-xs">{v.fix}</p>
                     </div>
                   </div>
                 ))}
@@ -805,7 +805,7 @@ function CodeSection() {
                 <div className="flex flex-wrap gap-1.5">
                   {article.relatedArticles.map(art => (
                     <button key={art} onClick={() => { setSearchQuery(art); setActiveFilter(null) }}
-                      className="flex items-center gap-0.5 px-2 py-1 bg-[#0a0b0e] field-mode:bg-black text-[#00d4ff] field-mode:text-yellow-300 text-xs border border-[#2a2a35] field-mode:border-yellow-400/30 hover:border-[#00d4ff]">
+                      className="flex items-center gap-0.5 px-2 py-1 bg-[#0a0b0e] field-mode:bg-black text-[#f97316] field-mode:text-yellow-300 text-xs border border-[#2a2a35] field-mode:border-yellow-400/30 hover:border-[#f97316]">
                       {art} <ChevronRight className="h-3 w-3" />
                     </button>
                   ))}
@@ -822,7 +822,7 @@ function CodeSection() {
 // ─── INSPECT SECTION ──────────────────────────────────────────────────────────
 
 const CATEGORIES = ['All', 'Grounding', 'Panel Access', 'Panel Integrity', 'Conduit', 'Protection', 'Boxes', 'Labeling', 'Wiring', 'Wet Locations', 'Overcurrent Protection']
-const SEVERITY_COLOR = { critical: '#ff4444', major: '#ffaa00', minor: '#00d4ff' }
+const SEVERITY_COLOR = { critical: '#ff4444', major: '#f97316', minor: '#f97316' }
 const SEVERITY_LABEL = { critical: 'CRITICAL', major: 'MAJOR', minor: 'MINOR' }
 
 function InspectSection() {
@@ -852,20 +852,20 @@ function InspectSection() {
           <ShieldAlert className="h-4 w-4 text-[#ff4444]" />
           <span className="text-sm font-bold text-[#ff4444] uppercase tracking-wider">Inspection Failures</span>
         </div>
-        <p className="text-[10px] text-[#555]">Most common commercial inspection write-ups. Know before the inspector shows up.</p>
+        <p className="text-[10px] text-[#52525b]">Most common commercial inspection write-ups. Know before the inspector shows up.</p>
       </div>
 
       <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555] field-mode:text-yellow-400/50" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b] field-mode:text-yellow-400/50" />
         <input type="text" placeholder="Search violations..." value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-3 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#555] focus:border-[#ff4444] focus:outline-none" />
+          className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-3 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#52525b] focus:border-[#ff4444] focus:outline-none" />
       </div>
 
       <div className="flex gap-2 overflow-x-auto mb-4 pb-1" style={{ scrollbarWidth: 'none' }}>
         {CATEGORIES.map(cat => (
           <button key={cat} onClick={() => setActiveCategory(cat)}
-            className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap border transition-colors ${activeCategory === cat ? 'border-[#ff4444] text-[#ff4444] bg-[#ff444410]' : 'border-[#2a2a35] text-[#555]'}`}>
+            className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap border transition-colors ${activeCategory === cat ? 'border-[#ff4444] text-[#ff4444] bg-[#ff444410]' : 'border-[#2a2a35] text-[#52525b]'}`}>
             {cat}
           </button>
         ))}
@@ -875,7 +875,7 @@ function InspectSection() {
         {(['critical','major','minor'] as const).map(s => (
           <div key={s} className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: SEVERITY_COLOR[s] }} />
-            <span className="text-[9px] uppercase tracking-wider text-[#555]">{SEVERITY_LABEL[s]}</span>
+            <span className="text-[9px] uppercase tracking-wider text-[#52525b]">{SEVERITY_LABEL[s]}</span>
           </div>
         ))}
       </div>
@@ -897,12 +897,12 @@ function InspectSection() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[10px] font-mono text-[#555] field-mode:text-yellow-400/40">{item.nec}</span>
+                    <span className="text-[10px] font-mono text-[#52525b] field-mode:text-yellow-400/40">{item.nec}</span>
                     <span className="text-[10px] text-[#444]">·</span>
-                    <span className="text-[10px] text-[#555] field-mode:text-yellow-400/40">{item.category}</span>
+                    <span className="text-[10px] text-[#52525b] field-mode:text-yellow-400/40">{item.category}</span>
                   </div>
                 </div>
-                <div className="text-[#555] field-mode:text-yellow-400/40 shrink-0">
+                <div className="text-[#52525b] field-mode:text-yellow-400/40 shrink-0">
                   {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </div>
               </button>
@@ -920,8 +920,8 @@ function InspectSection() {
                       </div>
                       <div className="p-3 bg-[#0d1310] field-mode:bg-black">
                         <div className="flex items-center gap-1.5 mb-2">
-                          <Check className="h-3 w-3 text-[#00ff88]" />
-                          <span className="text-[9px] font-bold uppercase tracking-wider text-[#00ff88]">Passes</span>
+                          <Check className="h-3 w-3 text-[#f97316]" />
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-[#f97316]">Passes</span>
                         </div>
                         {getDiagram(item.id, false)}
                       </div>
@@ -931,7 +931,7 @@ function InspectSection() {
                   {!item.has_diagram && (
                     <div className="mx-3 mt-3 border border-dashed border-[#2a2a35] field-mode:border-yellow-400/20 p-3 bg-[#0a0b0e] field-mode:bg-black">
                       <div className="text-[9px] uppercase tracking-wider text-[#444] field-mode:text-yellow-400/40 mb-1">Photo Reference</div>
-                      <div className="text-[10px] text-[#555] field-mode:text-yellow-400/40 italic leading-relaxed">{item.photo_prompt}</div>
+                      <div className="text-[10px] text-[#52525b] field-mode:text-yellow-400/40 italic leading-relaxed">{item.photo_prompt}</div>
                     </div>
                   )}
 
@@ -945,24 +945,24 @@ function InspectSection() {
 
                   <div className="p-3 border-t border-[#1e2028] bg-[#111] field-mode:bg-black">
                     <div className="flex items-center gap-1.5 mb-1.5">
-                      <AlertTriangle className="h-3.5 w-3.5 text-[#ffaa00] shrink-0" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#ffaa00]">Why It Fails</span>
+                      <AlertTriangle className="h-3.5 w-3.5 text-[#f97316] shrink-0" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#f97316]">Why It Fails</span>
                     </div>
                     <p className="text-xs text-[#aaa] field-mode:text-yellow-100/70 leading-relaxed">{item.why_it_fails}</p>
                   </div>
 
                   <div className="p-3 border-t border-[#1e2028] bg-[#0d1310] field-mode:bg-black">
                     <div className="flex items-center gap-1.5 mb-1.5">
-                      <Check className="h-3.5 w-3.5 text-[#00ff88] shrink-0" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#00ff88]">What Passes</span>
+                      <Check className="h-3.5 w-3.5 text-[#f97316] shrink-0" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#f97316]">What Passes</span>
                     </div>
                     <p className="text-xs text-[#88cc99] leading-relaxed">{item.what_passes}</p>
                   </div>
 
-                  <div className="p-3 border-t border-[#1e2028] bg-[#0f1115] field-mode:bg-black">
+                  <div className="p-3 border-t border-[#1e2028] bg-[#09090b] field-mode:bg-black">
                     <div className="flex items-center gap-1.5 mb-1.5">
-                      <Star className="h-3.5 w-3.5 text-[#00d4ff] shrink-0" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#00d4ff]">Inspector's Note</span>
+                      <Star className="h-3.5 w-3.5 text-[#f97316] shrink-0" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#f97316]">Inspector's Note</span>
                     </div>
                     <p className="text-xs text-[#8899aa] field-mode:text-yellow-100/60 leading-relaxed italic">"{item.inspector_note}"</p>
                   </div>
@@ -994,12 +994,12 @@ function SymbolsSection() {
 
   return (
     <div>
-      <div className="sticky top-0 bg-[#0f1115] field-mode:bg-black z-10 pb-3 border-b border-[#1e2028] field-mode:border-yellow-400/20 mb-4">
+      <div className="sticky top-0 bg-[#09090b] field-mode:bg-black z-10 pb-3 border-b border-[#1e2028] field-mode:border-yellow-400/20 mb-4">
         <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555] field-mode:text-yellow-400/50" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b] field-mode:text-yellow-400/50" />
           <input type="text" placeholder="Search symbols..." value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-3 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#555] focus:border-[#ff6b00] focus:outline-none" />
+            className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-3 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#52525b] focus:border-[#f97316] focus:outline-none" />
         </div>
         {!searchQuery && (
           <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
@@ -1008,7 +1008,7 @@ function SymbolsSection() {
               const isActive = activeCategory === cat.id
               return (
                 <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap border transition-colors ${isActive ? 'text-[#0f1115] border-transparent' : 'text-[#888] border-[#2a2a35]'}`}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap border transition-colors ${isActive ? 'text-[#09090b] border-transparent' : 'text-[#888] border-[#2a2a35]'}`}
                   style={{ backgroundColor: isActive ? cat.color : 'transparent' }}>
                   <Icon className="h-3 w-3" />
                   {cat.name}
@@ -1023,16 +1023,16 @@ function SymbolsSection() {
         <div className="space-y-4">
           {filteredCategories.map(cat => (
             <div key={cat.id}>
-              <h3 className="text-[10px] font-bold text-[#555] field-mode:text-yellow-400/50 uppercase mb-2">{cat.name}</h3>
+              <h3 className="text-[10px] font-bold text-[#52525b] field-mode:text-yellow-400/50 uppercase mb-2">{cat.name}</h3>
               <div className="space-y-1">
                 {cat.symbols.map((sym, idx) => (
                   <div key={idx} className="bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 p-3 flex items-center gap-3">
                     <div className="w-14 h-14 bg-[#0a0b0e] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/20 flex items-center justify-center shrink-0">
-                      <span className="text-sm font-mono text-[#ff6b00] field-mode:text-yellow-300 font-bold">{sym.symbol}</span>
+                      <span className="text-sm font-mono text-[#f97316] field-mode:text-yellow-300 font-bold">{sym.symbol}</span>
                     </div>
                     <div>
                       <p className="text-white field-mode:text-yellow-100 font-medium text-sm">{sym.name}</p>
-                      {sym.description && <p className="text-[#555] field-mode:text-yellow-400/50 text-xs mt-0.5">{sym.description}</p>}
+                      {sym.description && <p className="text-[#52525b] field-mode:text-yellow-400/50 text-xs mt-0.5">{sym.description}</p>}
                     </div>
                   </div>
                 ))}
@@ -1045,16 +1045,16 @@ function SymbolsSection() {
           {activeCatData && (
             <div>
               <h2 className="text-sm font-bold text-white field-mode:text-yellow-100 mb-0.5">{activeCatData.name}</h2>
-              <p className="text-[10px] text-[#555] field-mode:text-yellow-400/50 mb-3">NECA 100 Standard Symbols</p>
+              <p className="text-[10px] text-[#52525b] field-mode:text-yellow-400/50 mb-3">NECA 100 Standard Symbols</p>
               <div className="space-y-1">
                 {activeCatData.symbols.map((sym, idx) => (
-                  <div key={idx} className="bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 p-3 flex items-center gap-3 hover:border-[#333] transition-colors">
+                  <div key={idx} className="bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 p-3 flex items-center gap-3 hover:border-[#3f3f46] transition-colors">
                     <div className="w-14 h-14 bg-[#0a0b0e] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/20 flex items-center justify-center shrink-0">
                       <span className="text-sm font-mono font-bold field-mode:text-yellow-300" style={{ color: activeCatData.color }}>{sym.symbol}</span>
                     </div>
                     <div className="flex-1">
                       <p className="text-white field-mode:text-yellow-100 font-medium text-sm">{sym.name}</p>
-                      {sym.description && <p className="text-[#555] field-mode:text-yellow-400/50 text-xs mt-0.5">{sym.description}</p>}
+                      {sym.description && <p className="text-[#52525b] field-mode:text-yellow-400/50 text-xs mt-0.5">{sym.description}</p>}
                     </div>
                   </div>
                 ))}
@@ -1062,11 +1062,11 @@ function SymbolsSection() {
             </div>
           )}
           <div className="mt-8 pt-6 border-t border-[#1e2028] field-mode:border-yellow-400/20">
-            <h3 className="text-[10px] font-bold text-[#555] field-mode:text-yellow-400/50 uppercase mb-3">Common Abbreviations</h3>
+            <h3 className="text-[10px] font-bold text-[#52525b] field-mode:text-yellow-400/50 uppercase mb-3">Common Abbreviations</h3>
             <div className="grid grid-cols-2 gap-1">
               {abbreviations.map((item, idx) => (
                 <div key={idx} className="bg-[#111] field-mode:bg-black border border-[#1e2028] field-mode:border-yellow-400/20 p-2">
-                  <span className="text-[#ff6b00] field-mode:text-yellow-300 font-bold text-xs">{item.abbr}</span>
+                  <span className="text-[#f97316] field-mode:text-yellow-300 font-bold text-xs">{item.abbr}</span>
                   <p className="text-[#666] field-mode:text-yellow-400/50 text-[10px] mt-0.5">{item.meaning}</p>
                 </div>
               ))}
@@ -1084,9 +1084,9 @@ export function ReferenceTab() {
   const [section, setSection] = useState<Section>('code')
 
   const sections: { id: Section; label: string; color: string }[] = [
-    { id: 'code',    label: 'NEC Code',  color: '#00ff88' },
+    { id: 'code',    label: 'NEC Code',  color: '#f97316' },
     { id: 'inspect', label: 'Inspect',   color: '#ff4444' },
-    { id: 'symbols', label: 'Symbols',   color: '#ff6b00' },
+    { id: 'symbols', label: 'Symbols',   color: '#f97316' },
   ]
 
   return (
@@ -1096,7 +1096,7 @@ export function ReferenceTab() {
           <button key={s.id} onClick={() => setSection(s.id)}
             className="flex-1 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-all"
             style={{
-              color: section === s.id ? '#0f1115' : s.color,
+              color: section === s.id ? '#09090b' : s.color,
               backgroundColor: section === s.id ? s.color : 'transparent',
               borderRight: s.id !== 'symbols' ? '1px solid #2a2a35' : 'none'
             }}>

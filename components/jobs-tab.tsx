@@ -7,7 +7,7 @@
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="bg-[#1a1c22] p-4 rounded border border-[#2a2a35]">
               <div className="flex items-center gap-2 mb-2">
-                <Calendar className="h-4 w-4 text-[#00d4ff]" />
+                <Calendar className="h-4 w-4 text-[#f97316]" />
                 <span className="text-sm text-[#aaa]">Start Date</span>
               </div>
               <span className="font-medium">
@@ -17,7 +17,7 @@
             
             <div className="bg-[#1a1c22] p-4 rounded border border-[#2a2a35]">
               <div className="flex items-center gap-2 mb-2">
-                <HardHat className="h-4 w-4 text-[#ff6b00]" />
+                <HardHat className="h-4 w-4 text-[#f97316]" />
                 <span className="text-sm text-[#aaa]">Job Type</span>
               </div>
               <span 
@@ -30,7 +30,7 @@
             
             <div className="bg-[#1a1c22] p-4 rounded border border-[#2a2a35]">
               <div className="flex items-center gap-2 mb-2">
-                <DollarSign className="h-4 w-4 text-[#00ff88]" />
+                <DollarSign className="h-4 w-4 text-[#f97316]" />
                 <span className="text-sm text-[#aaa]">Quote Amount</span>
               </div>
               <span className="font-medium">${selectedJob.quoteAmount.toLocaleString()}</span>
@@ -38,7 +38,7 @@
             
             <div className="bg-[#1a1c22] p-4 rounded border border-[#2a2a35]">
               <div className="flex items-center gap-2 mb-2">
-                <FileText className="h-4 w-4 text-[#ffaa00]" />
+                <FileText className="h-4 w-4 text-[#f97316]" />
                 <span className="text-sm text-[#aaa]">Estimated Hours</span>
               </div>
               <span className="font-medium">{selectedJob.estimatedHours} hours</span>
@@ -107,13 +107,13 @@
   // ─── JOBS LIST VIEW ────────────────────────────────────────────────────────
 
   return (
-    <div className="flex flex-col h-full bg-[#0f1115] text-[#f0f0f0]">
+    <div className="flex flex-col h-full bg-[#09090b] text-[#f0f0f0]">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-[#2a2a35]">
         <h1 className="text-lg font-bold">Jobs</h1>
         <button
           onClick={() => setShowNewJobForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#ff6b00] text-white text-sm font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20]"
+          className="flex items-center gap-2 px-4 py-2 bg-[#f97316] text-white text-sm font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20]"
         >
           <Plus className="h-4 w-4" />
           New Job
@@ -129,7 +129,7 @@
             <p className="text-sm text-[#aaa] mb-6">Create your first job to get started</p>
             <button
               onClick={() => setShowNewJobForm(true)}
-              className="px-6 py-3 bg-[#ff6b00] text-white font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20]"
+              className="px-6 py-3 bg-[#f97316] text-white font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20]"
             >
               Create First Job
             </button>
@@ -140,7 +140,7 @@
               <div
                 key={job.id}
                 onClick={() => setSelectedJob(job)}
-                className="bg-[#1a1c22] p-4 rounded border border-[#2a2a35] hover:border-[#ff6b00] cursor-pointer transition-colors"
+                className="bg-[#1a1c22] p-4 rounded border border-[#2a2a35] hover:border-[#f97316] cursor-pointer transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
                   <h3 className="font-bold text-lg">{job.title}</h3>
@@ -184,13 +184,13 @@
       {showNewJobForm && (
         <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={() => setShowNewJobForm(false)}>
           <div 
-            className="w-full bg-[#0f1115] border-t border-[#2a2a35] p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto"
+            className="w-full bg-[#09090b] border-t border-[#2a2a35] p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">New Job</span>
               <button onClick={() => setShowNewJobForm(false)}>
-                <X className="h-5 w-5 text-[#555]" />
+                <X className="h-5 w-5 text-[#52525b]" />
               </button>
             </div>
             
@@ -336,14 +336,14 @@
             <div className="flex gap-3 pt-4 border-t border-[#2a2a35]">
               <button
                 onClick={() => setShowNewJobForm(false)}
-                className="flex-1 px-4 py-3 border border-[#2a2a35] text-white text-sm font-bold uppercase tracking-wider rounded hover:border-[#555]"
+                className="flex-1 px-4 py-3 border border-[#2a2a35] text-white text-sm font-bold uppercase tracking-wider rounded hover:border-[#52525b]"
               >
                 Cancel
               </button>
               <button
                 onClick={() => saveJob(newJob)}
                 disabled={!newJob.title || !newJob.address || !newJob.customerName}
-                className="flex-1 px-4 py-3 bg-[#ff6b00] text-white text-sm font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-3 bg-[#f97316] text-white text-sm font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Create Job
               </button>

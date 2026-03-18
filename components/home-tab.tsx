@@ -89,22 +89,22 @@ const DEFAULT_CREDENTIALS: Credential[] = []
 // ─── TOOL DEFINITIONS ────────────────────────────────────────────────────────
 
 const ALL_TOOLS = [
-  { id: 'voltage-drop',  label: 'Voltage Drop',  desc: 'V, A, length, wire',      icon: Zap,       color: '#ff6b00', tab: 'calculators' as TabId },
-  { id: 'conduit-fill',  label: 'Conduit Fill',  desc: 'Type, size, wire count',   icon: Cylinder,  color: '#00d4ff', tab: 'calculators' as TabId },
-  { id: 'ohms-law',      label: "Ohm's Law",     desc: 'V, I, R triangle',         icon: Triangle,  color: '#ffaa00', tab: 'calculators' as TabId },
-  { id: 'pipe-bending',  label: 'Pipe Bending',  desc: 'Offsets, 90s, saddles',    icon: Ruler,     color: '#ff6b00', tab: 'calculators' as TabId },
-  { id: 'wire-sizing',   label: 'Wire Sizing',   desc: 'Load, distance, NEC',      icon: Cable,     color: '#00ff88', tab: 'calculators' as TabId },
-  { id: 'ampacity',      label: 'Ampacity',      desc: 'Derating & correction',    icon: Gauge,     color: '#00d4ff', tab: 'calculators' as TabId },
-  { id: 'box-fill',      label: 'Box Fill',      desc: 'NEC 314.16 volumes',       icon: Box,       color: '#ffaa00', tab: 'calculators' as TabId },
-  { id: 'motor-fla',     label: 'Motor FLA',     desc: '430.248/250 tables',       icon: Settings,  color: '#00d4ff', tab: 'calculators' as TabId },
-  { id: 'construction',  label: 'Construction',  desc: 'Fractions, feet & inches', icon: HardHat,   color: '#ffaa00', tab: 'calculators' as TabId },
+  { id: 'voltage-drop',  label: 'Voltage Drop',  desc: 'V, A, length, wire',      icon: Zap,       color: '#f97216', tab: 'calculators' as TabId },
+  { id: 'conduit-fill',  label: 'Conduit Fill',  desc: 'Type, size, wire count',   icon: Cylinder,  color: '#f97216', tab: 'calculators' as TabId },
+  { id: 'ohms-law',      label: "Ohm's Law",     desc: 'V, I, R triangle',         icon: Triangle,  color: '#f97216', tab: 'calculators' as TabId },
+  { id: 'pipe-bending',  label: 'Pipe Bending',  desc: 'Offsets, 90s, saddles',    icon: Ruler,     color: '#f97216', tab: 'calculators' as TabId },
+  { id: 'wire-sizing',   label: 'Wire Sizing',   desc: 'Load, distance, NEC',      icon: Cable,     color: '#f97216', tab: 'calculators' as TabId },
+  { id: 'ampacity',      label: 'Ampacity',      desc: 'Derating & correction',    icon: Gauge,     color: '#f97216', tab: 'calculators' as TabId },
+  { id: 'box-fill',      label: 'Box Fill',      desc: 'NEC 314.16 volumes',       icon: Box,       color: '#f97216', tab: 'calculators' as TabId },
+  { id: 'motor-fla',     label: 'Motor FLA',     desc: '430.248/250 tables',       icon: Settings,  color: '#f97216', tab: 'calculators' as TabId },
+  { id: 'construction',  label: 'Construction',  desc: 'Fractions, feet & inches', icon: HardHat,   color: '#f97216', tab: 'calculators' as TabId },
 ]
 
 const DEFAULT_QUICK_ACTIONS = [
-  { id: 'voltage-drop',  label: 'Voltage Drop',     desc: 'Most-used calculator',    icon: Zap,           color: '#00d4ff', tab: 'calculators' as TabId },
-  { id: 'pipe-bending',  label: 'Conduit Bending',  desc: 'Chart, brands, calc',     icon: Ruler,         color: '#ff6b00', tab: 'calculators' as TabId },
-  { id: 'nec-ref',       label: 'NEC Reference',    desc: 'Look up an article',      icon: BookOpen,      color: '#00ff88', tab: 'nec'         as TabId },
-  { id: 'box-fill',      label: 'Box Fill',          desc: 'NEC 314.16 volumes',      icon: Box,           color: '#ffaa00', tab: 'calculators' as TabId },
+  { id: 'voltage-drop',  label: 'Voltage Drop',     desc: 'Most-used calculator',    icon: Zap,           color: 'f97216', tab: 'calculators' as TabId },
+  { id: 'pipe-bending',  label: 'Conduit Bending',  desc: 'Chart, brands, calc',     icon: Ruler,         color: 'f97216', tab: 'calculators' as TabId },
+  { id: 'nec-ref',       label: 'NEC Reference',    desc: 'Look up an article',      icon: BookOpen,      color: 'f97216', tab: 'nec'         as TabId },
+  { id: 'box-fill',      label: 'Box Fill',          desc: 'NEC 314.16 volumes',      icon: Box,           color: 'f97216', tab: 'calculators' as TabId },
 ]
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -117,11 +117,11 @@ function daysUntilExpiry(dateStr: string): number | null {
 }
 
 function expiryColor(days: number | null): string {
-  if (days === null) return '#555'
+  if (days === null) return '#52525b'
   if (days < 0) return '#ff4444'
   if (days < 30) return '#ff4444'
-  if (days < 90) return '#ffaa00'
-  return '#00ff88'
+  if (days < 90) return 'f97216'
+  return 'f97216'
 }
 
 function expiryLabel(days: number | null, dateStr: string): string {
@@ -163,8 +163,8 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#555] mb-1.5'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[f97216] focus:outline-none'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5'
 
   async function handleSubmit() {
     setError('')
@@ -187,11 +187,11 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
   return (
     <div className="flex flex-col h-full justify-center px-2 py-6">
       <div className="flex flex-col items-center mb-8">
-        <div className="flex items-center justify-center w-14 h-14 bg-[#ff6b00] mb-3">
-          <Zap className="h-7 w-7 text-[#0f1115]" />
+        <div className="flex items-center justify-center w-14 h-14 bg-[f97216] mb-3">
+          <Zap className="h-7 w-7 text-[#09090b]" />
         </div>
-        <h1 className="text-2xl font-bold text-[#ff6b00] uppercase tracking-wider">Sparky</h1>
-        <p className="text-[11px] text-[#555] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
+        <h1 className="text-2xl font-bold text-[f97216] uppercase tracking-wider">Sparky</h1>
+        <p className="text-[11px] text-[#52525b] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
       </div>
       <div className="flex flex-col gap-4">
         <div>
@@ -206,11 +206,11 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
         </div>
         {error && <p className="text-xs text-[#ff4444]">{error}</p>}
         <button onClick={handleSubmit} disabled={loading || !email || !password}
-          className="w-full py-3.5 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider disabled:opacity-40 mt-2">
+          className="w-full py-3.5 bg-[f97216] text-[#09090b] text-sm font-bold uppercase tracking-wider disabled:opacity-40 mt-2">
           {loading ? 'Please wait...' : isLogin ? 'Sign In →' : 'Create Account →'}
         </button>
         <button onClick={() => setIsLogin(!isLogin)}
-          className="text-xs text-[#555] underline text-center">
+          className="text-xs text-[#52525b] underline text-center">
           {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
         </button>
       </div>
@@ -229,18 +229,18 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
   const [licenseState, setLicenseState] = useState('CA')
   const [step, setStep] = useState(1)
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none'
-  const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none appearance-none'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#555] mb-1.5'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[f97216] focus:outline-none'
+  const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[f97216] focus:outline-none appearance-none'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5'
 
   return (
     <div className="flex flex-col h-full justify-center px-2 py-6">
       <div className="flex flex-col items-center mb-8">
-        <div className="flex items-center justify-center w-14 h-14 bg-[#ff6b00] mb-3">
-          <Zap className="h-7 w-7 text-[#0f1115]" />
+        <div className="flex items-center justify-center w-14 h-14 bg-[f97216] mb-3">
+          <Zap className="h-7 w-7 text-[#09090b]" />
         </div>
-        <h1 className="text-2xl font-bold text-[#ff6b00] uppercase tracking-wider">Sparky</h1>
-        <p className="text-[11px] text-[#555] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
+        <h1 className="text-2xl font-bold text-[f97216] uppercase tracking-wider">Sparky</h1>
+        <p className="text-[11px] text-[#52525b] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
       </div>
 
       {step === 1 && (
@@ -268,14 +268,14 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
             <div className="grid grid-cols-2 gap-2">
               {WORK_TYPES.map(w => (
                 <button key={w} onClick={() => setWorkType(w)}
-                  className={`py-2.5 text-xs font-bold uppercase tracking-wider border transition-all ${workType === w ? 'border-[#ff6b00] text-[#ff6b00] bg-[#ff6b0012]' : 'border-[#2a2a35] text-[#555]'}`}>
+                  className={`py-2.5 text-xs font-bold uppercase tracking-wider border transition-all ${workType === w ? 'border-[f97216] text-[f97216] bg-[f9721612]' : 'border-[#2a2a35] text-[#52525b]'}`}>
                   {w}
                 </button>
               ))}
             </div>
           </div>
           <button onClick={() => name.trim() ? setStep(2) : null} disabled={!name.trim()}
-            className="w-full py-3.5 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider disabled:opacity-40 mt-2">
+            className="w-full py-3.5 bg-[f97216] text-[#09090b] text-sm font-bold uppercase tracking-wider disabled:opacity-40 mt-2">
             Continue →
           </button>
         </div>
@@ -300,18 +300,18 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
             </div>
           </div>
           <div className="bg-[#111] border border-[#2a2a35] p-3 mt-2">
-            <p className="text-[10px] text-[#555] leading-relaxed">
+            <p className="text-[10px] text-[#52525b] leading-relaxed">
               You can add OSHA cards, certifications, and other credentials after setup. Sparky will track expiration dates and remind you before they lapse.
             </p>
           </div>
           <div className="flex gap-2 mt-2">
             <button onClick={() => setStep(1)}
-              className="flex-1 py-3.5 border border-[#2a2a35] text-[#555] text-sm font-bold uppercase tracking-wider">
+              className="flex-1 py-3.5 border border-[#2a2a35] text-[#52525b] text-sm font-bold uppercase tracking-wider">
               ← Back
             </button>
             <button
               onClick={() => onComplete({ name: name.trim(), role, yearsExp, workType, licenseNumber, licenseState })}
-              className="flex-[2] py-3.5 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider">
+              className="flex-[2] py-3.5 bg-[f97216] text-[#09090b] text-sm font-bold uppercase tracking-wider">
               Let's Go →
             </button>
           </div>
@@ -326,14 +326,14 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
 function ImageViewerModal({ url, name, onClose }: { url: string; name: string; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black/95" onClick={onClose}>
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#222]"
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#27272a]"
         onClick={e => e.stopPropagation()}>
         <span className="text-xs font-bold uppercase tracking-wider text-[#f0f0f0]">{name}</span>
-        <button onClick={onClose}><X className="h-5 w-5 text-[#555]" /></button>
+        <button onClick={onClose}><X className="h-5 w-5 text-[#52525b]" /></button>
       </div>
       <div className="flex-1 flex items-center justify-center p-4" onClick={e => e.stopPropagation()}>
         <img src={url} alt={name}
-          className="max-w-full max-h-full object-contain rounded border border-[#222]" />
+          className="max-w-full max-h-full object-contain rounded border border-[#27272a]" />
       </div>
     </div>
   )
@@ -367,7 +367,7 @@ function CredentialCard({ cred, onEdit, onDelete, onImageClick }: {
       ) : (
         <button
           onClick={() => onEdit(cred)}
-          className="shrink-0 w-12 h-12 rounded border border-dashed border-[#2a2a35] flex items-center justify-center text-[#333] hover:border-[#ff6b00] hover:text-[#ff6b00] transition-colors"
+          className="shrink-0 w-12 h-12 rounded border border-dashed border-[#2a2a35] flex items-center justify-center text-[#3f3f46] hover:border-[f97216] hover:text-[f97216] transition-colors"
         >
           <Camera className="h-4 w-4" />
         </button>
@@ -389,10 +389,10 @@ function CredentialCard({ cred, onEdit, onDelete, onImageClick }: {
         )}
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button onClick={() => onEdit(cred)} className="text-[#555] hover:text-[#ff6b00] transition-colors p-1">
+        <button onClick={() => onEdit(cred)} className="text-[#52525b] hover:text-[f97216] transition-colors p-1">
           <Edit2 className="h-3.5 w-3.5" />
         </button>
-        <button onClick={() => onDelete(cred.id)} className="text-[#555] hover:text-[#ff4444] transition-colors p-1">
+        <button onClick={() => onDelete(cred.id)} className="text-[#52525b] hover:text-[#ff4444] transition-colors p-1">
           <Trash2 className="h-3.5 w-3.5" />
         </button>
       </div>
@@ -418,9 +418,9 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
   const [uploadError, setUploadError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none'
-  const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none appearance-none'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#555] mb-1.5'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[f97216] focus:outline-none'
+  const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[f97216] focus:outline-none appearance-none'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5'
 
   async function handleImageUpload(file: File) {
     if (!file) return
@@ -444,12 +444,12 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
   }
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-[#0f1115]">
+    <div className="fixed inset-0 z-[60] flex flex-col bg-[#09090b]">
       <div className="flex items-center justify-between px-4 py-4 border-b border-[#2a2a35]">
         <span className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">
           {isNew ? 'Add Credential' : 'Edit Credential'}
         </span>
-        <button onClick={onClose}><X className="h-5 w-5 text-[#555]" /></button>
+        <button onClick={onClose}><X className="h-5 w-5 text-[#52525b]" /></button>
       </div>
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
         <div>
@@ -483,7 +483,7 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
                 className="w-20 h-20 object-cover rounded border border-[#2a2a35]" />
               <div className="flex flex-col gap-2">
                 <button onClick={() => fileInputRef.current?.click()}
-                  className="text-xs text-[#ff6b00] uppercase tracking-wider font-bold border border-[#ff6b0033] px-3 py-1.5 hover:border-[#ff6b00] transition-colors">
+                  className="text-xs text-[f97216] uppercase tracking-wider font-bold border border-[f9721633] px-3 py-1.5 hover:border-[f97216] transition-colors">
                   Replace
                 </button>
                 <button onClick={() => setImageUrl('')}
@@ -494,7 +494,7 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
             </div>
           ) : (
             <button onClick={() => fileInputRef.current?.click()} disabled={uploading}
-              className="w-full flex items-center justify-center gap-2 border border-dashed border-[#2a2a35] py-6 text-xs text-[#555] uppercase tracking-wider hover:border-[#ff6b00] hover:text-[#ff6b00] transition-colors disabled:opacity-50">
+              className="w-full flex items-center justify-center gap-2 border border-dashed border-[#2a2a35] py-6 text-xs text-[#52525b] uppercase tracking-wider hover:border-[f97216] hover:text-[f97216] transition-colors disabled:opacity-50">
               {uploading
                 ? <span className="flex items-center gap-2"><Upload className="h-4 w-4 animate-pulse" /> Uploading...</span>
                 : <span className="flex items-center gap-2"><Camera className="h-4 w-4" /> Tap to add photo or take a picture</span>
@@ -504,7 +504,7 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
           {uploadError && <p className="text-xs text-[#ff4444] mt-2">{uploadError}</p>}
         </div>
       </div>
-      <div className="px-4 py-4 border-t border-[#1a1d22] bg-[#0f1115]">
+      <div className="px-4 py-4 border-t border-[#1a1d22] bg-[#09090b]">
         <button
           onClick={() => {
             if (!name.trim()) return
@@ -514,7 +514,7 @@ function EditCredentialModal({ cred, userId, onSave, onClose }: {
             })
           }}
           disabled={!name.trim() || uploading}
-          className="w-full py-4 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider disabled:opacity-40">
+          className="w-full py-4 bg-[f97216] text-[#09090b] text-sm font-bold uppercase tracking-wider disabled:opacity-40">
           Save Credential
         </button>
       </div>
@@ -652,21 +652,21 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
   const border = fieldMode ? 'border-yellow-400/30 bg-black' : 'border-[#2a2a35] bg-[#111]'
   const inputCls = fieldMode
     ? 'flex-1 h-11 px-3 text-sm bg-black border border-yellow-400/30 text-yellow-100 placeholder-yellow-400/30 focus:outline-none focus:border-yellow-400'
-    : 'flex-1 h-11 px-3 text-sm bg-[#0a0b0e] border border-[#333] text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#ff6b00]'
+    : 'flex-1 h-11 px-3 text-sm bg-[#0a0b0e] border border-[#3f3f46] text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[f97216]'
 
   return (
     <div className={`border p-4 flex flex-col gap-3 ${border}`}>
       <div className="flex items-center gap-2">
-        <Zap className="h-4 w-4 text-[#ff6b00]" />
-        <span className={`text-[11px] font-bold uppercase tracking-widest ${fieldMode ? 'text-yellow-300' : 'text-[#ff6b00]'}`}>
+        <Zap className="h-4 w-4 text-[f97216]" />
+        <span className={`text-[11px] font-bold uppercase tracking-widest ${fieldMode ? 'text-yellow-300' : 'text-[f97216]'}`}>
           Ask Sparky
         </span>
         <span className={`ml-auto text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border ${
           modelUsed === 'ollama'
             ? 'border-green-500/60 text-green-400'
             : modelUsed === 'cloud'
-              ? fieldMode ? 'border-yellow-400/20 text-yellow-400/40' : 'border-[#333] text-[#444]'
-              : fieldMode ? 'border-yellow-400/10 text-yellow-400/30' : 'border-[#222] text-[#333]'
+              ? fieldMode ? 'border-yellow-400/20 text-yellow-400/40' : 'border-[#3f3f46] text-[#444]'
+              : fieldMode ? 'border-yellow-400/10 text-yellow-400/30' : 'border-[#27272a] text-[#3f3f46]'
         }`}>
           {modelUsed === 'ollama' ? 'Local' : modelUsed === 'cloud' ? 'Cloud' : 'Local→Cloud'}
         </span>
@@ -684,10 +684,10 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
             disabled={loading}
             className={`h-11 w-11 shrink-0 flex items-center justify-center border transition-all ${
               isListening
-                ? 'border-[#ff6b00] bg-[#ff6b0020] text-[#ff6b00] animate-pulse'
+                ? 'border-[f97216] bg-[f9721620] text-[f97216] animate-pulse'
                 : fieldMode
                   ? 'border-yellow-400/30 text-yellow-400/50'
-                  : 'border-[#333] text-[#555] hover:border-[#ff6b00] hover:text-[#ff6b00]'
+                  : 'border-[#3f3f46] text-[#52525b] hover:border-[f97216] hover:text-[f97216]'
             }`}
           >
             {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
@@ -704,14 +704,14 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
         <button
           onClick={ask}
           disabled={loading || !input.trim()}
-          className="h-11 w-11 shrink-0 flex items-center justify-center bg-[#ff6b00] text-[#0f1115] disabled:opacity-40"
+          className="h-11 w-11 shrink-0 flex items-center justify-center bg-[f97216] text-[#09090b] disabled:opacity-40"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
         </button>
       </div>
 
       {response && (
-        <div className={`text-sm leading-relaxed p-3 border-l-2 border-[#ff6b00] ${
+        <div className={`text-sm leading-relaxed p-3 border-l-2 border-[f97216] ${
           fieldMode ? 'text-yellow-100 bg-black' : 'text-[#ddd] bg-[#0a0b0e]'
         }`}>
           {response}
@@ -720,9 +720,9 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
 
       {loading && (
         <div className="flex gap-1 items-center px-1">
-          <span className="w-1.5 h-1.5 bg-[#ff6b00] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-          <span className="w-1.5 h-1.5 bg-[#ff6b00] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-          <span className="w-1.5 h-1.5 bg-[#ff6b00] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          <span className="w-1.5 h-1.5 bg-[f97216] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+          <span className="w-1.5 h-1.5 bg-[f97216] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+          <span className="w-1.5 h-1.5 bg-[f97216] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
       )}
     </div>
@@ -751,15 +751,15 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
     heading:    fieldMode ? 'text-yellow-300'                       : 'text-[#888]',
     body:       fieldMode ? 'text-yellow-100'                       : 'text-[#f0f0f0]',
     muted:      fieldMode ? 'text-yellow-400/70'                    : 'text-[#888]',
-    dim:        fieldMode ? 'text-yellow-400/40'                    : 'text-[#555]',
+    dim:        fieldMode ? 'text-yellow-400/40'                    : 'text-[#52525b]',
     tipCard:    fieldMode ? 'bg-black border border-yellow-400/30'  : 'relative overflow-hidden border border-[#2a2a35] bg-[#111]',
     tipText:    fieldMode ? 'text-yellow-100 text-sm font-bold'     : 'text-xs font-medium leading-relaxed text-[#ccc]',
     tipBody:    fieldMode ? 'text-yellow-300/80 text-sm'            : 'mt-1 text-[11px] leading-relaxed text-[#777]',
     actionBtn:  fieldMode
       ? 'border border-yellow-400/40 bg-black p-4 flex flex-col gap-2 text-left active:scale-[0.98] min-h-[80px]'
-      : 'border border-[#2a2a35] bg-[#111] p-3 flex flex-col gap-1.5 text-left transition-colors hover:border-[#333] active:scale-[0.98]',
+      : 'border border-[#2a2a35] bg-[#111] p-3 flex flex-col gap-1.5 text-left transition-colors hover:border-[#3f3f46] active:scale-[0.98]',
     actionLabel: fieldMode ? 'text-sm font-bold text-yellow-100'   : 'text-xs font-bold text-[#f0f0f0]',
-    actionDesc:  fieldMode ? 'text-xs text-yellow-400/60'          : 'text-[10px] text-[#555]',
+    actionDesc:  fieldMode ? 'text-xs text-yellow-400/60'          : 'text-[10px] text-[#52525b]',
     alertBg:    fieldMode ? 'bg-black border border-red-400/50'     : 'bg-[#1a0a0a] border border-[#ff444433]',
   }
 
@@ -865,7 +865,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   })
 
   const categoryColors: Record<string, string> = {
-    safety: '#ff3333', code: '#00d4ff', technique: '#00ff88', tool: '#ffaa00',
+    safety: '#ff3333', code: 'f97216', technique: 'f97216', tool: 'f97216',
   }
 
   return (
@@ -883,26 +883,26 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
 
       {/* Profile header */}
       <div className={`border p-4 flex items-center gap-3 ${fm.card}`}>
-        <div className="flex items-center justify-center w-12 h-12 bg-[#ff6b00] shrink-0">
-          <User className="h-6 w-6 text-[#0f1115]" />
+        <div className="flex items-center justify-center w-12 h-12 bg-[f97216] shrink-0">
+          <User className="h-6 w-6 text-[#09090b]" />
         </div>
         <div className="flex-1 min-w-0">
           <div className={`text-lg font-bold ${fm.body}`}>{profile.name}</div>
           <div className={`text-xs ${fm.muted}`}>{profile.role}</div>
           <div className="flex items-center gap-2 mt-0.5">
             <span className={`text-[10px] ${fm.dim}`}>{profile.yearsExp} yr{profile.yearsExp !== 1 ? 's' : ''} experience</span>
-            <span className="text-[#333]">·</span>
+            <span className="text-[#3f3f46]">·</span>
             <span className={`text-[10px] ${fm.dim}`}>{profile.workType}</span>
             {profile.licenseNumber && (
               <>
-                <span className="text-[#333]">·</span>
+                <span className="text-[#3f3f46]">·</span>
                 <span className={`text-[10px] ${fm.dim}`}>{profile.licenseState} #{profile.licenseNumber}</span>
               </>
             )}
           </div>
         </div>
         <button onClick={() => setShowEditProfile(true)}
-          className={`transition-colors p-1 shrink-0 ${fieldMode ? 'text-yellow-400/60 hover:text-yellow-300' : 'text-[#555] hover:text-[#ff6b00]'}`}>
+          className={`transition-colors p-1 shrink-0 ${fieldMode ? 'text-yellow-400/60 hover:text-yellow-300' : 'text-[#52525b] hover:text-[f97216]'}`}>
           <Edit2 className="h-4 w-4" />
         </button>
       </div>
@@ -933,12 +933,12 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
         <div className={fm.tipCard}>
           {!fieldMode && (
             <div className="absolute left-0 top-0 h-full w-1"
-              style={{ backgroundColor: categoryColors[tip.category] || '#ff6b00' }} />
+              style={{ backgroundColor: categoryColors[tip.category] || 'f97216' }} />
           )}
           <div className={`p-3 ${!fieldMode ? 'pl-4' : ''}`}>
             <div className="flex items-center gap-2 mb-1.5">
-              <Lightbulb className={`h-3.5 w-3.5 ${fieldMode ? 'text-yellow-400' : 'text-[#ffaa00]'}`} />
-              <span className={`text-[10px] font-bold uppercase tracking-wider ${fieldMode ? 'text-yellow-400' : 'text-[#ffaa00]'}`}>
+              <Lightbulb className={`h-3.5 w-3.5 ${fieldMode ? 'text-yellow-400' : 'text-[f97216]'}`} />
+              <span className={`text-[10px] font-bold uppercase tracking-wider ${fieldMode ? 'text-yellow-400' : 'text-[f97216]'}`}>
                 Sparky's Tip
               </span>
               <span className={`text-[10px] uppercase tracking-wider ${fm.dim}`}>{tip.category}</span>
@@ -989,7 +989,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Shield className={`h-4 w-4 ${fieldMode ? 'text-yellow-400' : 'text-[#00ff88]'}`} />
+            <Shield className={`h-4 w-4 ${fieldMode ? 'text-yellow-400' : 'text-[f97216]'}`} />
             <h2 className={`text-[11px] font-bold uppercase tracking-wider ${fm.heading}`}>Credentials</h2>
           </div>
           <button
@@ -997,7 +997,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
             className={`flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-2.5 py-1.5 transition-colors ${
               fieldMode
                 ? 'text-yellow-400 border border-yellow-400/30 hover:border-yellow-400'
-                : 'text-[#ff6b00] border border-[#ff6b0033] hover:border-[#ff6b00]'
+                : 'text-[f97216] border border-[f9721633] hover:border-[f97216]'
             }`}>
             <Plus className="h-3 w-3" /> Add
           </button>
@@ -1005,7 +1005,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
         {credentials.length === 0 ? (
           <div className={`border border-dashed p-6 text-center ${fieldMode ? 'border-yellow-400/20' : 'border-[#2a2a35]'}`}>
             <p className={`text-[11px] ${fm.dim}`}>No credentials added yet</p>
-            <p className={`text-[10px] mt-1 ${fieldMode ? 'text-yellow-400/30' : 'text-[#333]'}`}>
+            <p className={`text-[10px] mt-1 ${fieldMode ? 'text-yellow-400/30' : 'text-[#3f3f46]'}`}>
               Add any certifications here — OSHA cards, licenses, manufacturer certs, and more
             </p>
           </div>
@@ -1040,11 +1040,11 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
       )}
       {showEditProfile && (
         <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={() => setShowEditProfile(false)}>
-          <div className="w-full bg-[#0f1115] border-t border-[#2a2a35] p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto"
+          <div className="w-full bg-[#09090b] border-t border-[#2a2a35] p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <span className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">Edit Profile</span>
-              <button onClick={() => setShowEditProfile(false)}><X className="h-4 w-4 text-[#555]" /></button>
+              <button onClick={() => setShowEditProfile(false)}><X className="h-4 w-4 text-[#52525b]" /></button>
             </div>
             {[
               { label: 'Name', value: profile.name, key: 'name', type: 'text' },
@@ -1053,37 +1053,37 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
               { label: 'License State', value: profile.licenseState, key: 'licenseState', type: 'text' },
             ].map(f => (
               <div key={f.key}>
-                <label className="block text-[10px] uppercase tracking-wider text-[#555] mb-1.5">{f.label}</label>
+                <label className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5">{f.label}</label>
                 <input
-                  className="w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                  className="w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[f97216] focus:outline-none"
                   type={f.type} value={f.value}
                   onChange={e => setProfile(prev => prev ? { ...prev, [f.key]: f.type === 'number' ? parseInt(e.target.value) || 0 : e.target.value } : prev)}
                 />
               </div>
             ))}
             <div>
-              <label className="block text-[10px] uppercase tracking-wider text-[#555] mb-1.5">Role</label>
+              <label className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5">Role</label>
               <select
-                className="w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none appearance-none"
+                className="w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[f97216] focus:outline-none appearance-none"
                 value={profile.role}
                 onChange={e => setProfile(prev => prev ? { ...prev, role: e.target.value } : prev)}>
                 {ROLE_OPTIONS.map(r => <option key={r} value={r}>{r}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-[#10px] uppercase tracking-wider text-[#555] mb-2">Work Type</label>
+              <label className="block text-[#10px] uppercase tracking-wider text-[#52525b] mb-2">Work Type</label>
               <div className="grid grid-cols-2 gap-2">
                 {WORK_TYPES.map(w => (
                   <button key={w}
                     onClick={() => setProfile(prev => prev ? { ...prev, workType: w } : prev)}
-                    className={`py-2.5 text-xs font-bold uppercase tracking-wider border transition-all ${profile.workType === w ? 'border-[#ff6b00] text-[#ff6b00] bg-[#ff6b0012]' : 'border-[#2a2a35] text-[#555]'}`}>
+                    className={`py-2.5 text-xs font-bold uppercase tracking-wider border transition-all ${profile.workType === w ? 'border-[f97216] text-[f97216] bg-[f9721612]' : 'border-[#2a2a35] text-[#52525b]'}`}>
                     {w}
                   </button>
                 ))}
               </div>
             </div>
             <button onClick={() => { saveProfile(profile); setShowEditProfile(false) }}
-              className="w-full py-3 bg-[#ff6b00] text-[#0f1115] text-sm font-bold uppercase tracking-wider mt-2">
+              className="w-full py-3 bg-[f97216] text-[#09090b] text-sm font-bold uppercase tracking-wider mt-2">
               Save Profile
             </button>
           </div>

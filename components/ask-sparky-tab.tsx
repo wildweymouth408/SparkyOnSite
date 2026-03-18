@@ -280,13 +280,13 @@ export function AskSparkyTab() {
 
   // Field mode style tokens
   const fm = {
-    topBar:     fieldMode ? 'text-yellow-400/60'                              : 'text-[#555]',
-    voiceBtn:   fieldMode ? 'border-yellow-400/30 text-yellow-400/60'         : 'border-[#333] text-[#555]',
-    userBubble: fieldMode ? 'bg-black text-yellow-100 border border-yellow-400/30' : 'bg-[#1a1f2e] text-[#f0f0f0] border border-[#333]',
+    topBar:     fieldMode ? 'text-yellow-400/60'                              : 'text-[#52525b]',
+    voiceBtn:   fieldMode ? 'border-yellow-400/30 text-yellow-400/60'         : 'border-[#3f3f46] text-[#52525b]',
+    userBubble: fieldMode ? 'bg-black text-yellow-100 border border-yellow-400/30' : 'bg-[#1a1f2e] text-[#f0f0f0] border border-[#3f3f46]',
     botBubble:  fieldMode ? 'bg-black text-yellow-100 border border-yellow-400/20' : 'bg-[#111] text-[#e0e0e0] border border-[#2a2a2a]',
-    inputBar:   fieldMode ? 'border-t border-yellow-400/20'                   : 'border-t border-[#222]',
-    input:      fieldMode ? 'border border-yellow-400/30 bg-black text-yellow-100 placeholder-yellow-400/30 focus:border-yellow-400' : 'border border-[#333] bg-[#111] text-[#f0f0f0] placeholder-[#555] focus:border-[#ff6b00]',
-    micBtn:     fieldMode ? 'border-yellow-400/30 text-yellow-400/50 hover:border-yellow-300 hover:text-yellow-300' : 'border-[#333] text-[#555] hover:border-[#ff6b00] hover:text-[#ff6b00]',
+    inputBar:   fieldMode ? 'border-t border-yellow-400/20'                   : 'border-t border-[#27272a]',
+    input:      fieldMode ? 'border border-yellow-400/30 bg-black text-yellow-100 placeholder-yellow-400/30 focus:border-yellow-400' : 'border border-[#3f3f46] bg-[#111] text-[#f0f0f0] placeholder-[#52525b] focus:border-[#f97316]',
+    micBtn:     fieldMode ? 'border-yellow-400/30 text-yellow-400/50 hover:border-yellow-300 hover:text-yellow-300' : 'border-[#3f3f46] text-[#52525b] hover:border-[#f97316] hover:text-[#f97316]',
     hint:       fieldMode ? 'text-yellow-400/30'                              : 'text-[#444]',
   }
 
@@ -296,7 +296,7 @@ export function AskSparkyTab() {
       {/* Top bar */}
       <div className="flex items-center justify-between mb-3 px-1">
         <div className={`flex items-center gap-1.5 text-[10px] uppercase tracking-wider ${fm.topBar}`}>
-          <Zap className="h-3 w-3 text-[#ff6b00]" />
+          <Zap className="h-3 w-3 text-[#f97316]" />
           Ask Sparky AI
         </div>
         {speechSupported && (
@@ -304,8 +304,8 @@ export function AskSparkyTab() {
             onClick={() => { setSpeakEnabled(v => !v); if (isSpeaking) stopSpeaking() }}
             className={`flex items-center gap-1.5 px-2.5 py-1.5 border text-[10px] uppercase tracking-wider font-bold transition-all ${
               speakEnabled
-                ? 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff12]'
-                : fieldMode ? 'border-yellow-400/30 text-yellow-400/50' : 'border-[#333] text-[#555]'
+                ? 'border-[#f97316] text-[#f97316] bg-[#f9731612]'
+                : fieldMode ? 'border-yellow-400/30 text-yellow-400/50' : 'border-[#3f3f46] text-[#52525b]'
             }`}
           >
             {isSpeaking
@@ -321,7 +321,7 @@ export function AskSparkyTab() {
       {/* Loading history indicator */}
       {!historyLoaded && (
         <div className="flex items-center gap-2 px-1 mb-2">
-          <Loader2 className="h-3 w-3 animate-spin text-[#ff6b00]" />
+          <Loader2 className="h-3 w-3 animate-spin text-[#f97316]" />
           <span className={`text-[10px] uppercase tracking-wider ${fm.hint}`}>Loading your history...</span>
         </div>
       )}
@@ -331,8 +331,8 @@ export function AskSparkyTab() {
         {messages.map((msg, i) => (
           <div key={i} className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
             {msg.role === 'assistant' && (
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[#ff6b00] mt-1">
-                <Zap className="h-3.5 w-3.5 text-[#0f1115]" />
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[#f97316] mt-1">
+                <Zap className="h-3.5 w-3.5 text-[#09090b]" />
               </div>
             )}
             <div className={`max-w-[82%] px-3 py-2.5 text-sm leading-relaxed ${
@@ -343,7 +343,7 @@ export function AskSparkyTab() {
               {msg.role === 'assistant' && speechSupported && speakEnabled && (
                 <button
                   onClick={() => speak(msg.content)}
-                  className="mt-2 flex items-center gap-1.5 text-[10px] text-[#00d4ff] uppercase tracking-wider font-bold"
+                  className="mt-2 flex items-center gap-1.5 text-[10px] text-[#f97316] uppercase tracking-wider font-bold"
                 >
                   <Volume2 className="h-3 w-3" />
                   Tap to hear
@@ -365,14 +365,14 @@ export function AskSparkyTab() {
 
         {loading && (
           <div className="flex gap-2.5">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[#ff6b00] mt-1">
-              <Zap className="h-3.5 w-3.5 text-[#0f1115]" />
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[#f97316] mt-1">
+              <Zap className="h-3.5 w-3.5 text-[#09090b]" />
             </div>
             <div className={`border px-3 py-2.5 ${fieldMode ? 'bg-black border-yellow-400/20' : 'bg-[#111] border-[#2a2a2a]'}`}>
               <div className="flex gap-1 items-center h-5">
-                <span className="w-1.5 h-1.5 bg-[#ff6b00] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-1.5 h-1.5 bg-[#ff6b00] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-1.5 h-1.5 bg-[#ff6b00] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <span className="w-1.5 h-1.5 bg-[#f97316] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 bg-[#f97316] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-1.5 h-1.5 bg-[#f97316] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
             </div>
           </div>
@@ -386,11 +386,11 @@ export function AskSparkyTab() {
           <div className="flex items-center gap-2 mb-2 px-1">
             <div className="flex gap-1">
               {[0,1,2,3].map(i => (
-                <div key={i} className="w-1 bg-[#ff6b00] rounded-full animate-bounce"
+                <div key={i} className="w-1 bg-[#f97316] rounded-full animate-bounce"
                   style={{ height: `${8 + i * 4}px`, animationDelay: `${i * 100}ms` }} />
               ))}
             </div>
-            <span className="text-[10px] text-[#ff6b00] uppercase tracking-wider font-bold">Listening...</span>
+            <span className="text-[10px] text-[#f97316] uppercase tracking-wider font-bold">Listening...</span>
             <span className={`text-[10px] ${fm.hint}`}>Tap mic to stop</span>
           </div>
         )}
@@ -402,7 +402,7 @@ export function AskSparkyTab() {
               disabled={loading}
               className={`flex h-11 w-11 shrink-0 items-center justify-center border transition-all disabled:opacity-40 ${
                 isListening
-                  ? 'border-[#ff6b00] bg-[#ff6b0020] text-[#ff6b00] animate-pulse'
+                  ? 'border-[#f97316] bg-[#f9731620] text-[#f97316] animate-pulse'
                   : fm.micBtn
               }`}
             >
@@ -422,7 +422,7 @@ export function AskSparkyTab() {
           <button
             onClick={sendMessage}
             disabled={loading || !input.trim()}
-            className="flex h-11 w-11 items-center justify-center bg-[#ff6b00] text-[#0f1115] disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+            className="flex h-11 w-11 items-center justify-center bg-[#f97316] text-[#09090b] disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </button>
@@ -433,7 +433,7 @@ export function AskSparkyTab() {
             {voiceSupported ? '🎤 Tap mic to speak • Enter to send' : 'Enter to send'}
           </span>
           {isSpeaking && (
-            <button onClick={stopSpeaking} className="text-[9px] text-[#00d4ff] uppercase tracking-wider">
+            <button onClick={stopSpeaking} className="text-[9px] text-[#f97316] uppercase tracking-wider">
               Stop speaking
             </button>
           )}

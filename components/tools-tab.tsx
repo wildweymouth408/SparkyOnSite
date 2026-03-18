@@ -39,15 +39,15 @@ type CalculatorId =
   | null
 
 const CALCULATORS = [
-  { id: 'voltage-drop' as const,  label: 'Voltage Drop',  desc: 'V, A, length, wire',       icon: Zap,      color: '#ff6b00' },
-  { id: 'conduit-fill' as const,  label: 'Conduit Fill',  desc: 'Type, size, wire count',    icon: Cylinder, color: '#00d4ff' },
-  { id: 'ohms-law' as const,      label: "Ohm's Law",     desc: 'V, I, R triangle',          icon: Triangle, color: '#ffaa00' },
-  { id: 'pipe-bending' as const,  label: 'Conduit Bending', desc: 'Chart, brands, step-by-step', icon: Ruler, color: '#ff6b00' },
-  { id: 'wire-sizing' as const,   label: 'Wire Sizing',   desc: 'Load, distance, NEC',       icon: Cable,    color: '#00ff88' },
-  { id: 'ampacity' as const,      label: 'Ampacity',      desc: 'Derating & correction',     icon: Gauge,    color: '#00d4ff' },
-  { id: 'box-fill' as const,      label: 'Box Fill',      desc: 'NEC 314.16 volumes',        icon: Box,      color: '#ffaa00' },
-  { id: 'motor-fla' as const,     label: 'Motor FLA',     desc: '430.248/250 tables',        icon: Settings, color: '#00d4ff' },
-  { id: 'construction' as const,  label: 'Construction',  desc: 'Fractions, feet & inches',  icon: HardHat,  color: '#ffaa00' },
+  { id: 'voltage-drop' as const,  label: 'Voltage Drop',  desc: 'V, A, length, wire',       icon: Zap,      color: '#f97216' },
+  { id: 'conduit-fill' as const,  label: 'Conduit Fill',  desc: 'Type, size, wire count',    icon: Cylinder, color: '#f97216' },
+  { id: 'ohms-law' as const,      label: "Ohm's Law",     desc: 'V, I, R triangle',          icon: Triangle, color: '#f97216' },
+  { id: 'pipe-bending' as const,  label: 'Conduit Bending', desc: 'Chart, brands, step-by-step', icon: Ruler, color: '#f97216' },
+  { id: 'wire-sizing' as const,   label: 'Wire Sizing',   desc: 'Load, distance, NEC',       icon: Cable,    color: '#f97216' },
+  { id: 'ampacity' as const,      label: 'Ampacity',      desc: 'Derating & correction',     icon: Gauge,    color: '#f97216' },
+  { id: 'box-fill' as const,      label: 'Box Fill',      desc: 'NEC 314.16 volumes',        icon: Box,      color: '#f97216' },
+  { id: 'motor-fla' as const,     label: 'Motor FLA',     desc: '430.248/250 tables',        icon: Settings, color: '#f97216' },
+  { id: 'construction' as const,  label: 'Construction',  desc: 'Fractions, feet & inches',  icon: HardHat,  color: '#f97216' },
 ] as const
 
 // ── Inline Motor FLA Calculator ───────────────────────────────────────────────
@@ -98,8 +98,8 @@ function MotorFLACalculator() {
   const safeVoltage = voltageOptions.includes(voltage) ? voltage : voltageOptions[voltageOptions.length - 2]
   const fla = table[hp]?.[parseInt(safeVoltage)] || 0
 
-  const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none appearance-none'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#555] mb-1'
+  const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none appearance-none'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1'
 
   return (
     <div className="flex flex-col gap-4 p-1">
@@ -126,15 +126,15 @@ function MotorFLACalculator() {
       </div>
 
       {fla > 0 ? (
-        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[#00ff88] p-4 space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Full Load Amps</span><span className="font-bold text-[#00d4ff] font-mono">{fla} A</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Wire (125% FLA)</span><span className="font-bold text-[#ffaa00] font-mono">{(fla * 1.25).toFixed(1)} A min</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Breaker (250% FLA)</span><span className="font-bold text-[#00ff88] font-mono">{(fla * 2.5).toFixed(1)} A max</span></div>
+        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[#f97316] p-4 space-y-2">
+          <div className="flex justify-between text-sm"><span className="text-[#888]">Full Load Amps</span><span className="font-bold text-[#f97316] font-mono">{fla} A</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#888]">Wire (125% FLA)</span><span className="font-bold text-[#f97316] font-mono">{(fla * 1.25).toFixed(1)} A min</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#888]">Breaker (250% FLA)</span><span className="font-bold text-[#f97316] font-mono">{(fla * 2.5).toFixed(1)} A max</span></div>
           <div className="flex justify-between text-sm"><span className="text-[#888]">Overload (115%)</span><span className="font-mono text-[#f0f0f0]">{(fla * 1.15).toFixed(2)} A</span></div>
           <div className="text-[10px] text-[#444] pt-1">NEC 430.22 (wire) · 430.52 (breaker) · 430.32 (overload)</div>
         </div>
       ) : (
-        <div className="text-sm text-[#555] text-center py-4">No NEC table data for this combination</div>
+        <div className="text-sm text-[#52525b] text-center py-4">No NEC table data for this combination</div>
       )}
     </div>
   )
@@ -148,8 +148,8 @@ function ConstructionCalculator() {
   const [num, setNum] = useState('')
   const [den, setDen] = useState('')
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none font-mono'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#555] mb-1'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none font-mono'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1'
 
   const result = (() => {
     const d = parseInt(den)
@@ -168,7 +168,7 @@ function ConstructionCalculator() {
   return (
     <div className="flex flex-col gap-4 p-1">
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-[#555] mb-2">Fraction → Decimal</div>
+        <div className="text-[10px] uppercase tracking-wider text-[#52525b] mb-2">Fraction → Decimal</div>
         <div className="grid grid-cols-4 gap-2">
           <div><label className={lbl}>Feet</label><input type="number" className={inp} value={feet} onChange={e => setFeet(e.target.value)} placeholder="0" /></div>
           <div><label className={lbl}>Inches</label><input type="number" className={inp} value={inches} onChange={e => setInches(e.target.value)} placeholder="0" /></div>
@@ -178,14 +178,14 @@ function ConstructionCalculator() {
       </div>
 
       {result && (
-        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[#00ff88] p-4 space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Decimal Inches</span><span className="font-bold text-[#00ff88] font-mono">{result.totalInches}"</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Decimal Feet</span><span className="font-bold text-[#00d4ff] font-mono">{result.totalFeet}'</span></div>
+        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[#f97316] p-4 space-y-2">
+          <div className="flex justify-between text-sm"><span className="text-[#888]">Decimal Inches</span><span className="font-bold text-[#f97316] font-mono">{result.totalInches}"</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#888]">Decimal Feet</span><span className="font-bold text-[#f97316] font-mono">{result.totalFeet}'</span></div>
           <div className="flex justify-between text-sm"><span className="text-[#888]">Millimeters</span><span className="font-mono text-[#f0f0f0]">{result.mm} mm</span></div>
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-[#555]">
+      <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-[#52525b]">
         {[['1/8','0.125'],['1/4','0.25'],['3/8','0.375'],['1/2','0.5'],['5/8','0.625'],['3/4','0.75'],['7/8','0.875']].map(([f,d]) => (
           <div key={f} className="flex justify-between bg-[#0a0b0e] border border-[#1e2028] px-2 py-1">
             <span>{f}"</span><span className="text-[#444]">{d}"</span>
@@ -289,7 +289,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
                   <div className="text-xs font-medium text-[#f0f0f0] field-mode:text-yellow-100">{calc.label}</div>
                   <div className="text-[10px] text-[#666] field-mode:text-yellow-400/60">{calc.desc}</div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-[#555] field-mode:text-yellow-400/40" />
+                <ChevronRight className="h-4 w-4 text-[#52525b] field-mode:text-yellow-400/40" />
               </button>
             )
           })}
@@ -314,7 +314,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
                     <div className="text-[10px] font-medium uppercase tracking-wider text-[#888] field-mode:text-yellow-400/60">{calc.type}</div>
                     <div className="text-xs text-[#ccc] field-mode:text-yellow-100">{calc.label}</div>
                   </div>
-                  <div className="text-right font-mono text-xs text-[#ff6b00] field-mode:text-yellow-300">{calc.result}</div>
+                  <div className="text-right font-mono text-xs text-[#f97316] field-mode:text-yellow-300">{calc.result}</div>
                 </div>
               </Swipeable>
             ))}
