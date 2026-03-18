@@ -49,6 +49,10 @@ export function QuickToolsDrawer({ open, onOpenChange }: QuickToolsDrawerProps) 
           {activeTool === 'wire' && <WireSizingCalculator compact />}
           {activeTool === 'ampacity' && <AmpacityCalculator compact />}
           {activeTool === 'box' && <BoxFillCalculator compact />}
+          <div className="mt-6 border-t border-[#333] pt-4 text-xs text-[#888]">
+            <p><strong>Disclaimer:</strong> Calculations are for reference only. Always verify with the NEC codebook and local regulations.</p>
+            <p className="mt-1">Sparky references NEC 2023 but does not guarantee compliance. Always consult the official NEC and a licensed professional.</p>
+          </div>
         </div>
       </DrawerContent>
     </Drawer>

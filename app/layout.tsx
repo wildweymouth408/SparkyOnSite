@@ -17,12 +17,12 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Sparky - Electrician Field Management',
-  description: 'Professional electrician field management platform with NEC calculators, job tracking, and code reference.',
+  description: 'Professional electrician field management platform with NEC calculators, job tracking, and code reference. Sparky references NEC 2023 but does not guarantee compliance. Always consult the official NEC and a licensed professional.',
   generator: 'v0.app',
   manifest: '/manifest.json',
   icons: {
-    icon: '/icon-512x512.jpg',
-    apple: '/icon-512x512.jpg',
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
   },
 }
 

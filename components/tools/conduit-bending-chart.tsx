@@ -5,7 +5,7 @@ import { useState } from 'react'
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type Brand = 'klein' | 'ideal' | 'greenlee' | 'milwaukee'
-type BendType = '90' | 'offset' | 'saddle3' | 'saddle4' | 'back2back'
+type BendType = '90' | 'offset' | 'saddle3' | 'saddle4' | 'back2back' | 'rollingOffset' | 'parallel'
 type ConduitSize = '1/2"' | '3/4"' | '1"' | '1-1/4"' | '1-1/2"' | '2"'
 
 // ── Reference Data ────────────────────────────────────────────────────────────
@@ -42,32 +42,32 @@ const BRANDS: Record<Brand, {
   klein: {
     name: 'Klein Tools',
     model: '51600 Series',
-    color: '#ff6b00',
-    handleColor: '#ff6b00',
+    color: '#e65c00',
+    handleColor: '#cc5200',
     marks: { front: 'Arrow ▶', back: 'Star ★', center: 'Rim Notch' },
     tip: 'Most common bender. Orange handle. Arrow is your primary mark for 90s and offsets.',
   },
   ideal: {
     name: 'Ideal Industries',
     model: '74-028 / 74-036',
-    color: '#00d4ff',
-    handleColor: '#1a6ea8',
+    color: '#007acc',
+    handleColor: '#005a9c',
     marks: { front: 'Hook Mark', back: 'Center Notch', center: 'Degree Marks' },
     tip: 'Blue/grey handles. "Hook Mark" = same concept as Klein Arrow. Degree marks engraved on shoe side.',
   },
   greenlee: {
     name: 'Greenlee',
     model: '840 / 851 / 852',
-    color: '#00ff88',
-    handleColor: '#1a6b3a',
+    color: '#009966',
+    handleColor: '#007a4d',
     marks: { front: 'Arrow Mark', back: 'Star Notch', center: 'Degree Notches' },
     tip: 'Green handles. Degree notches (10°, 22.5°, 30°, 45°) clearly engraved on shoe edge.',
   },
   milwaukee: {
     name: 'Milwaukee',
     model: '48-22-4001 / 4002',
-    color: '#ff2020',
-    handleColor: '#c41c1c',
+    color: '#c62828',
+    handleColor: '#a32020',
     marks: { front: 'Arrow ▶', back: 'Star ★', center: 'Degree Marks' },
     tip: 'Red handles. Same mark layout as Klein. Some models have built-in angle sight window.',
   },
@@ -135,6 +135,34 @@ const INSTRUCTIONS: Record<Brand, Record<BendType, { steps: string[]; pro?: stri
         'Result: U-shape or L-shape with a straight run between the two 90s.',
       ],
       pro: 'The STAR mark on Klein accounts for the developed length through the bend. Use it — don\'t guess.',
+    },
+    'rollingOffset': {
+      steps: [
+        'Measure the vertical rise and horizontal run of the obstacle.',
+        'Calculate travel = sqrt(rise² + run²).',
+        'Choose bend angle (typically 30° or 45°).',
+        'Distance between bends = travel × multiplier for chosen angle.',
+        'Shrinkage = travel × shrink per inch (same as offset).',
+        'Mark first bend point on conduit.',
+        'Align front mark (Arrow) to first mark, bend to chosen angle.',
+        'Rotate conduit 90° around its axis (quarter turn).',
+        'Measure distance between bends along conduit from first mark, mark second bend.',
+        'Align front mark to second mark, bend to same angle in opposite direction.',
+        'Check that conduit clears obstacle in both dimensions.',
+      ],
+      pro: 'For a 6" rise and 8" run: travel = √(6² + 8²) = 10". At 30°, distance = 10 × 2.0 = 20".',
+    },
+    'parallel': {
+      steps: [
+        'Determine center-to-center spacing between conduits.',
+        'Choose bend angle (typically 30° or 45°).',
+        'Calculate offset distance for primary conduit using standard offset formula.',
+        'For parallel conduit, add spacing multiplied by cosecant of bend angle to offset distance.',
+        'Mark bend points on both conduits accordingly.',
+        'Bend each conduit individually using the same technique as a standard offset.',
+        'Ensure both conduits remain parallel throughout the run.',
+      ],
+      pro: 'For 4" spacing and 30° offset, add 4 × 2.0 = 8" to the offset distance.',
     },
   },
   ideal: {
@@ -395,6 +423,46 @@ function BendDiagram({ type, brand }: { type: BendType; brand: Brand }) {
     </svg>
   )
 
+  if (type === 'rollingOffset') return (
+    <svg viewBox="0 0 300 150" className="h-28 w-full">
+      {/* Right triangle representing rise and run */}
+      <line x1="50" y1="100" x2="150" y2="100" stroke={dim} strokeWidth="1" strokeDasharray="3,2" />
+      <line x1="150" y1="100" x2="150" y2="40" stroke={dim} strokeWidth="1" strokeDasharray="3,2" />
+      <line x1="50" y1="100" x2="150" y2="40" stroke={color} strokeWidth="4" strokeLinecap="round" />
+      {/* Labels */}
+      <text x="100" y="105" fill={lbl} fontSize="8" textAnchor="middle" fontFamily="monospace">Run</text>
+      <text x="160" y="70" fill={lbl} fontSize="8" textAnchor="middle" fontFamily="monospace">Rise</text>
+      <text x="90" y="60" fill={lbl} fontSize="8" textAnchor="middle" fontFamily="monospace">Travel</text>
+      {/* Bend points */}
+      <circle cx="50" cy="100" r="4" fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="2,1" />
+      <circle cx="150" cy="40" r="4" fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="2,1" />
+      <text x="50" y="115" fill={color} fontSize="8" fontFamily="monospace">Bend 1</text>
+      <text x="150" y="30" fill={color} fontSize="8" fontFamily="monospace">Bend 2</text>
+    </svg>
+  )
+
+  if (type === 'parallel') return (
+    <svg viewBox="0 0 300 150" className="h-28 w-full">
+      {/* Two parallel conduits with offset bends */}
+      <line x1="30" y1="80" x2="100" y2="80" stroke={color} strokeWidth="4" strokeLinecap="round" />
+      <line x1="30" y1="100" x2="100" y2="100" stroke={color} strokeWidth="4" strokeLinecap="round" />
+      {/* First bends */}
+      <line x1="100" y1="80" x2="160" y2="40" stroke={color} strokeWidth="4" strokeLinecap="round" />
+      <line x1="100" y1="100" x2="160" y2="60" stroke={color} strokeWidth="4" strokeLinecap="round" />
+      {/* Parallel legs */}
+      <line x1="160" y1="40" x2="240" y2="40" stroke={color} strokeWidth="4" strokeLinecap="round" />
+      <line x1="160" y1="60" x2="240" y2="60" stroke={color} strokeWidth="4" strokeLinecap="round" />
+      {/* Spacing dimension */}
+      <line x1="270" y1="40" x2="270" y2="60" stroke={dim} strokeWidth="1" strokeDasharray="3,2" />
+      <line x1="265" y1="40" x2="275" y2="40" stroke={dim} strokeWidth="1" />
+      <line x1="265" y1="60" x2="275" y2="60" stroke={dim} strokeWidth="1" />
+      <text x="280" y="50" fill={lbl} fontSize="8" fontFamily="monospace">Spacing</text>
+      {/* Labels */}
+      <text x="120" y="95" fill={lbl} fontSize="8" textAnchor="middle" fontFamily="monospace">Conduit 1</text>
+      <text x="120" y="115" fill={lbl} fontSize="8" textAnchor="middle" fontFamily="monospace">Conduit 2</text>
+    </svg>
+  )
+
   // back2back
   return (
     <svg viewBox="0 0 260 140" className="h-28 w-full">
@@ -473,6 +541,9 @@ export function ConduitBendingChart() {
   const [offsetHeight, setOffsetHeight] = useState<number>(6)
   const [offsetAngle, setOffsetAngle] = useState<number>(30)
   const [stubLength, setStubLength] = useState<number>(12)
+  const [rollingRise, setRollingRise] = useState<number>(6)
+  const [rollingRun, setRollingRun] = useState<number>(8)
+  const [rollingAngle, setRollingAngle] = useState<number>(30)
 
   const b = BRANDS[brand]
   const instructions = INSTRUCTIONS[brand][bendType]
@@ -481,6 +552,13 @@ export function ConduitBendingChart() {
   const offsetCalc = mult ? {
     distance: (offsetHeight * mult.mult).toFixed(2),
     shrinkage: (offsetHeight * mult.shrinkDec).toFixed(3),
+  } : null
+
+  const rollingMult = MULTIPLIERS.find(m => m.angle === rollingAngle)
+  const rollingCalc = rollingMult ? {
+    travel: Math.sqrt(rollingRise * rollingRise + rollingRun * rollingRun).toFixed(2),
+    distance: (Math.sqrt(rollingRise * rollingRise + rollingRun * rollingRun) * rollingMult.mult).toFixed(2),
+    shrinkage: (Math.sqrt(rollingRise * rollingRise + rollingRun * rollingRun) * rollingMult.shrinkDec).toFixed(3),
   } : null
 
   const stubCalc = {
@@ -494,6 +572,8 @@ export function ConduitBendingChart() {
     { id: 'saddle3',  label: '3-Pt Saddle' },
     { id: 'saddle4',  label: '4-Pt Saddle' },
     { id: 'back2back',label: 'Back-to-Back' },
+    { id: 'rollingOffset', label: 'Rolling Offset' },
+    { id: 'parallel', label: 'Parallel Bends' },
   ]
 
   const inputCls = 'h-10 w-full border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none'
@@ -776,6 +856,71 @@ export function ConduitBendingChart() {
                 </div>
                 <p className="text-[10px] text-[#444] pt-1">
                   Bend 1: {b.marks.front} to first mark · Roll 180° · Bend 2: same angle
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {bendType === 'rollingOffset' && (
+        <div className="border border-[#1e1e1e] bg-[#0a0a0a] p-4">
+          <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888]">
+            Rolling Offset Quick Calc
+          </h2>
+          <div className="flex flex-col gap-3">
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className={labelCls}>Rise (vertical) (in)</label>
+                <input
+                  type="number"
+                  value={rollingRise}
+                  onChange={e => setRollingRise(Number(e.target.value))}
+                  className={inputCls}
+                  step={0.25}
+                />
+              </div>
+              <div className="flex-1">
+                <label className={labelCls}>Run (horizontal) (in)</label>
+                <input
+                  type="number"
+                  value={rollingRun}
+                  onChange={e => setRollingRun(Number(e.target.value))}
+                  className={inputCls}
+                  step={0.25}
+                />
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className={labelCls}>Angle</label>
+                <select
+                  value={rollingAngle}
+                  onChange={e => setRollingAngle(Number(e.target.value))}
+                  className={inputCls}
+                >
+                  {MULTIPLIERS.map(m => (
+                    <option key={m.angle} value={m.angle}>{m.angle}°</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {rollingCalc && (
+              <div className="border border-[#1a1a2a] bg-[#0a0a12] p-3 space-y-1.5">
+                <div className="flex justify-between text-sm">
+                  <span className="text-[#888]">Travel (hypotenuse)</span>
+                  <span className="font-mono font-bold text-[#00d4ff] text-base">{rollingCalc.travel}"</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-[#888]">Distance Between Bends</span>
+                  <span className="font-mono font-bold text-[#00d4ff] text-base">{rollingCalc.distance}"</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-[#888]">Shrinkage (deduct)</span>
+                  <span className="font-mono font-bold text-[#ff6b00]">{rollingCalc.shrinkage}"</span>
+                </div>
+                <p className="text-[10px] text-[#444] pt-1">
+                  Bend 1: {b.marks.front} to first mark · Rotate conduit 90° · Bend 2: same angle
                 </p>
               </div>
             )}
