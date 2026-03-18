@@ -3,116 +3,67 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Sunrise color palette */
-:root {
-  /* Core colors */
-  --background: #121212; /* dark gray background */
-  --foreground: #ffffff; /* white text */
-  --card: #1e1e1e; /* card background */
-  --card-foreground: #ffffff;
-  --popover: #1e1e1e;
-  --popover-foreground: #ffffff;
-  /* Primary accent using sunrise gradient - we'll define gradient via classes */
-  --primary: #ff6b00; /* start of sunrise gradient */
-  --primary-foreground: #ffffff;
-  --secondary: #2a2a2a;
-  --secondary-foreground: #ffffff;
-  --muted: #2a2a2a;
-  --muted-foreground: #a0a0a0;
-  --accent: #ff8c00; /* middle of sunrise gradient */
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: #333333;
-  --input: #2a2a2a;
-  --ring: #ff6b00;
-  /* Chart colors (optional) */
-  --chart-1: #ff6b00;
-  --chart-2: #ffd700;
-  --chart-3: #ff8c00;
-  --chart-4: #00d4ff;
-  --chart-5: #00ff88;
-  /* Border radius */
-  --radius: 0.75rem; /* 12px rounded corners */
-  /* Sidebar (if used) */
-  --sidebar: #1a1a1a;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #ff6b00;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #2a2a2a;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #333333;
-  --sidebar-ring: #ff6b00;
-  /* Spacing based on 8‑pt grid (1 unit = 8px) */
-  --spacing-0: 0;
-  --spacing-px: 1px;
-  --spacing-0\.5: 0.25rem;  /* 4px */
-  --spacing-1: 0.5rem;     /* 8px */
-  --spacing-1\.5: 0.75rem;  /* 12px */
-  --spacing-2: 1rem;       /* 16px */
-  --spacing-2\.5: 1.25rem;  /* 20px */
-  --spacing-3: 1.5rem;     /* 24px */
-  --spacing-3\.5: 1.75rem;  /* 28px */
-  --spacing-4: 2rem;       /* 32px */
-  --spacing-5: 2.5rem;     /* 40px */
-  --spacing-6: 3rem;       /* 48px */
-  --spacing-7: 3.5rem;     /* 56px */
-  --spacing-8: 4rem;       /* 64px */
-  --spacing-9: 4.5rem;     /* 72px */
-  --spacing-10: 5rem;      /* 80px */
-  --spacing-11: 5.5rem;    /* 88px */
-  --spacing-12: 6rem;      /* 96px */
-  --spacing-14: 7rem;      /* 112px */
-  --spacing-16: 8rem;      /* 128px */
-  --spacing-20: 10rem;     /* 160px */
-  --spacing-24: 12rem;     /* 192px */
-  --spacing-28: 14rem;     /* 224px */
-  --spacing-32: 16rem;     /* 256px */
-  --spacing-36: 18rem;     /* 288px */
-  --spacing-40: 20rem;     /* 320px */
-  --spacing-44: 22rem;     /* 352px */
-  --spacing-48: 24rem;     /* 384px */
-  --spacing-52: 26rem;     /* 416px */
-  --spacing-56: 28rem;     /* 448px */
-  --spacing-60: 30rem;     /* 480px */
-  --spacing-64: 32rem;     /* 512px */
-  --spacing-72: 36rem;     /* 576px */
-  --spacing-80: 40rem;     /* 640px */
-  --spacing-96: 48rem;     /* 768px */
-}
-
-/* Dark mode (already dark by default, but keep for compatibility) */
-.dark {
-  /* Override any light mode variables if needed */
-  --background: #121212;
-  --foreground: #ffffff;
-  --card: #1e1e1e;
-  --card-foreground: #ffffff;
-  --border: #333333;
-}
-
-/* Sunrise gradient utility classes */
+/* Sunrise gradient utilities */
 .sunrise-gradient {
-  background: linear-gradient(135deg, #ff6b00 0%, #ffd700 50%, #ff8c00 100%);
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #f59e0b 100%);
 }
 .sunrise-gradient-text {
-  background: linear-gradient(135deg, #ff6b00 0%, #ffd700 50%, #ff8c00 100%);
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .sunrise-gradient-bg {
-  background: linear-gradient(135deg, #ff6b00 0%, #ffd700 50%, #ff8c00 100%);
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #f59e0b 100%);
 }
 
-/* Inter font loaded via Next.js font optimization */
+:root {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --primary: #f97316;
+  --primary-foreground: #fafafa;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #f97316;
+  --accent-foreground: #fafafa;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #f97316;
+  --chart-1: #f97316;
+  --chart-2: #fb923c;
+  --chart-3: #fdba74;
+  --chart-4: #fed7aa;
+  --chart-5: #3f3f46;
+  --radius: 0.75rem;
+  --sidebar: #09090b;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #f97316;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #27272a;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #27272a;
+  --sidebar-ring: #f97316;
+}
 
-/* Theme definition for Tailwind */
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --border: #27272a;
+}
+
 @theme inline {
-  /* Font families */
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, 'JetBrains Mono', monospace; /* keep JetBrains for monospace */
-  /* Color mapping */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -137,12 +88,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  /* Border radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -151,7 +100,6 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  /* Spacing scale already defined as CSS custom properties */
 }
 
 @layer base {
@@ -159,6 +107,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
 }

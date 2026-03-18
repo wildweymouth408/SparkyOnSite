@@ -14,14 +14,10 @@ export default function SparkyApp() {
 
   useEffect(() => {
     setMounted(true)
-
-    // Apply saved field mode class on mount
     const savedField = localStorage.getItem('sparky_field_mode')
     if (savedField === 'true') {
       document.documentElement.classList.add('field-mode')
     }
-
-    // Listen for field mode toggle from More tab
     function handleFieldMode() {
       const current = localStorage.getItem('sparky_field_mode')
       if (current === 'true') {
@@ -30,8 +26,6 @@ export default function SparkyApp() {
         document.documentElement.classList.remove('field-mode')
       }
     }
-
-    // Listen for dark mode toggle from More tab  
     function handleDarkMode() {
       const current = localStorage.getItem('sparky_dark_mode')
       if (current === 'false') {
@@ -40,7 +34,6 @@ export default function SparkyApp() {
         document.documentElement.classList.add('dark')
       }
     }
-
     window.addEventListener('sparky_field_mode_changed', handleFieldMode)
     window.addEventListener('sparky_dark_mode_changed', handleDarkMode)
     return () => {
@@ -49,13 +42,11 @@ export default function SparkyApp() {
     }
   }, [])
 
-  // Called by HomeTab Quick Actions
   function handleNavigate(tab: TabId, toolId?: string) {
     if (toolId) setPendingToolId(toolId)
     setActiveTab(tab)
   }
 
-  // Clear pending tool after Tools tab picks it up
   function handleToolConsumed() {
     setPendingToolId(null)
   }
@@ -63,58 +54,51 @@ export default function SparkyApp() {
   if (!mounted) {
     return (
       <div className="flex h-dvh items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#ff6b00]" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-          </svg>
-          <span className="text-xs uppercase tracking-widest text-[#555]">Loading...</span>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#f97316] to-[#f59e0b] flex items-center justify-center">
+            <svg viewBox="0 0 24 24" className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-sm font-semibold text-foreground">Sparky</span>
+            <span className="text-xs text-[#52525b]">Loading your tools...</span>
+          </div>
         </div>
       </div>
     )
   }
 
-  const tabAccentColor: Record<TabId, string> = {
-    home:        '#ff6b00',
-    calculators: '#00d4ff',
-    nec:         '#00ff88',
-    jobs:        '#ff6b00',
-    settings:    '#888888',
-  }
-
-  const tabTitle: Record<TabId, string> = {
-    home:        'Home',
-    calculators: 'Calculators',
-    nec:         'NEC Reference',
-    jobs:        'Jobs',
-    settings:    'Settings',
-  }
-
   return (
     <div className="flex h-dvh flex-col bg-background text-foreground">
-      <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3">
+      {/* Header */}
+      <header className="flex items-center justify-between border-b border-border glass px-4 py-3">
         <div className="flex items-center gap-2.5">
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5"
-            style={{ color: tabAccentColor[activeTab] }}>
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-          </svg>
-          <span className="text-sm font-bold uppercase tracking-wider" style={{ color: tabAccentColor[activeTab] }}>
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#f97316] to-[#f59e0b] flex items-center justify-center">
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+          </div>
+          <span className="text-sm font-bold text-foreground">
             Sparky
           </span>
-          <span className="text-[10px] font-medium uppercase tracking-wider text-[#555]">
-            / {tabTitle[activeTab]}
+          <span className="text-xs text-[#52525b]">
+            {activeTab === 'home' ? '' : 
+             activeTab === 'calculators' ? '/ Tools' :
+             activeTab === 'nec' ? '/ Codes' :
+             activeTab === 'jobs' ? '/ Sparky AI' :
+             '/ Profile'}
           </span>
         </div>
-        <div className="h-1 w-16 overflow-hidden bg-[#222]">
+        <div className="h-1 w-12 overflow-hidden rounded-full bg-[#27272a]">
           <div
-            className="h-full w-4"
-            style={{
-              backgroundColor: tabAccentColor[activeTab],
-              animation: 'electron-flow 1.5s linear infinite',
-            }}
+            className="h-full w-4 rounded-full sunrise-gradient"
+            style={{ animation: 'electron-flow 1.5s linear infinite' }}
           />
         </div>
       </header>
 
+      {/* Content */}
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-24">
         {activeTab === 'home'        && <HomeTab onNavigate={handleNavigate} />}
         {activeTab === 'calculators' && (
@@ -125,7 +109,7 @@ export default function SparkyApp() {
           />
         )}
         {activeTab === 'nec'         && <ReferenceTab />}
-        {activeTab === 'jobs'        && <MoreTab />}
+        {activeTab === 'jobs'        && <AskSparkyTab />}
         {activeTab === 'settings'    && <MoreTab />}
       </main>
 
