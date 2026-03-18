@@ -47,10 +47,10 @@ export function PipeBendingCalculator() {
   const jobNote = result ? `[Pipe Bending] ${result.bendType}, ${inputs.offsetHeight}" offset, Distance: ${result.distanceBetweenBends}", Shrinkage: ${result.shrinkage}"` : ''
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
+    <div className="flex flex-col gap-5">
       {showAR && <ArDemoOverlay onClose={() => setShowAR(false)} result={result} />}
-      <div className="flex-1 flex flex-col gap-5">
-        {/* Bend type selector */}
+
+      {/* Bend type selector */}
       <div className="flex gap-1">
         {(['offset', '90', '3-point-saddle', '4-point-saddle'] as const).map(type => (
           <button
@@ -65,7 +65,7 @@ export function PipeBendingCalculator() {
             className={`flex-1 py-2 text-[10px] font-medium uppercase tracking-wider transition-colors ${
               inputs.bendType === type
                 ? 'bg-[#ff6b00] text-[#0f1115]'
-                : 'border border-border bg-card rounded-lg text-muted-foreground hover:text-foreground'
+                : 'border border-[#333] bg-[#111] text-[#888] hover:text-[#f0f0f0]'
             }`}
           >
             {type === 'offset' ? 'Offset' : type === '90' ? '90' : type === '3-point-saddle' ? '3-Pt' : '4-Pt'}
@@ -121,7 +121,7 @@ export function PipeBendingCalculator() {
       {/* Inputs */}
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+          <span className="text-[11px] uppercase tracking-wider text-[#888]">
             {inputs.bendType === '90' ? 'Stub-up Length (in)' : 'Offset Height (in)'}
           </span>
           <input
@@ -129,17 +129,17 @@ export function PipeBendingCalculator() {
             value={inputs.offsetHeight || ''}
             onChange={e => setInputs(p => ({ ...p, offsetHeight: Number(e.target.value) }))}
             step={0.25}
-            className="h-12 border border-border bg-card rounded-lg px-3 font-mono text-sm text-foreground focus:border-[#ff6b00] focus:outline-none"
+            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
           />
         </label>
 
         {inputs.bendType !== '90' && (
           <label className="flex flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Bend Angle</span>
+            <span className="text-[11px] uppercase tracking-wider text-[#888]">Bend Angle</span>
             <select
               value={inputs.bendAngle}
               onChange={e => setInputs(p => ({ ...p, bendAngle: Number(e.target.value) }))}
-              className="h-12 border border-border bg-card rounded-lg px-3 font-mono text-sm text-foreground focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
             >
               {availableAngles.map(a => <option key={a} value={a}>{a}{'\u00B0'}</option>)}
             </select>
@@ -148,11 +148,11 @@ export function PipeBendingCalculator() {
 
         {inputs.bendType === '90' && (
           <label className="flex flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Conduit Size (OD inches)</span>
+            <span className="text-[11px] uppercase tracking-wider text-[#888]">Conduit Size (OD inches)</span>
             <select
               value={inputs.conduitDiameter}
               onChange={e => setInputs(p => ({ ...p, conduitDiameter: Number(e.target.value) }))}
-              className="h-12 border border-border bg-card rounded-lg px-3 font-mono text-sm text-foreground focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
             >
               <option value={0.5}>1/2"</option>
               <option value={0.75}>3/4"</option>
@@ -164,34 +164,33 @@ export function PipeBendingCalculator() {
           </label>
         )}
       </div>
-    </div>
-    <div className="flex-1 flex flex-col gap-5">
+
       {/* Results */}
       {result && (
-        <div className="border border-border bg-card rounded-lg p-4">
-          <div className="mb-2 text-[11px] uppercase tracking-wider text-muted-foreground">
+        <div className="border border-[#333] bg-[#111] p-4">
+          <div className="mb-2 text-[11px] uppercase tracking-wider text-[#888]">
             {result.bendType}
           </div>
           <div className="flex flex-col gap-2 text-sm">
             {result.distanceBetweenBends > 0 && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Distance between bends</span>
+                <span className="text-[#888]">Distance between bends</span>
                 <span className="font-mono font-bold text-[#ff6b00]">{result.distanceBetweenBends}"</span>
               </div>
             )}
             {result.shrinkage > 0 && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Shrinkage</span>
-                <span className="font-mono text-foreground">{result.shrinkage}"</span>
+                <span className="text-[#888]">Shrinkage</span>
+                <span className="font-mono text-[#f0f0f0]">{result.shrinkage}"</span>
               </div>
             )}
             {result.travel > 0 && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Travel</span>
-                <span className="font-mono text-foreground">{result.travel}"</span>
+                <span className="text-[#888]">Travel</span>
+                <span className="font-mono text-[#f0f0f0]">{result.travel}"</span>
               </div>
             )}
-            <div className="mt-1 border-t border-border pt-2 text-xs text-muted-foreground">
+            <div className="mt-1 border-t border-[#333] pt-2 text-xs text-[#888]">
               Marks: {result.firstMark}"
               {result.secondMark ? `, ${result.secondMark}"` : ''}
               {result.thirdMark ? `, ${result.thirdMark}"` : ''}
@@ -220,18 +219,17 @@ export function PipeBendingCalculator() {
           <div className="flex gap-2">
             <button
               onClick={() => setShowAR(true)}
-              className="flex items-center justify-center gap-2 border border-border bg-secondary px-4 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:bg-muted active:scale-95"
+              className="flex items-center justify-center gap-2 border border-[#333] bg-[#1a1a1a] px-4 py-3 text-xs font-medium uppercase tracking-wider text-[#888] hover:bg-[#222]"
             >
               <Camera className="h-4 w-4" /> AR Demo
             </button>
-            <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-border bg-secondary py-3 text-xs font-medium uppercase tracking-wider text-foreground hover:bg-muted active:scale-95"
+            <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#333] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#222]">
               <Save className="h-4 w-4" /> Save
             </button>
           </div>
           <AttachToJob note={jobNote} />
         </div>
       )}
-    </div>
     </div>
   )
 }

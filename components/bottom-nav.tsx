@@ -7,16 +7,16 @@ interface BottomNavProps {
   onTabChange: (tab: TabId) => void
 }
 const tabs: { id: TabId; label: string; icon: typeof Home; accentColor: string; activeColor: string }[] = [
-  { id: 'home',      label: 'Home',        icon: Home,          accentColor: 'text-[#ff6b00]', activeColor: '#ff6b00' },
-  { id: 'calculators', label: 'Calculators', icon: Wrench,    accentColor: 'text-[#00d4ff]', activeColor: '#00d4ff' },
-  { id: 'nec',         label: 'NEC',        icon: BookOpen,  accentColor: 'text-[#00ff88]', activeColor: '#00ff88' },
-  { id: 'jobs',        label: 'Jobs',       icon: Briefcase, accentColor: 'text-[#ff6b00]', activeColor: '#ff6b00' },
-  { id: 'settings',    label: 'Settings',   icon: Settings,  accentColor: 'text-[#888]',    activeColor: '#888888' },
+  { id: 'home',      label: 'Home',        icon: Home,          accentColor: 'sunrise-gradient-text', activeColor: 'sunrise-gradient' },
+  { id: 'calculators', label: 'Calculators', icon: Wrench,    accentColor: 'sunrise-gradient-text', activeColor: 'sunrise-gradient' },
+  { id: 'nec',         label: 'NEC',        icon: BookOpen,  accentColor: 'sunrise-gradient-text', activeColor: 'sunrise-gradient' },
+  { id: 'jobs',        label: 'Jobs',       icon: Briefcase, accentColor: 'sunrise-gradient-text', activeColor: 'sunrise-gradient' },
+  { id: 'settings',    label: 'Settings',   icon: Settings,  accentColor: 'sunrise-gradient-text', activeColor: 'sunrise-gradient' },
 ]
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-stretch border-t border-[#333] field-mode:border-yellow-400/30 bg-[#0f1115] field-mode:bg-black"
+      className="fixed bottom-0 left-0 right-0 z-50 flex items-stretch border-t border-border field-mode:border-yellow-400/30 bg-background field-mode:bg-black"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       role="tablist"
       aria-label="Main navigation"
@@ -38,8 +38,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
           >
             {isActive && (
               <span
-                className="absolute top-0 left-1/2 h-[2px] w-8 -translate-x-1/2 transition-all duration-300"
-                style={{ backgroundColor: tab.activeColor }}
+                className="absolute top-0 left-1/2 h-[2px] w-8 -translate-x-1/2 transition-all duration-300 sunrise-gradient"
               />
             )}
             <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.5} />

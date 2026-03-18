@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getRecentCalculations, type SavedCalculation } from '@/lib/storage'
+import { getRecentCalculations, type SavedCalculation, saveCalculation, generateId } from '@/lib/storage'
 import { recordToolOpen } from '@/lib/usage'
 import { CalculatorModal } from '@/components/tools/calculator-modal'
 import { VoltageDropCalculator } from '@/components/tools/voltage-drop'
@@ -24,6 +24,7 @@ import {
   Clock,
   ChevronRight,
 } from 'lucide-react'
+import { Swipeable } from '@/components/ui/swipeable'
 
 type CalculatorId =
   | 'voltage-drop'
@@ -225,6 +226,17 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
     setActiveCalc(id)
   }
 
+  function handleDuplicateCalculation(calc: SavedCalculation) {
+    const duplicated = { ...calc, id: generateId(), timestamp: new Date().toISOString() }
+    saveCalculation(duplicated)
+    setRecentCalcs(getRecentCalculations(5))
+  }
+
+  function handleDeleteCalculation(id: string) {
+    // TODO: implement deleteCalculation in storage
+    setRecentCalcs(prev => prev.filter(c => c.id !== id))
+  }
+
   function renderCalculator() {
     switch (activeCalc) {
       case 'voltage-drop':  return <VoltageDropCalculator />
@@ -251,7 +263,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
             const Icon = calc.icon
             return (
               <button key={calc.id} onClick={() => openCalc(calc.id)}
-                className="group flex flex-col gap-2 border border-[#333] bg-[#111] p-4 text-left transition-all duration-200 hover:border-[#555] active:scale-[0.98]">
+                className="group flex flex-col gap-2 border border-border bg-card rounded-lg shadow-md p-4 text-left transition-all duration-200 hover:shadow-lg active:scale-[0.98]">
                 <Icon className="h-5 w-5" style={{ color: calc.color }} />
                 <div>
                   <div className="text-xs font-bold text-[#f0f0f0]">{calc.label}</div>
@@ -271,7 +283,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
             const Icon = calc.icon
             return (
               <button key={calc.id} onClick={() => openCalc(calc.id)}
-                className="flex items-center gap-3 border border-[#333] bg-[#111] p-3 text-left transition-all duration-200 hover:border-[#555] active:scale-[0.99] field-mode:bg-black field-mode:border-yellow-400/30 field-mode:min-h-[56px]">
+                className="flex items-center gap-3 border border-border bg-card rounded-lg shadow-md p-3 text-left transition-all duration-200 hover:shadow-lg active:scale-[0.99] field-mode:bg-black field-mode:border-yellow-400/30 field-mode:min-h-[56px]">
                 <Icon className="h-4 w-4 shrink-0" style={{ color: calc.color }} />
                 <div className="flex-1">
                   <div className="text-xs font-medium text-[#f0f0f0] field-mode:text-yellow-100">{calc.label}</div>
@@ -292,13 +304,19 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
           </h2>
           <div className="flex flex-col gap-1">
             {recentCalcs.map(calc => (
-              <div key={calc.id} className="flex items-center justify-between border border-[#222] bg-[#111] px-3 py-2 field-mode:bg-black field-mode:border-yellow-400/20">
-                <div className="flex-1">
-                  <div className="text-[10px] font-medium uppercase tracking-wider text-[#888] field-mode:text-yellow-400/60">{calc.type}</div>
-                  <div className="text-xs text-[#ccc] field-mode:text-yellow-100">{calc.label}</div>
+              <Swipeable
+                key={calc.id}
+                onSwipeLeft={() => handleDuplicateCalculation(calc)}
+                onSwipeRight={() => handleDeleteCalculation(calc.id)}
+              >
+                <div className="flex items-center justify-between border border-border bg-card rounded-lg shadow-sm px-3 py-2 field-mode:bg-black field-mode:border-yellow-400/20">
+                  <div className="flex-1">
+                    <div className="text-[10px] font-medium uppercase tracking-wider text-[#888] field-mode:text-yellow-400/60">{calc.type}</div>
+                    <div className="text-xs text-[#ccc] field-mode:text-yellow-100">{calc.label}</div>
+                  </div>
+                  <div className="text-right font-mono text-xs text-[#ff6b00] field-mode:text-yellow-300">{calc.result}</div>
                 </div>
-                <div className="text-right font-mono text-xs text-[#ff6b00] field-mode:text-yellow-300">{calc.result}</div>
-              </div>
+              </Swipeable>
             ))}
           </div>
         </div>

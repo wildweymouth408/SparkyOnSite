@@ -216,6 +216,34 @@ const INSTRUCTIONS: Record<Brand, Record<BendType, { steps: string[]; pro?: stri
       ],
       pro: '',
     },
+    'rollingOffset': {
+      steps: [
+        'Measure the vertical rise and horizontal run of the obstacle.',
+        'Calculate travel = sqrt(rise² + run²).',
+        'Choose bend angle (typically 30° or 45°).',
+        'Distance between bends = travel × multiplier for chosen angle.',
+        'Shrinkage = travel × shrink per inch (same as offset).',
+        'Mark first bend point on conduit.',
+        'Align front mark (Hook Mark) to first mark, bend to chosen angle.',
+        'Rotate conduit 90° around its axis (quarter turn).',
+        'Measure distance between bends along conduit from first mark, mark second bend.',
+        'Align front mark to second mark, bend to same angle in opposite direction.',
+        'Check that conduit clears obstacle in both dimensions.',
+      ],
+      pro: 'For a 6" rise and 8" run: travel = √(6² + 8²) = 10". At 30°, distance = 10 × 2.0 = 20".',
+    },
+    'parallel': {
+      steps: [
+        'Determine center-to-center spacing between conduits.',
+        'Choose bend angle (typically 30° or 45°).',
+        'Calculate offset distance for primary conduit using standard offset formula.',
+        'For parallel conduit, add spacing multiplied by cosecant of bend angle to offset distance.',
+        'Mark bend points on both conduits accordingly.',
+        'Bend each conduit individually using the same technique as a standard offset.',
+        'Ensure both conduits remain parallel throughout the run.',
+      ],
+      pro: 'For 4" spacing and 30° offset, add 4 × 2.0 = 8" to the offset distance.',
+    },
   },
   greenlee: {
     '90': {

@@ -3,80 +3,116 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Sunrise color palette */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Core colors */
+  --background: #121212; /* dark gray background */
+  --foreground: #ffffff; /* white text */
+  --card: #1e1e1e; /* card background */
+  --card-foreground: #ffffff;
+  --popover: #1e1e1e;
+  --popover-foreground: #ffffff;
+  /* Primary accent using sunrise gradient - we'll define gradient via classes */
+  --primary: #ff6b00; /* start of sunrise gradient */
+  --primary-foreground: #ffffff;
+  --secondary: #2a2a2a;
+  --secondary-foreground: #ffffff;
+  --muted: #2a2a2a;
+  --muted-foreground: #a0a0a0;
+  --accent: #ff8c00; /* middle of sunrise gradient */
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #333333;
+  --input: #2a2a2a;
+  --ring: #ff6b00;
+  /* Chart colors (optional) */
+  --chart-1: #ff6b00;
+  --chart-2: #ffd700;
+  --chart-3: #ff8c00;
+  --chart-4: #00d4ff;
+  --chart-5: #00ff88;
+  /* Border radius */
+  --radius: 0.75rem; /* 12px rounded corners */
+  /* Sidebar (if used) */
+  --sidebar: #1a1a1a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ff6b00;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #333333;
+  --sidebar-ring: #ff6b00;
+  /* Spacing based on 8‑pt grid (1 unit = 8px) */
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-0\.5: 0.25rem;  /* 4px */
+  --spacing-1: 0.5rem;     /* 8px */
+  --spacing-1\.5: 0.75rem;  /* 12px */
+  --spacing-2: 1rem;       /* 16px */
+  --spacing-2\.5: 1.25rem;  /* 20px */
+  --spacing-3: 1.5rem;     /* 24px */
+  --spacing-3\.5: 1.75rem;  /* 28px */
+  --spacing-4: 2rem;       /* 32px */
+  --spacing-5: 2.5rem;     /* 40px */
+  --spacing-6: 3rem;       /* 48px */
+  --spacing-7: 3.5rem;     /* 56px */
+  --spacing-8: 4rem;       /* 64px */
+  --spacing-9: 4.5rem;     /* 72px */
+  --spacing-10: 5rem;      /* 80px */
+  --spacing-11: 5.5rem;    /* 88px */
+  --spacing-12: 6rem;      /* 96px */
+  --spacing-14: 7rem;      /* 112px */
+  --spacing-16: 8rem;      /* 128px */
+  --spacing-20: 10rem;     /* 160px */
+  --spacing-24: 12rem;     /* 192px */
+  --spacing-28: 14rem;     /* 224px */
+  --spacing-32: 16rem;     /* 256px */
+  --spacing-36: 18rem;     /* 288px */
+  --spacing-40: 20rem;     /* 320px */
+  --spacing-44: 22rem;     /* 352px */
+  --spacing-48: 24rem;     /* 384px */
+  --spacing-52: 26rem;     /* 416px */
+  --spacing-56: 28rem;     /* 448px */
+  --spacing-60: 30rem;     /* 480px */
+  --spacing-64: 32rem;     /* 512px */
+  --spacing-72: 36rem;     /* 576px */
+  --spacing-80: 40rem;     /* 640px */
+  --spacing-96: 48rem;     /* 768px */
 }
 
+/* Dark mode (already dark by default, but keep for compatibility) */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Override any light mode variables if needed */
+  --background: #121212;
+  --foreground: #ffffff;
+  --card: #1e1e1e;
+  --card-foreground: #ffffff;
+  --border: #333333;
 }
 
+/* Sunrise gradient utility classes */
+.sunrise-gradient {
+  background: linear-gradient(135deg, #ff6b00 0%, #ffd700 50%, #ff8c00 100%);
+}
+.sunrise-gradient-text {
+  background: linear-gradient(135deg, #ff6b00 0%, #ffd700 50%, #ff8c00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sunrise-gradient-bg {
+  background: linear-gradient(135deg, #ff6b00 0%, #ffd700 50%, #ff8c00 100%);
+}
+
+/* Inter font loaded via Next.js font optimization */
+
+/* Theme definition for Tailwind */
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  /* Font families */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'JetBrains Mono', monospace; /* keep JetBrains for monospace */
+  /* Color mapping */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -101,10 +137,12 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  /* Border radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -113,6 +151,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* Spacing scale already defined as CSS custom properties */
 }
 
 @layer base {

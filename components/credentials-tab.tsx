@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, Trash2, Eye, EyeOff, Upload, Award, X, Loader2 } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 import { supabase } from '@/lib/supabase'
 import { uploadCertificate, getCertificateUrl, deleteCertificate } from '@/lib/certificates'
 import { encryptField, decryptField } from '@/lib/crypto'
@@ -155,8 +156,44 @@ export function CredentialsTab() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-[#ff6b00]" />
+      <div className="flex flex-col gap-4 max-w-lg mx-auto">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-3 w-60 mt-1" />
+          </div>
+          <Skeleton className="h-9 w-20" />
+        </div>
+        {/* Skeleton credential cards */}
+        {[1, 2, 3].map(i => (
+          <div key={i} className="rounded border border-border bg-card p-4 flex flex-col gap-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex flex-col gap-2 min-w-0">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-24" />
+              </div>
+              <Skeleton className="h-6 w-6 rounded-full" />
+            </div>
+            <div className="flex gap-4">
+              <div className="flex flex-col gap-1">
+                <Skeleton className="h-3 w-12" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <Skeleton className="h-3 w-12" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-1 flex-1">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-3 w-24" />
+              </div>
+              <Skeleton className="h-8 w-8 rounded" />
+            </div>
+            <Skeleton className="h-9 w-full rounded" />
+          </div>
+        ))}
       </div>
     )
   }

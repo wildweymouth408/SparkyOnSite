@@ -192,11 +192,25 @@ export const STANDARD_BOXES: Record<string, { description: string; volume: numbe
 
 // Pipe bending multipliers
 export const BEND_MULTIPLIERS: Record<number, { multiplier: number; shrinkage: number }> = {
+  5: { multiplier: 11.5, shrinkage: 1 / 16 },
   10: { multiplier: 6.0, shrinkage: 1 / 16 },
+  11.25: { multiplier: 5.1, shrinkage: 2 / 16 },
+  15: { multiplier: 3.9, shrinkage: 2 / 16 },
   22.5: { multiplier: 2.6, shrinkage: 3 / 16 },
   30: { multiplier: 2.0, shrinkage: 1 / 4 },
   45: { multiplier: 1.414, shrinkage: 3 / 8 },
   60: { multiplier: 1.155, shrinkage: 1 / 2 },
+  90: { multiplier: 1.0, shrinkage: 0 },
+}
+
+// 90° stub‑up take‑up deductions per trade size (inches)
+export const TAKEUP: Record<string, number> = {
+  '0.5': 5,       // 1/2"
+  '0.75': 6,      // 3/4"
+  '1': 8,         // 1"
+  '1.25': 11,     // 1-1/4"
+  '1.5': 13,      // 1-1/2"
+  '2': 16,        // 2"
 }
 
 // Common wire sizes for dropdowns

@@ -62,7 +62,7 @@ export default function SparkyApp() {
 
   if (!mounted) {
     return (
-      <div className="flex h-dvh items-center justify-center bg-[#0f1115]">
+      <div className="flex h-dvh items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
           <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#ff6b00]" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
@@ -90,8 +90,8 @@ export default function SparkyApp() {
   }
 
   return (
-    <div className="flex h-dvh flex-col bg-[#0f1115] text-[#f0f0f0]">
-      <header className="flex items-center justify-between border-b border-[#333] bg-[#0f1115] px-4 py-3">
+    <div className="flex h-dvh flex-col bg-background text-foreground">
+      <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3">
         <div className="flex items-center gap-2.5">
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5"
             style={{ color: tabAccentColor[activeTab] }}>

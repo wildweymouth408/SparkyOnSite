@@ -3,7 +3,7 @@
 import {
 WIRE_AREAS, K_FACTOR, AMPACITY_TABLE, WIRE_CROSS_SECTION,
 CONDUIT_AREAS, getConduitFillLimit, BOX_FILL_ALLOWANCE,
-BEND_MULTIPLIERS, getConduitDerating, INSULATION_TEMP,
+BEND_MULTIPLIERS, TAKEUP, getConduitDerating, INSULATION_TEMP,
 TEMP_CORRECTION, STANDARD_BOXES,
 } from './calculator-data'
 
@@ -201,14 +201,12 @@ if (!mult) return { distanceBetweenBends: 0, shrinkage: 0, travel: 0, firstMark:
 
 if (bendType === 'offset') {
 const distanceBetweenBends = offsetHeight * mult.multiplier
-const shrinkage = offsetHeight * (mult.shrinkage * 16) // convert back
-const shrinkagePerInch = mult.shrinkage
-const totalShrinkage = offsetHeight * shrinkagePerInch * 16
+const shrinkage = offsetHeight * mult.shrinkage // shrinkage per inch already decimal inches
 const travel = Math.sqrt(distanceBetweenBends ** 2 + offsetHeight ** 2)
 
 return {
 distanceBetweenBends: Math.round(distanceBetweenBends * 100) / 100,
-shrinkage: Math.round(totalShrinkage * 100) / 100,
+shrinkage: Math.round(shrinkage * 100) / 100,
 travel: Math.round(travel * 100) / 100,
 firstMark: 0,
 secondMark: Math.round(distanceBetweenBends * 100) / 100,
@@ -218,7 +216,9 @@ bendType: `${bendAngle}° Offset`,
 
 if (bendType === '90') {
 const stub = offsetHeight // stub-up length
-const deduction = conduitDiameter <= 0.75 ? 5 : conduitDiameter <= 1 ? 6 : conduitDiameter <= 1.25 ? 8 : 11
+// Map conduit diameter to trade size key for TAKEUP lookup
+const sizeKey = Object.keys(TAKEUP).find(key => Math.abs(parseFloat(key) - conduitDiameter) < 0.01)
+const deduction = sizeKey ? TAKEUP[sizeKey] : (conduitDiameter <= 0.75 ? 5 : conduitDiameter <= 1 ? 6 : conduitDiameter <= 1.25 ? 8 : 11) // fallback to old logic
 const markFromEnd = stub - deduction
 
 return {
@@ -234,9 +234,9 @@ bendType: '90° Stub-up',
 if (bendType === '3-point-saddle') {
 const centerBendAngle = bendAngle
 const outerAngle = centerBendAngle / 2
-const outerMult = BEND_MULTIPLIERS[outerAngle]
-const distanceBetweenBends = offsetHeight * mult.multiplier
-const shrinkageInches = offsetHeight * mult.shrinkage * 16
+const outerMult = BEND_MULTIPLIERS[outerAngle] || mult // fallback to center multiplier if outer not defined
+const distanceBetweenBends = offsetHeight * outerMult.multiplier
+const shrinkageInches = offsetHeight * outerMult.shrinkage // shrinkage per inch already decimal inches
 
 return {
 distanceBetweenBends: Math.round(distanceBetweenBends * 100) / 100,
@@ -251,10 +251,11 @@ bendType: `3-Point Saddle (${centerBendAngle}°)`,
 
 if (bendType === '4-point-saddle') {
 const distanceBetweenBends = offsetHeight * mult.multiplier
+const shrinkage = offsetHeight * mult.shrinkage // shrinkage per inch already decimal inches
 
 return {
 distanceBetweenBends: Math.round(distanceBetweenBends * 100) / 100,
-shrinkage: Math.round((offsetHeight * mult.shrinkage * 16) * 100) / 100,
+shrinkage: Math.round(shrinkage * 100) / 100,
 travel: 0,
 firstMark: 0,
 secondMark: Math.round(distanceBetweenBends * 100) / 100,
