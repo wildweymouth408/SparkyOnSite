@@ -68,7 +68,7 @@ interface Credential {
   imageUrl?: string
 }
 
-type TabId = 'home' | 'calculators' | 'nec' | 'jobs' | 'settings'
+type TabId = 'home' | 'calculators' | 'nec' | 'sparky' | 'profile'
 
 interface HomeTabProps {
   onNavigate?: (tab: TabId, toolId?: string) => void

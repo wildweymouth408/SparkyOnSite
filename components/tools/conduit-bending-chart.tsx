@@ -182,12 +182,14 @@ const INSTRUCTIONS: Record<Brand, Record<BendType, { steps: string[]; pro?: stri
 
 // ── Realistic Bend Diagrams ──────────────────────────────────────────────────
 
-const PIPE = '#9CA3AF'       // metallic gray
-const PIPE_DARK = '#6B7280'  // darker edge
-const MARK_RED = '#DC2626'   // pencil mark red
-const DIM_LINE = '#6B7280'   // dimension lines
-const DIM_TEXT = '#9CA3AF'   // dimension text
-const BG_SURFACE = '#1F2937' // work surface
+const PIPE_LIGHT = '#f97316' // sunrise primary
+const PIPE_DARK = '#ea580c'   // darker orange for shadow
+const MARK_RED = '#ef4444'    // destructive red
+const DIM_LINE = '#a1a1aa'    // muted-foreground
+const DIM_TEXT = '#d4d4d8'    // lighter foreground
+const BG_SURFACE = '#18181b'  // card background
+const OBSTACLE_FILL = '#27272a'    // secondary
+const OBSTACLE_STROKE = '#374151'  // border
 
 function BendDiagram({ type, brand, calcValues }: {
   type: BendType
@@ -198,17 +200,22 @@ function BendDiagram({ type, brand, calcValues }: {
 
   if (type === '90') return (
     <svg viewBox="0 0 320 200" className="w-full" style={{ maxHeight: '180px' }}>
+      <defs>
+        <filter id="pipe-shadow-90" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.3"/>
+        </filter>
+      </defs>
       {/* Floor line */}
       <line x1="0" y1="170" x2="320" y2="170" stroke={BG_SURFACE} strokeWidth="1" />
       {/* Horizontal run */}
-      <line x1="20" y1="155" x2="140" y2="155" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="20" y1="155" x2="140" y2="155" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="20" y1="155" x2="140" y2="155" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-90)" />
+      <line x1="20" y1="155" x2="140" y2="155" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Bend arc */}
-      <path d="M 140 155 Q 140 60 180 45" fill="none" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <path d="M 140 155 Q 140 60 180 45" fill="none" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <path d="M 140 155 Q 140 60 180 45" fill="none" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-90)" />
+      <path d="M 140 155 Q 140 60 180 45" fill="none" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Vertical stub */}
-      <line x1="180" y1="45" x2="180" y2="15" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="180" y1="45" x2="180" y2="15" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="180" y1="45" x2="180" y2="15" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-90)" />
+      <line x1="180" y1="45" x2="180" y2="15" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Pencil mark on pipe */}
       <line x1="100" y1="147" x2="100" y2="163" stroke={MARK_RED} strokeWidth="2" />
       <text x="100" y="178" fill={MARK_RED} fontSize="9" textAnchor="middle" fontFamily="var(--font-mono)">
@@ -235,17 +242,22 @@ function BendDiagram({ type, brand, calcValues }: {
 
   if (type === 'offset') return (
     <svg viewBox="0 0 320 180" className="w-full" style={{ maxHeight: '160px' }}>
+      <defs>
+        <filter id="pipe-shadow-offset" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.3"/>
+        </filter>
+      </defs>
       {/* Floor */}
       <line x1="0" y1="160" x2="320" y2="160" stroke={BG_SURFACE} strokeWidth="1" />
       {/* Lower run */}
-      <line x1="20" y1="130" x2="90" y2="130" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="20" y1="130" x2="90" y2="130" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="20" y1="130" x2="90" y2="130" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-offset)" />
+      <line x1="20" y1="130" x2="90" y2="130" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* First bend (up) */}
-      <line x1="90" y1="130" x2="155" y2="60" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="90" y1="130" x2="155" y2="60" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="90" y1="130" x2="155" y2="60" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-offset)" />
+      <line x1="90" y1="130" x2="155" y2="60" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Upper run */}
-      <line x1="155" y1="60" x2="300" y2="60" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="155" y1="60" x2="300" y2="60" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="155" y1="60" x2="300" y2="60" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-offset)" />
+      <line x1="155" y1="60" x2="300" y2="60" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Pencil marks */}
       <line x1="90" y1="122" x2="90" y2="138" stroke={MARK_RED} strokeWidth="2" />
       <line x1="155" y1="52" x2="155" y2="68" stroke={MARK_RED} strokeWidth="2" />
@@ -275,22 +287,27 @@ function BendDiagram({ type, brand, calcValues }: {
 
   if (type === 'saddle3') return (
     <svg viewBox="0 0 340 180" className="w-full" style={{ maxHeight: '160px' }}>
+      <defs>
+        <filter id="pipe-shadow-saddle3" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.3"/>
+        </filter>
+      </defs>
       <line x1="0" y1="160" x2="340" y2="160" stroke={BG_SURFACE} strokeWidth="1" />
       {/* Obstacle */}
-      <rect x="130" y="100" width="80" height="30" fill={BG_SURFACE} stroke="#374151" strokeWidth="1" rx="2" />
-      <text x="170" y="119" fill="#4B5563" fontSize="8" textAnchor="middle" fontFamily="var(--font-mono)">obstacle</text>
+      <rect x="130" y="100" width="80" height="30" fill={OBSTACLE_FILL} stroke={OBSTACLE_STROKE} strokeWidth="1" rx="2" />
+      <text x="170" y="119" fill={DIM_TEXT} fontSize="8" textAnchor="middle" fontFamily="var(--font-mono)">obstacle</text>
       {/* Left run */}
-      <line x1="20" y1="125" x2="100" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="20" y1="125" x2="100" y2="125" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="20" y1="125" x2="100" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle3)" />
+      <line x1="20" y1="125" x2="100" y2="125" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Up to center */}
-      <line x1="100" y1="125" x2="170" y2="65" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="100" y1="125" x2="170" y2="65" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="100" y1="125" x2="170" y2="65" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle3)" />
+      <line x1="100" y1="125" x2="170" y2="65" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Down from center */}
-      <line x1="170" y1="65" x2="240" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="170" y1="65" x2="240" y2="125" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="170" y1="65" x2="240" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle3)" />
+      <line x1="170" y1="65" x2="240" y2="125" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Right run */}
-      <line x1="240" y1="125" x2="320" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="240" y1="125" x2="320" y2="125" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="240" y1="125" x2="320" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle3)" />
+      <line x1="240" y1="125" x2="320" y2="125" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Marks */}
       <line x1="100" y1="117" x2="100" y2="133" stroke={MARK_RED} strokeWidth="2" />
       <line x1="170" y1="57" x2="170" y2="73" stroke={MARK_RED} strokeWidth="2" />
@@ -304,25 +321,30 @@ function BendDiagram({ type, brand, calcValues }: {
 
   if (type === 'saddle4') return (
     <svg viewBox="0 0 360 180" className="w-full" style={{ maxHeight: '160px' }}>
+      <defs>
+        <filter id="pipe-shadow-saddle4" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.3"/>
+        </filter>
+      </defs>
       <line x1="0" y1="160" x2="360" y2="160" stroke={BG_SURFACE} strokeWidth="1" />
       {/* Obstacle (wider) */}
-      <rect x="100" y="100" width="160" height="30" fill={BG_SURFACE} stroke="#374151" strokeWidth="1" rx="2" />
-      <text x="180" y="119" fill="#4B5563" fontSize="8" textAnchor="middle" fontFamily="var(--font-mono)">obstacle</text>
+      <rect x="100" y="100" width="160" height="30" fill={OBSTACLE_FILL} stroke={OBSTACLE_STROKE} strokeWidth="1" rx="2" />
+      <text x="180" y="119" fill={DIM_TEXT} fontSize="8" textAnchor="middle" fontFamily="var(--font-mono)">obstacle</text>
       {/* Left run */}
-      <line x1="20" y1="125" x2="80" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="20" y1="125" x2="80" y2="125" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="20" y1="125" x2="80" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle4)" />
+      <line x1="20" y1="125" x2="80" y2="125" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Up bend 1 */}
-      <line x1="80" y1="125" x2="120" y2="65" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="80" y1="125" x2="120" y2="65" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="80" y1="125" x2="120" y2="65" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle4)" />
+      <line x1="80" y1="125" x2="120" y2="65" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Flat top */}
-      <line x1="120" y1="65" x2="240" y2="65" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="120" y1="65" x2="240" y2="65" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="120" y1="65" x2="240" y2="65" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle4)" />
+      <line x1="120" y1="65" x2="240" y2="65" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Down bend 2 */}
-      <line x1="240" y1="65" x2="280" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="240" y1="65" x2="280" y2="125" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="240" y1="65" x2="280" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle4)" />
+      <line x1="240" y1="65" x2="280" y2="125" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Right run */}
-      <line x1="280" y1="125" x2="340" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="280" y1="125" x2="340" y2="125" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="280" y1="125" x2="340" y2="125" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-saddle4)" />
+      <line x1="280" y1="125" x2="340" y2="125" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Marks */}
       {[80, 120, 240, 280].map(x => (
         <line key={x} x1={x} y1={x > 200 ? (x === 240 ? 57 : 117) : (x === 120 ? 57 : 117)} x2={x} y2={x > 200 ? (x === 240 ? 73 : 133) : (x === 120 ? 73 : 133)} stroke={MARK_RED} strokeWidth="2" />
@@ -336,22 +358,27 @@ function BendDiagram({ type, brand, calcValues }: {
 
   if (type === 'back2back') return (
     <svg viewBox="0 0 300 200" className="w-full" style={{ maxHeight: '180px' }}>
+      <defs>
+        <filter id="pipe-shadow-back2back" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.3"/>
+        </filter>
+      </defs>
       <line x1="0" y1="185" x2="300" y2="185" stroke={BG_SURFACE} strokeWidth="1" />
       {/* First stub */}
-      <line x1="80" y1="170" x2="80" y2="70" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="80" y1="170" x2="80" y2="70" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="80" y1="170" x2="80" y2="70" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-back2back)" />
+      <line x1="80" y1="170" x2="80" y2="70" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* First arc */}
-      <path d="M 80 70 Q 80 35 110 35" fill="none" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <path d="M 80 70 Q 80 35 110 35" fill="none" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <path d="M 80 70 Q 80 35 110 35" fill="none" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-back2back)" />
+      <path d="M 80 70 Q 80 35 110 35" fill="none" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Horizontal */}
-      <line x1="110" y1="35" x2="190" y2="35" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="110" y1="35" x2="190" y2="35" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="110" y1="35" x2="190" y2="35" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-back2back)" />
+      <line x1="110" y1="35" x2="190" y2="35" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Second arc */}
-      <path d="M 190 35 Q 220 35 220 70" fill="none" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <path d="M 190 35 Q 220 35 220 70" fill="none" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <path d="M 190 35 Q 220 35 220 70" fill="none" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-back2back)" />
+      <path d="M 190 35 Q 220 35 220 70" fill="none" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Second stub */}
-      <line x1="220" y1="70" x2="220" y2="170" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="220" y1="70" x2="220" y2="170" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="220" y1="70" x2="220" y2="170" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-back2back)" />
+      <line x1="220" y1="70" x2="220" y2="170" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Star mark callout for second bend */}
       <circle cx="220" cy="110" r="3" fill="none" stroke={MARK_RED} strokeWidth="1.5" />
       <text x="235" y="113" fill={MARK_RED} fontSize="8" fontFamily="var(--font-mono)">{b.marks.back}</text>
@@ -367,13 +394,18 @@ function BendDiagram({ type, brand, calcValues }: {
 
   if (type === 'rollingOffset') return (
     <svg viewBox="0 0 300 180" className="w-full" style={{ maxHeight: '160px' }}>
+      <defs>
+        <filter id="pipe-shadow-rolling" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.3"/>
+        </filter>
+      </defs>
       <line x1="0" y1="160" x2="300" y2="160" stroke={BG_SURFACE} strokeWidth="1" />
       {/* Right triangle */}
       <line x1="60" y1="130" x2="180" y2="130" stroke={DIM_LINE} strokeWidth="0.5" strokeDasharray="3,2" />
       <line x1="180" y1="130" x2="180" y2="50" stroke={DIM_LINE} strokeWidth="0.5" strokeDasharray="3,2" />
       {/* Travel (hypotenuse) = the actual pipe */}
-      <line x1="60" y1="130" x2="180" y2="50" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="60" y1="130" x2="180" y2="50" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="60" y1="130" x2="180" y2="50" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-rolling)" />
+      <line x1="60" y1="130" x2="180" y2="50" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Marks */}
       <circle cx="60" cy="130" r="4" fill="none" stroke={MARK_RED} strokeWidth="1.5" />
       <circle cx="180" cy="50" r="4" fill="none" stroke={MARK_RED} strokeWidth="1.5" />
@@ -384,7 +416,7 @@ function BendDiagram({ type, brand, calcValues }: {
       <text x="195" y="93" fill={DIM_TEXT} fontSize="9" fontFamily="var(--font-mono)">
         rise {calcValues?.rise || '—'}"
       </text>
-      <text x="105" y="82" fill={PIPE} fontSize="9" fontFamily="var(--font-mono)">
+      <text x="105" y="82" fill={PIPE_LIGHT} fontSize="9" fontFamily="var(--font-mono)">
         travel {calcValues?.travel || '—'}"
       </text>
       <text x="55" y="150" fill={MARK_RED} fontSize="7" textAnchor="middle" fontFamily="var(--font-mono)">bend 1</text>
@@ -395,19 +427,24 @@ function BendDiagram({ type, brand, calcValues }: {
   // kickWith90
   return (
     <svg viewBox="0 0 300 200" className="w-full" style={{ maxHeight: '180px' }}>
+      <defs>
+        <filter id="pipe-shadow-kick" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.3"/>
+        </filter>
+      </defs>
       <line x1="0" y1="185" x2="300" y2="185" stroke={BG_SURFACE} strokeWidth="1" />
       {/* Wall */}
       <rect x="245" y="10" width="10" height="175" fill={BG_SURFACE} />
-      <text x="260" y="100" fill="#4B5563" fontSize="8" fontFamily="var(--font-mono)" transform="rotate(90,260,100)">wall</text>
+      <text x="260" y="100" fill={DIM_TEXT} fontSize="8" fontFamily="var(--font-mono)" transform="rotate(90,260,100)">wall</text>
       {/* Horizontal run */}
-      <line x1="20" y1="150" x2="130" y2="150" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="20" y1="150" x2="130" y2="150" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="20" y1="150" x2="130" y2="150" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-kick)" />
+      <line x1="20" y1="150" x2="130" y2="150" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Bend arc to vertical */}
-      <path d="M 130 150 Q 130 80 160 55" fill="none" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <path d="M 130 150 Q 130 80 160 55" fill="none" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <path d="M 130 150 Q 130 80 160 55" fill="none" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-kick)" />
+      <path d="M 130 150 Q 130 80 160 55" fill="none" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Vertical with slight kick */}
-      <line x1="160" y1="55" x2="170" y2="20" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" />
-      <line x1="160" y1="55" x2="170" y2="20" stroke={PIPE} strokeWidth="5" strokeLinecap="round" />
+      <line x1="160" y1="55" x2="170" y2="20" stroke={PIPE_DARK} strokeWidth="8" strokeLinecap="round" filter="url(#pipe-shadow-kick)" />
+      <line x1="160" y1="55" x2="170" y2="20" stroke={PIPE_LIGHT} strokeWidth="5" strokeLinecap="round" />
       {/* Kick dimension */}
       <line x1="170" y1="20" x2="245" y2="20" stroke={DIM_LINE} strokeWidth="0.5" strokeDasharray="3,2" />
       <text x="207" y="15" fill={DIM_TEXT} fontSize="8" textAnchor="middle" fontFamily="var(--font-mono)">kick offset</text>

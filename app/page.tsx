@@ -86,7 +86,7 @@ export default function SparkyApp() {
             {activeTab === 'home' ? '' : 
              activeTab === 'calculators' ? '/ Tools' :
              activeTab === 'nec' ? '/ Codes' :
-             activeTab === 'jobs' ? '/ Sparky AI' :
+             activeTab === 'sparky' ? '/ Sparky' :
              '/ Profile'}
           </span>
         </div>
@@ -109,8 +109,8 @@ export default function SparkyApp() {
           />
         )}
         {activeTab === 'nec'         && <ReferenceTab />}
-        {activeTab === 'jobs'        && <AskSparkyTab />}
-        {activeTab === 'settings'    && <MoreTab />}
+        {activeTab === 'sparky'      && <AskSparkyTab />}
+        {activeTab === 'profile'     && <MoreTab />}
       </main>
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
