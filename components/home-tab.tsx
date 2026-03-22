@@ -161,7 +161,7 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
         <div className="flex items-center justify-center w-14 h-14 bg-[#f97316] mb-3">
           <Zap className="h-7 w-7 text-[#09090b]" />
         </div>
-        <h1 className="text-2xl font-bold text-[#f97316] uppercase tracking-wider">SparkyOnsite</h1>
+        <h1 className="text-2xl font-bold text-[#f97316] uppercase tracking-wider">Sparky</h1>
         <p className="text-[11px] text-[#52525b] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
       </div>
       <div className="flex flex-col gap-4">
@@ -210,14 +210,14 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
         <div className="flex items-center justify-center w-14 h-14 bg-[#f97316] mb-3">
           <Zap className="h-7 w-7 text-[#09090b]" />
         </div>
-        <h1 className="text-2xl font-bold text-[#f97316] uppercase tracking-wider">SparkyOnsite</h1>
+        <h1 className="text-2xl font-bold text-[#f97316] uppercase tracking-wider">Sparky</h1>
         <p className="text-[11px] text-[#52525b] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
       </div>
 
       {step === 1 && (
         <div className="flex flex-col gap-4">
           <div className="text-center mb-2">
-            <p className="text-sm text-[#888]">Let's set up your profile so SparkyOnsite knows who you are.</p>
+            <p className="text-sm text-[#888]">Let's set up your profile so Sparky knows who you are.</p>
           </div>
           <div>
             <label className={lbl}>Your First Name</label>
@@ -700,7 +700,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
             <div className="flex items-center gap-2 mb-1.5">
               <Lightbulb className={`h-3.5 w-3.5 ${fieldMode ? 'text-yellow-400' : 'text-[#f97316]'}`} />
               <span className={`text-[10px] font-bold uppercase tracking-wider ${fieldMode ? 'text-yellow-400' : 'text-[#f97316]'}`}>
-                SparkyOnsite's Tip
+                Sparky's Tip
               </span>
               <span className={`text-[10px] uppercase tracking-wider ${fm.dim}`}>{tip.category}</span>
             </div>
