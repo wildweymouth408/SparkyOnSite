@@ -11,6 +11,8 @@ import { ConduitBendingChart } from '@/components/tools/conduit-bending-chart'
 import { WireSizingCalculator } from '@/components/tools/wire-sizing'
 import { AmpacityCalculator } from '@/components/tools/ampacity'
 import { BoxFillCalculator } from '@/components/tools/box-fill'
+import { MaterialTakeoffCalculator } from '@/components/tools/material-takeoff-calculator'
+import { PanelScheduleBuilder } from '@/components/panel-schedule-builder'
 import {
   Zap,
   Cylinder,
@@ -23,6 +25,8 @@ import {
   HardHat,
   Clock,
   ChevronRight,
+  ClipboardList,
+  LayoutGrid,
 } from 'lucide-react'
 import { Swipeable } from '@/components/ui/swipeable'
 
@@ -36,6 +40,8 @@ type CalculatorId =
   | 'box-fill'
   | 'motor-fla'
   | 'construction'
+  | 'material-takeoff'
+  | 'panel-schedule'
   | null
 
 const CALCULATORS = [
@@ -48,6 +54,8 @@ const CALCULATORS = [
   { id: 'box-fill' as const,      label: 'Box Fill',      desc: 'NEC 314.16 volumes',        icon: Box,      color: '#f97216' },
   { id: 'motor-fla' as const,     label: 'Motor FLA',     desc: '430.248/250 tables',        icon: Settings, color: '#f97216' },
   { id: 'construction' as const,  label: 'Construction',  desc: 'Fractions, feet & inches',  icon: HardHat,  color: '#f97216' },
+  { id: 'material-takeoff' as const,  label: 'Material Takeoff',  desc: 'Wire, conduit & labor est.',  icon: ClipboardList, color: '#f97316' },
+  { id: 'panel-schedule' as const,    label: 'Panel Schedule',    desc: 'Load center builder',         icon: LayoutGrid,    color: '#f97316' },
 ] as const
 
 // ── Inline Motor FLA Calculator ───────────────────────────────────────────────
@@ -247,7 +255,9 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
       case 'ampacity':      return <AmpacityCalculator />
       case 'box-fill':      return <BoxFillCalculator />
       case 'motor-fla':     return <MotorFLACalculator />
-      case 'construction':  return <ConstructionCalculator />
+      case 'construction':     return <ConstructionCalculator />
+      case 'material-takeoff': return <MaterialTakeoffCalculator />
+      case 'panel-schedule':   return <PanelScheduleBuilder />
       default:              return null
     }
   }
@@ -331,3 +341,4 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
     </div>
   )
 }
+
