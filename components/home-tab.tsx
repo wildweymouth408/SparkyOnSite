@@ -111,18 +111,7 @@ const DEFAULT_QUICK_ACTIONS = [
 // ─── FIELD MODE HOOK ───────────────────────────────────────────────────────────
 
 function useFieldMode() {
-  const [fieldMode, setFieldMode] = useState(false)
-  useEffect(() => {
-    const saved = localStorage.getItem('sparky_field_mode')
-    if (saved !== null) setFieldMode(JSON.parse(saved))
-    function handleChange() {
-      const updated = localStorage.getItem('sparky_field_mode')
-      if (updated !== null) setFieldMode(JSON.parse(updated))
-    }
-    window.addEventListener('sparky_field_mode_changed', handleChange)
-    return () => window.removeEventListener('sparky_field_mode_changed', handleChange)
-  }, [])
-  return fieldMode
+  return false
 }
 
 // ─── AUTH SCREEN ───────────────────────────────────────────────────────────────
@@ -408,27 +397,25 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
     }
   }
 
-  const border = fieldMode ? 'border-yellow-400/30 bg-black' : 'border-[#2a2a35] bg-[#111]'
-  const inputCls = fieldMode
-    ? 'flex-1 h-11 px-3 text-sm bg-black border border-yellow-400/30 text-yellow-100 placeholder-yellow-400/30 focus:outline-none focus:border-yellow-400'
-    : 'flex-1 h-11 px-3 text-sm bg-[#0a0b0e] border border-[#3f3f46] text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#f97316]'
+  const border = 'border-[#2a2a35] bg-[#111]'
+  const inputCls = 'flex-1 h-11 px-3 text-sm bg-[#0a0b0e] border border-[#3f3f46] text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#f97316]'
 
   return (
     <div className={`border p-4 flex flex-col gap-3 ${border}`}>
       <div className="flex items-center gap-2">
         <Zap className="h-4 w-4 text-[#f97316]" />
-        <span className={`text-[11px] font-bold uppercase tracking-widest ${fieldMode ? 'text-yellow-300' : 'text-[#f97316]'}`}>
+        <span className={`text-[11px] font-bold uppercase tracking-widest text-[#f97316]`}>
           Ask Sparky
         </span>
         <span className={`ml-auto text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border ${
           modelUsed === 'ollama' ? 'border-green-500/60 text-green-400'
-            : modelUsed === 'cloud' ? fieldMode ? 'border-yellow-400/20 text-yellow-400/40' : 'border-[#3f3f46] text-[#444]'
-            : fieldMode ? 'border-yellow-400/10 text-yellow-400/30' : 'border-[#27272a] text-[#3f3f46]'
+            : modelUsed === 'cloud' ? 'border-[#3f3f46] text-[#444]'
+            : 'border-[#27272a] text-[#3f3f46]'
         }`}>
           {modelUsed === 'ollama' ? 'Local' : modelUsed === 'cloud' ? 'Cloud' : 'Local→Cloud'}
         </span>
         {voiceSupported && (
-          <span className={`text-[9px] uppercase tracking-wider ${fieldMode ? 'text-yellow-400/40' : 'text-[#444]'}`}>
+          <span className={`text-[9px] uppercase tracking-wider text-[#444]`}>
             {usedVoice ? '🎤 → spoken' : 'mic on'}
           </span>
         )}
@@ -442,7 +429,6 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
             className={`h-11 w-11 shrink-0 flex items-center justify-center border transition-all ${
               isListening
                 ? 'border-[#f97316] bg-[#f9721620] text-[#f97316] animate-pulse'
-                : fieldMode ? 'border-yellow-400/30 text-yellow-400/50'
                 : 'border-[#3f3f46] text-[#52525b] hover:border-[#f97316] hover:text-[#f97316]'
             }`}
           >
@@ -467,7 +453,7 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
       </div>
 
       {response && (
-        <div className={`text-sm leading-relaxed p-3 border-l-2 border-[#f97316] ${fieldMode ? 'text-yellow-100 bg-black' : 'text-[#ddd] bg-[#0a0b0e]'}`}>
+        <div className={`text-sm leading-relaxed p-3 border-l-2 border-[#f97316] text-[#ddd] bg-[#0a0b0e]`}>
           {response}
         </div>
       )}
@@ -504,20 +490,18 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
 
   // ── Field mode style tokens ───────────────────────────────────────────────
   const fm = {
-    page:       fieldMode ? 'bg-black' : '',
-    card:       fieldMode ? 'bg-black border-yellow-400/40' : 'bg-[#111] border-[#2a2a35]',
-    heading:    fieldMode ? 'text-yellow-300' : 'text-[#888]',
-    body:       fieldMode ? 'text-yellow-100' : 'text-[#f0f0f0]',
-    muted:      fieldMode ? 'text-yellow-400/70' : 'text-[#888]',
-    dim:        fieldMode ? 'text-yellow-400/40' : 'text-[#52525b]',
-    tipCard:    fieldMode ? 'bg-black border border-yellow-400/30' : 'relative overflow-hidden border border-[#2a2a35] bg-[#111]',
-    tipText:    fieldMode ? 'text-yellow-100 text-sm font-bold' : 'text-xs font-medium leading-relaxed text-[#ccc]',
-    tipBody:    fieldMode ? 'text-yellow-300/80 text-sm' : 'mt-1 text-[11px] leading-relaxed text-[#777]',
-    actionBtn:  fieldMode
-      ? 'border border-yellow-400/40 bg-black p-4 flex flex-col gap-2 text-left active:scale-[0.98] min-h-[80px]'
-      : 'border border-[#2a2a35] bg-[#111] p-3 flex flex-col gap-1.5 text-left transition-colors hover:border-[#3f3f46] active:scale-[0.98]',
-    actionLabel: fieldMode ? 'text-sm font-bold text-yellow-100'  : 'text-xs font-bold text-[#f0f0f0]',
-    actionDesc:  fieldMode ? 'text-xs text-yellow-400/60'          : 'text-[10px] text-[#52525b]',
+    page:       '',
+    card:       'bg-[#111] border-[#2a2a35]',
+    heading:    'text-[#888]',
+    body:       'text-[#f0f0f0]',
+    muted:      'text-[#888]',
+    dim:        'text-[#52525b]',
+    tipCard:    'relative overflow-hidden border border-[#2a2a35] bg-[#111]',
+    tipText:    'text-xs font-medium leading-relaxed text-[#ccc]',
+    tipBody:    'mt-1 text-[11px] leading-relaxed text-[#777]',
+    actionBtn:  'border border-[#2a2a35] bg-[#111] p-3 flex flex-col gap-1.5 text-left transition-colors hover:border-[#3f3f46] active:scale-[0.98]',
+    actionLabel: 'text-xs font-bold text-[#f0f0f0]',
+    actionDesc:  'text-[10px] text-[#52525b]',
   }
 
   useEffect(() => {
@@ -649,15 +633,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   return (
     <div className={`flex flex-col gap-5 pb-6 ${fm.page}`}>
 
-      {/* Field mode banner */}
-      {fieldMode && (
-        <div className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/30 px-3 py-2">
-          <Sun className="h-3.5 w-3.5 text-yellow-400 shrink-0" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-400">
-            Field Mode · High-Vis Active
-          </span>
-        </div>
-      )}
+
 
       {/* Profile header */}
       <div className={`border p-4 flex items-center gap-3 ${fm.card}`}>

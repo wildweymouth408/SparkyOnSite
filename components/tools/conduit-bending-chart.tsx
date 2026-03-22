@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { BendVisualization } from '../bend-visualization'
 
 // ── Types ─────────────────────────────────────────────────────────────────────

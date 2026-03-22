@@ -56,7 +56,7 @@ export function AskSparkyTab() {
   const [loading, setLoading] = useState(false)
   const [historyLoaded, setHistoryLoaded] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
-  const [fieldMode, setFieldMode] = useState(false)
+
 
   const [isListening, setIsListening] = useState(false)
   const [voiceSupported, setVoiceSupported] = useState(false)
@@ -71,17 +71,7 @@ export function AskSparkyTab() {
 
   const bottomRef = useRef<HTMLDivElement>(null)
 
-  // Field mode
-  useEffect(() => {
-    const saved = localStorage.getItem('sparky_field_mode')
-    if (saved !== null) setFieldMode(JSON.parse(saved))
-    function handleChange() {
-      const updated = localStorage.getItem('sparky_field_mode')
-      if (updated !== null) setFieldMode(JSON.parse(updated))
-    }
-    window.addEventListener('sparky_field_mode_changed', handleChange)
-    return () => window.removeEventListener('sparky_field_mode_changed', handleChange)
-  }, [])
+
 
   // Load user + conversation history on mount
   useEffect(() => {
@@ -278,16 +268,16 @@ export function AskSparkyTab() {
     }
   }
 
-  // Field mode style tokens
+  // Field mode style tokens (removed field mode, using default dark theme)
   const fm = {
-    topBar:     fieldMode ? 'text-yellow-400/60'                              : 'text-[#52525b]',
-    voiceBtn:   fieldMode ? 'border-yellow-400/30 text-yellow-400/60'         : 'border-[#3f3f46] text-[#52525b]',
-    userBubble: fieldMode ? 'bg-black text-yellow-100 border border-yellow-400/30' : 'bg-[#1a1f2e] text-[#f0f0f0] border border-[#3f3f46]',
-    botBubble:  fieldMode ? 'bg-black text-yellow-100 border border-yellow-400/20' : 'bg-[#111] text-[#e0e0e0] border border-[#2a2a2a]',
-    inputBar:   fieldMode ? 'border-t border-yellow-400/20'                   : 'border-t border-[#27272a]',
-    input:      fieldMode ? 'border border-yellow-400/30 bg-black text-yellow-100 placeholder-yellow-400/30 focus:border-yellow-400' : 'border border-[#3f3f46] bg-[#111] text-[#f0f0f0] placeholder-[#52525b] focus:border-[#f97316]',
-    micBtn:     fieldMode ? 'border-yellow-400/30 text-yellow-400/50 hover:border-yellow-300 hover:text-yellow-300' : 'border-[#3f3f46] text-[#52525b] hover:border-[#f97316] hover:text-[#f97316]',
-    hint:       fieldMode ? 'text-yellow-400/30'                              : 'text-[#444]',
+    topBar:     'text-[#52525b]',
+    voiceBtn:   'border-[#3f3f46] text-[#52525b]',
+    userBubble: 'bg-[#1a1f2e] text-[#f0f0f0] border border-[#3f3f46]',
+    botBubble:  'bg-[#111] text-[#e0e0e0] border border-[#2a2a2a]',
+    inputBar:   'border-t border-[#27272a]',
+    input:      'border border-[#3f3f46] bg-[#111] text-[#f0f0f0] placeholder-[#52525b] focus:border-[#f97316]',
+    micBtn:     'border-[#3f3f46] text-[#52525b] hover:border-[#f97316] hover:text-[#f97316]',
+    hint:       'text-[#444]',
   }
 
   return (
@@ -305,7 +295,7 @@ export function AskSparkyTab() {
             className={`flex items-center gap-1.5 px-2.5 py-1.5 border text-[10px] uppercase tracking-wider font-bold transition-all ${
               speakEnabled
                 ? 'border-[#f97316] text-[#f97316] bg-[#f9731612]'
-                : fieldMode ? 'border-yellow-400/30 text-yellow-400/50' : 'border-[#3f3f46] text-[#52525b]'
+                : 'border-[#3f3f46] text-[#52525b]'
             }`}
           >
             {isSpeaking
@@ -356,7 +346,7 @@ export function AskSparkyTab() {
         {isListening && transcript && (
           <div className="flex gap-2.5 flex-row-reverse">
             <div className={`max-w-[82%] px-3 py-2.5 text-sm italic border border-dashed ${
-              fieldMode ? 'text-yellow-400/60 border-yellow-400/30 bg-black' : 'text-[#888] border-[#444] bg-[#111]'
+              'text-[#888] border-[#444] bg-[#111]'
             }`}>
               {transcript}...
             </div>
@@ -368,7 +358,7 @@ export function AskSparkyTab() {
             <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[#f97316] mt-1">
               <Zap className="h-3.5 w-3.5 text-[#09090b]" />
             </div>
-            <div className={`border px-3 py-2.5 ${fieldMode ? 'bg-black border-yellow-400/20' : 'bg-[#111] border-[#2a2a2a]'}`}>
+            <div className={`border px-3 py-2.5 bg-[#111] border-[#2a2a2a]`}>
               <div className="flex gap-1 items-center h-5">
                 <span className="w-1.5 h-1.5 bg-[#f97316] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-1.5 h-1.5 bg-[#f97316] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />

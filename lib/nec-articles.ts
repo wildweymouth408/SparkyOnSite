@@ -234,6 +234,98 @@ export const NEC_ARTICLES: NECArticle[] = [
       { label: 'Instantaneous', value: '800% FLC' },
     ],
   },
+  {
+    id: 'art-240-4',
+    number: '240.4',
+    title: 'Overcurrent Protection General',
+    category: 'Panels & Protection',
+    summary: 'General requirements for overcurrent protection of conductors',
+    details: [
+      'Conductors shall be protected against overcurrent in accordance with their ampacities',
+      'Next higher standard OCPD rating permitted if ampacity does not correspond to standard rating, under specific conditions',
+      'Small conductor restrictions: 14 AWG = 15A, 12 AWG = 20A, 10 AWG = 30A',
+    ],
+    keyValues: [
+      { label: '14 AWG', value: '15A' },
+      { label: '12 AWG', value: '20A' },
+      { label: '10 AWG', value: '30A' },
+    ],
+  },
+  {
+    id: 'art-210-19',
+    number: '210.19',
+    title: 'Branch Circuit Conductor Sizing',
+    category: 'Branch Circuits',
+    summary: 'Requirements for sizing branch circuit conductors',
+    details: [
+      'Conductors shall have an ampacity not less than the maximum load to be served',
+      'For other than continuous loads, 100% of load; for continuous loads, 125% of load',
+      'Consider voltage drop: 3% for branch circuits, 5% total',
+    ],
+  },
+  {
+    id: 'art-215-2',
+    number: '215.2',
+    title: 'Feeder Conductor Sizing',
+    category: 'Panels & Protection',
+    summary: 'Requirements for sizing feeder conductors',
+    details: [
+      'Feeder conductors shall have ampacity not less than required to supply the load',
+      'Continuous loads: 125% of load',
+      'Consider voltage drop: 3% for feeders, 5% total',
+    ],
+  },
+  {
+    id: 'art-220-42',
+    number: '220.42',
+    title: 'General Lighting Load Demand Factors',
+    category: 'General',
+    summary: 'Demand factors for general lighting loads',
+    details: [
+      'First 12500 VA at 100%; next 112500 VA at 35%; remainder at 25%',
+      'Dwelling units: 100% of lighting load',
+    ],
+  },
+  {
+    id: 'art-250-66',
+    number: '250.66',
+    title: 'Grounding Electrode Conductor Sizing',
+    category: 'Grounding',
+    summary: 'Sizing grounding electrode conductors for AC systems',
+    details: [
+      'Size based on largest service entrance conductor or equivalent area',
+      'Table 250.66: Up to 2/0 Cu service = #6 Cu GEC; 3/0-350 Cu = #4 Cu; 400-600 Cu = #2 Cu; etc.',
+    ],
+    keyValues: [
+      { label: 'Up to 2/0 Cu', value: '#6 Cu' },
+      { label: '3/0-350 Cu', value: '#4 Cu' },
+      { label: '400-600 Cu', value: '#2 Cu' },
+    ],
+  },
+  {
+    id: 'art-300-5',
+    number: '300.5',
+    title: 'Underground Installation Depth',
+    category: 'General',
+    summary: 'Minimum cover requirements for underground cables and raceways',
+    details: [
+      'Direct burial cables: 24 inches for 0-600V residential, 30 inches for commercial/industrial',
+      'Raceways (conduit): 18 inches for 0-600V residential, 24 inches for commercial/industrial',
+      'Protection required when less than minimum depth (concrete pad, etc.)',
+    ],
+  },
+  {
+    id: 'art-314-28',
+    number: '314.28',
+    title: 'Pull and Junction Box Sizing',
+    category: 'Boxes & Raceways',
+    summary: 'Minimum size requirements for pull and junction boxes',
+    details: [
+      'Straight pulls: length not less than 8 times the trade diameter of largest raceway',
+      'Angle or U pulls: distance from entry to opposite wall not less than 6 times raceway diameter plus sum of diameters of other raceways in same row',
+      'Splices and taps: box must be large enough for conductors and fittings',
+    ],
+  },
 ]
 
 export function getArticleById(id: string): NECArticle | undefined {

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { JetBrains_Mono } from 'next/font/google'
 import { Toaster } from 'sonner'
+import { DisclaimerModal } from '@/components/disclaimer-modal'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
@@ -45,8 +46,6 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
             try {
-              var field = localStorage.getItem('sparky_field_mode');
-              if (field === 'true') document.documentElement.classList.add('field-mode');
               var dark = localStorage.getItem('sparky_dark_mode');
               if (dark === null || dark === 'true') {
                 document.documentElement.classList.add('dark');
@@ -71,6 +70,7 @@ export default function RootLayout({
           }}
         />
         <Analytics />
+        <DisclaimerModal />
       </body>
     </html>
   )

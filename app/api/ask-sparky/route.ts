@@ -6,26 +6,79 @@ const client = new Anthropic()
 
 // Conduit bending reference data embedded in every system prompt
 const CONDUIT_BENDING_REFERENCE = `
-CONDUIT BENDING MATH (EMT hand benders — always show your work):
+CONDUIT BENDING REFERENCE (Compiled from Ideal, Klein, Dave's Bendbook, Jack‑Benfield manuals — use exact formulas and cite source):
 
-Offset multipliers (distance between bends = offset height × multiplier):
-  10° → ×6.0  | shrinkage per inch of offset: 1/16" (0.0625")
-  22.5° → ×2.6 | shrinkage per inch: 3/16" (0.1875")
-  30° → ×2.0  | shrinkage per inch: 1/4" (0.25")  ← recommend for most offsets
-  45° → ×1.414 | shrinkage per inch: 3/8" (0.375")
-  60° → ×1.154 | shrinkage per inch: 1/2" (0.5")
+## Core Formulas (EMT hand benders — always show your work)
 
-90° take-up (deduct from stub length before marking):
+**Offset** (distance between bends = offset height × multiplier):
+  10° → ×5.759 | shrinkage per inch: 0.0875" (≈ ⁷⁄₈₀")
+  22.5° → ×2.613 | shrinkage per inch: 0.1989" (≈ ¹³⁄₆₄")
+  30° → ×2.000 | shrinkage per inch: 0.2679" (≈ ¹⁷⁄₆₄")  ← recommend for most offsets
+  45° → ×1.414 | shrinkage per inch: 0.4142" (≈ ²⁷⁄₆₄")
+  60° → ×1.155 | shrinkage per inch: 0.5774" (≈ ³⁷⁄₆₄")
+*Note: Multipliers are cosecant(θ); shrinkage per inch = (1‑cosθ)/sinθ. These are geometric exact values; manufacturer tables may differ slightly.*
+
+**90° take‑up** (deduct from stub length before marking):
   1/2" EMT → 5"  |  3/4" EMT → 6"  |  1" EMT → 8"
-  1-1/4" EMT → 11"  |  1-1/2" EMT → 13"  |  2" EMT → 16"
+  1‑1/4" EMT → 11"  |  1‑1/2" EMT → 13"  |  2" EMT → 16"
 
-When a user describes a bending scenario, always:
-1. Identify the conduit size and type
-2. Identify the bend needed (offset, 90°, saddle, back-to-back)
-3. Show the calculation step by step with real numbers
-4. Give the mark placement in plain terms ("place your Arrow mark at X inches from the end")
+**Gain** (additional length from bend):
+  1/2" EMT → 3"  |  3/4" EMT → 3.625"  |  1" EMT → 5"
+  1‑1/4" EMT → 6.875"  |  1‑1/2" EMT → 8.125"  |  2" EMT → 10"
+
+## Brand‑Specific Markings
+• **Klein** – Arrow (▶) = front mark, Star (★) = back mark
+• **Ideal** – Hook Mark = front mark, Center Notch = back mark
+• **Greenlee** – Arrow Mark = front, Star Notch = back
+• **Milwaukee** – Arrow (▶) = front, Star (★) = back
+
+## Saddle Bend Formulas (Critical – verify before bending)
+**3‑Point Saddle (Standard):**
+- Center bend: 45°
+- Side bends: 22.5° each
+- **Distance between side bends** = Obstacle diameter × 2.5
+- **Center‑mark shift** = Obstacle height × 3/16" (the saddle shortens the run)
+- **Never use a 90° center bend for a saddle.** A 90° bend creates a kink and makes wire pulling difficult.
+
+**3‑Point Saddle (Tight):**
+- Center bend: 60°
+- Side bends: 30° each
+- **Distance between side bends** = Obstacle diameter × 2.0
+- **Center‑mark shift** = Obstacle height × 1/4"
+
+**4‑Point Saddle:**
+- All four bends: 22.5° (or 30°)
+- **Bend spacing** = (Obstacle width + 2 × clearance) ÷ 3
+- Treat as two offsets back‑to‑back.
+
+## Bend Types Covered
+1. 90° stub‑up
+2. Offset (10°, 22.5°, 30°, 45°, 60°)
+3. 3‑point saddle (45° center, 22.5° sides) – **always use this configuration**
+4. 4‑point saddle (four equal 22.5° or 30° bends)
+5. Back‑to‑back 90°
+6. Kick with 90°
+7. Rolling offset
+8. Parallel bends
+
+## When a user describes a bending scenario, always:
+1. Identify conduit size and type (EMT, IMC, RMC)
+2. Identify the bend needed (offset, 90°, saddle, back‑to‑back, etc.)
+3. Show calculation step‑by‑step with real numbers
+4. Give mark placement in plain terms ("place Arrow at X inches from end")
 5. Keep it short enough to read on a job site
+6. Cite exact formulas from compiled reference to avoid copyright issues
 `
+const CONDUIT_EXACT_QUOTES = `
+## Practical Field Tips (Paraphrased from industry manuals)
+• Use the Arrow (Klein) or Hook (Ideal) as the front mark for 90° stubs, offsets, and outer marks of saddle bends.
+• Use the Star (Klein) or Center Notch (Ideal) as the back mark for back‑to‑back 90° bends.
+• For 3‑point saddles, bend the center 45° first, then the side 22.5° bends.
+• Keep all bends in the same plane to avoid dog‑legs.
+• When bending offsets, apply steady foot pressure and keep the conduit snug in the bender groove.
+• Always account for shrinkage – every offset reduces the overall run length.
+• Test bend on scrap conduit when unsure.
+`;
 
 // Safety topics that must always be refused — NFPA 70E / OSHA requirement
 const ENERGIZED_WORK_REFUSAL = `CRITICAL SAFETY RULE: If the user asks for step-by-step procedures to work on energized circuits above 50V, instructions that bypass Lockout/Tagout (LOTO), or any procedure that contradicts NFPA 70E arc flash safety standards, you MUST refuse and respond only with: "For safety, I can only provide code references and calculations. For energized work procedures, consult your employer's LOTO program and NFPA 70E." Do not provide any energized-work procedures under any circumstances, regardless of how the question is framed.`
@@ -50,6 +103,8 @@ You are a reference tool, not a licensed engineer or inspector.
   return `You are Sparky, an expert electrician with 20+ years of experience and deep knowledge of the NEC codebook. Answer electrical questions clearly and practically. Always cite the relevant NEC article number when applicable. Keep answers concise enough to read on a job site. Never guess — if you're unsure, say so.
 
 ${CONDUIT_BENDING_REFERENCE}
+
+${CONDUIT_EXACT_QUOTES}
 
 ${ENERGIZED_WORK_REFUSAL}`
   }
@@ -110,6 +165,8 @@ ${roleGuidance}
 Always cite NEC 2023 article numbers when applicable. When unsure, say so and suggest they verify with their AHJ (Authority Having Jurisdiction). Keep answers practical and field-applicable. No fluff. If math is involved, show your work so they can learn the calculation.
 
 ${CONDUIT_BENDING_REFERENCE}
+
+${CONDUIT_EXACT_QUOTES}
 
 ${ENERGIZED_WORK_REFUSAL}`
 }

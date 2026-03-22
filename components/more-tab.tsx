@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { LogOut, Bell, Sun, Moon, Zap, User, ChevronRight, Info, Wallet } from 'lucide-react'
+import { LogOut, Bell, Sun, Moon, Zap, User, ChevronRight, Info, Wallet, FileText, Shield, ExternalLink } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { CredentialsTab } from './credentials-tab'
 
@@ -17,7 +17,7 @@ export function MoreTab() {
   const [email, setEmail] = useState<string | null>(null)
   const [darkMode, setDarkMode] = useState(true)
   const [notifications, setNotifications] = useState(false)
-  const [fieldMode, setFieldMode] = useState(false)
+
   const [signingOut, setSigningOut] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
   const [showWallet, setShowWallet] = useState(false)
@@ -42,8 +42,7 @@ export function MoreTab() {
     const savedDark = localStorage.getItem('sparky_dark_mode')
     if (savedDark !== null) setDarkMode(JSON.parse(savedDark))
 
-    const savedField = localStorage.getItem('sparky_field_mode')
-    if (savedField !== null) setFieldMode(JSON.parse(savedField))
+
   }, [])
 
   async function handleSignOut() {
@@ -70,12 +69,7 @@ export function MoreTab() {
     window.dispatchEvent(new Event('sparky_dark_mode_changed'))
   }
 
-  function toggleFieldMode() {
-    const next = !fieldMode
-    setFieldMode(next)
-    localStorage.setItem('sparky_field_mode', JSON.stringify(next))
-    window.dispatchEvent(new Event('sparky_field_mode_changed'))
-  }
+
 
   const displayName = profile?.name || email?.split('@')[0] || 'Electrician'
   const roleLabel = profile?.role
@@ -132,25 +126,7 @@ export function MoreTab() {
           Settings
         </span>
 
-        {/* Field Mode */}
-        <div className={`flex items-center justify-between rounded border px-4 py-3 transition-colors ${
-          fieldMode ? 'border-[#f97316]/40 bg-[#f9731608]' : 'border-[#27272a] bg-[#13161a]'
-        }`}>
-          <div className="flex items-center gap-3">
-            <Sun className={`h-4 w-4 ${fieldMode ? 'text-[#f97316]' : 'text-[#888]'}`} />
-            <div className="flex flex-col">
-              <span className={`text-sm ${fieldMode ? 'text-[#f97316]' : 'text-[#ccc]'}`}>Field Mode</span>
-              <span className="text-[10px] text-[#444] uppercase tracking-wider">High-vis · Glove-safe</span>
-            </div>
-          </div>
-          <button
-            onClick={toggleFieldMode}
-            className={`relative h-6 w-11 rounded-full transition-colors duration-200 ${fieldMode ? 'bg-[#f97316]' : 'bg-[#3f3f46]'}`}
-            aria-label="Toggle field mode"
-          >
-            <span className={`absolute left-0 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${fieldMode ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
-          </button>
-        </div>
+
 
         {/* Dark Mode */}
         <div className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3">
@@ -219,6 +195,33 @@ export function MoreTab() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Legal */}
+      <div className="flex flex-col gap-1">
+        <span className="text-[10px] font-medium uppercase tracking-widest text-[#444] px-1 mb-1">
+          Legal
+        </span>
+        <a
+          href="/terms"
+          className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3 text-left w-full"
+        >
+          <div className="flex items-center gap-3">
+            <FileText className="h-4 w-4 text-[#f97316]" />
+            <span className="text-sm text-[#ccc]">Terms of Service</span>
+          </div>
+          <ExternalLink className="h-4 w-4 text-[#52525b]" />
+        </a>
+        <a
+          href="/privacy"
+          className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3 text-left w-full"
+        >
+          <div className="flex items-center gap-3">
+            <Shield className="h-4 w-4 text-[#f97316]" />
+            <span className="text-sm text-[#ccc]">Privacy Policy</span>
+          </div>
+          <ExternalLink className="h-4 w-4 text-[#52525b]" />
+        </a>
       </div>
 
       {/* Sign Out */}

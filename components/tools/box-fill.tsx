@@ -5,6 +5,7 @@ import { calculateBoxFill, type BoxFillInputs } from '@/lib/calculations'
 import { STANDARD_BOXES, COMMON_WIRE_SIZES } from '@/lib/calculator-data'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { toast } from 'sonner'
 import { Check, X, Save, Plus, Minus } from 'lucide-react'
 
@@ -212,6 +213,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
           <div className="flex justify-between"><span className="text-[#888]">Grounds</span><span className="font-mono text-[#f0f0f0]">{result.groundVolume} cu.in.</span></div>
           <div className="flex justify-between"><span className="text-[#888]">Remaining</span><span className={`font-mono ${result.remainingVolume >= 0 ? 'text-[#00ff88]' : 'text-[#ff3333]'}`}>{result.remainingVolume} cu.in.</span></div>
         </div>
+        <CalculatorDisclaimer />
       </div>
 
       {!compact && (

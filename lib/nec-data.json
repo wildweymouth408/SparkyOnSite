@@ -566,6 +566,889 @@
           "fix": "4-inch square = 21 cu.in. max. Add extension ring for additional wires."
         }
       ]
+    },
+    {
+      "id": "art-250-122",
+      "articleNumber": "250.122",
+      "title": "Equipment Grounding Conductor Sizing",
+      "chapter": "Chapter 2: Wiring and Protection",
+      "scope": "Minimum size of equipment grounding conductors based on overcurrent device rating",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Size based on the rating of the overcurrent device protecting the circuit",
+          "plainEnglish": "Equipment ground wire size matches breaker size",
+          "application": "Sizing equipment grounding conductors for feeders and branch circuits",
+          "id": "250.122(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "15A OCPD: #14 Cu / #12 Al; 20A OCPD: #12 Cu / #10 Al; 30A OCPD: #10 Cu / #8 Al; 40A OCPD: #10 Cu / #8 Al; 60A OCPD: #10 Cu / #8 Al; 100A OCPD: #8 Cu / #6 Al; 200A OCPD: #6 Cu / #4 Al; 400A OCPD: #3 Cu / #1 Al; 600A OCPD: #1 Cu / 1/0 Al; 800A OCPD: 1/0 Cu / 3/0 Al; 1000A OCPD: 2/0 Cu / 4/0 Al",
+          "plainEnglish": "Larger breaker requires larger ground wire",
+          "application": "Select EGC size from Table 250.122",
+          "id": "250.122(B)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Where circuit conductors are increased in size for voltage drop, EGC must be proportionally increased",
+          "plainEnglish": "If you upsize wires for voltage drop, you must also upsize the ground wire",
+          "application": "Long wire runs with increased conductor size",
+          "id": "250.122(C)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Using #14 ground with 20A circuit",
+          "consequence": "Inadequate fault current path, potential equipment damage and shock hazard",
+          "fix": "Use #12 copper ground for 20A circuits"
+        },
+        {
+          "type": "violation",
+          "scenario": "Not up-sizing ground wire when conductors increased for voltage drop",
+          "consequence": "Ground wire undersized relative to circuit conductors, slow trip times",
+          "fix": "Increase ground wire size proportionally to the circuit conductor increase"
+        }
+      ],
+      "relatedArticles": [
+        "250.66",
+        "310.16",
+        "240.4"
+      ],
+      "keyPoints": [
+        {
+          "id": "250.122(A)",
+          "text": "Size based on the rating of the overcurrent device protecting the circuit",
+          "plainEnglish": "Equipment ground wire size matches breaker size",
+          "application": "Sizing equipment grounding conductors for feeders and branch circuits"
+        },
+        {
+          "id": "250.122(B)",
+          "text": "15A OCPD: #14 Cu / #12 Al; 20A OCPD: #12 Cu / #10 Al; 30A OCPD: #10 Cu / #8 Al; 40A OCPD: #10 Cu / #8 Al; 60A OCPD: #10 Cu / #8 Al; 100A OCPD: #8 Cu / #6 Al; 200A OCPD: #6 Cu / #4 Al; 400A OCPD: #3 Cu / #1 Al; 600A OCPD: #1 Cu / 1/0 Al; 800A OCPD: 1/0 Cu / 3/0 Al; 1000A OCPD: 2/0 Cu / 4/0 Al",
+          "plainEnglish": "Larger breaker requires larger ground wire",
+          "application": "Select EGC size from Table 250.122"
+        },
+        {
+          "id": "250.122(C)",
+          "text": "Where circuit conductors are increased in size for voltage drop, EGC must be proportionally increased",
+          "plainEnglish": "If you upsize wires for voltage drop, you must also upsize the ground wire",
+          "application": "Long wire runs with increased conductor size"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Using #14 ground with 20A circuit",
+          "consequence": "Inadequate fault current path, potential equipment damage and shock hazard",
+          "fix": "Use #12 copper ground for 20A circuits"
+        },
+        {
+          "scenario": "Not up-sizing ground wire when conductors increased for voltage drop",
+          "consequence": "Ground wire undersized relative to circuit conductors, slow trip times",
+          "fix": "Increase ground wire size proportionally to the circuit conductor increase"
+        }
+      ]
+    },
+    {
+      "id": "art-334-80",
+      "articleNumber": "334.80",
+      "title": "NM Cable Ampacity Adjustment",
+      "chapter": "Chapter 3: Wiring Methods",
+      "scope": "Ampacity adjustment for NM (Romex) cables bundled together or in thermal insulation",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Where more than 2 NM cables containing 2 or more current-carrying conductors are installed in contact with thermal insulation without maintaining spacing, the ampacity of each conductor shall be adjusted per 310.15(C)(1)",
+          "plainEnglish": "Bundled Romex in insulation must be derated",
+          "application": "Attic runs, insulated wall cavities",
+          "id": "334.80(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "When NM cable is installed in thermal insulation, ampacity is limited to the 60°C column of Table 310.16",
+          "plainEnglish": "Romex in insulation cannot use the 90°C column",
+          "application": "NM cable in spray foam, batt insulation",
+          "id": "334.80(B)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Running multiple NM cables through bored holes without spacing",
+          "consequence": "Overheating due to bundling, fire hazard",
+          "fix": "Maintain spacing between cables or derate ampacity per 310.15(C)(1)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Using 90°C ampacity for NM cable in insulation",
+          "consequence": "Conductors overheat, insulation damage",
+          "fix": "Use 60°C ampacity column for NM cable in thermal insulation"
+        }
+      ],
+      "relatedArticles": [
+        "310.16",
+        "310.15",
+        "334.12"
+      ],
+      "keyPoints": [
+        {
+          "id": "334.80(A)",
+          "text": "Where more than 2 NM cables containing 2 or more current-carrying conductors are installed in contact with thermal insulation without maintaining spacing, the ampacity of each conductor shall be adjusted per 310.15(C)(1)",
+          "plainEnglish": "Bundled Romex in insulation must be derated",
+          "application": "Attic runs, insulated wall cavities"
+        },
+        {
+          "id": "334.80(B)",
+          "text": "When NM cable is installed in thermal insulation, ampacity is limited to the 60°C column of Table 310.16",
+          "plainEnglish": "Romex in insulation cannot use the 90°C column",
+          "application": "NM cable in spray foam, batt insulation"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Running multiple NM cables through bored holes without spacing",
+          "consequence": "Overheating due to bundling, fire hazard",
+          "fix": "Maintain spacing between cables or derate ampacity per 310.15(C)(1)"
+        },
+        {
+          "scenario": "Using 90°C ampacity for NM cable in insulation",
+          "consequence": "Conductors overheat, insulation damage",
+          "fix": "Use 60°C ampacity column for NM cable in thermal insulation"
+        }
+      ]
+    },
+    {
+      "id": "art-408-36",
+      "articleNumber": "408.36",
+      "title": "Panelboard Overcurrent Protection",
+      "chapter": "Chapter 4: Equipment for General Use",
+      "scope": "Requirements for overcurrent protection of panelboards",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Each panelboard shall be protected by an overcurrent protective device having a rating not greater than that of the panelboard",
+          "plainEnglish": "Breaker protecting panel must match or be less than panel rating",
+          "application": "Main breaker sizing, feeder breaker sizing",
+          "id": "408.36(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "The overcurrent device shall be located within or at any point on the supply side of the panelboard",
+          "plainEnglish": "Protection can be upstream, not necessarily inside panel",
+          "application": "Feeder breaker location",
+          "id": "408.36(B)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Back-fed devices used for supply shall be secured in the 'on' position with a fastener",
+          "plainEnglish": "Main breaker in panel must be fastened",
+          "application": "Panel installation, generator interlock kits",
+          "id": "408.36(C)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Panelboard rated 100A fed by 125A breaker",
+          "consequence": "Panel may overheat, fire hazard",
+          "fix": "Replace breaker with 100A or smaller"
+        },
+        {
+          "type": "violation",
+          "scenario": "Back-fed main breaker not secured with fastener",
+          "consequence": "Breaker can be accidentally turned off, arcing hazard",
+          "fix": "Install approved fastener kit to secure breaker"
+        }
+      ],
+      "relatedArticles": [
+        "408.30",
+        "408.40",
+        "240.4"
+      ],
+      "keyPoints": [
+        {
+          "id": "408.36(A)",
+          "text": "Each panelboard shall be protected by an overcurrent protective device having a rating not greater than that of the panelboard",
+          "plainEnglish": "Breaker protecting panel must match or be less than panel rating",
+          "application": "Main breaker sizing, feeder breaker sizing"
+        },
+        {
+          "id": "408.36(B)",
+          "text": "The overcurrent device shall be located within or at any point on the supply side of the panelboard",
+          "plainEnglish": "Protection can be upstream, not necessarily inside panel",
+          "application": "Feeder breaker location"
+        },
+        {
+          "id": "408.36(C)",
+          "text": "Back-fed devices used for supply shall be secured in the 'on' position with a fastener",
+          "plainEnglish": "Main breaker in panel must be fastened",
+          "application": "Panel installation, generator interlock kits"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Panelboard rated 100A fed by 125A breaker",
+          "consequence": "Panel may overheat, fire hazard",
+          "fix": "Replace breaker with 100A or smaller"
+        },
+        {
+          "scenario": "Back-fed main breaker not secured with fastener",
+          "consequence": "Breaker can be accidentally turned off, arcing hazard",
+          "fix": "Install approved fastener kit to secure breaker"
+        }
+      ]
+    },
+    {
+      "id": "art-422-11",
+      "articleNumber": "422.11",
+      "title": "GFCI Protection for Appliances",
+      "chapter": "Chapter 4: Equipment for General Use",
+      "scope": "Specific appliances requiring GFCI protection regardless of location",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Automotive vacuum machines, drinking water coolers, high-pressure spray washing machines, tire inflation machines, vending machines, sump pumps, sewage pumps, dishwashers require GFCI protection",
+          "plainEnglish": "Many appliances need GFCI even if not in wet location",
+          "application": "Commercial appliances, residential dishwashers",
+          "id": "422.11(A)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Dishwasher installed without GFCI protection",
+          "consequence": "Shock hazard, code violation",
+          "fix": "Install GFCI breaker or receptacle for dishwasher circuit"
+        },
+        {
+          "type": "violation",
+          "scenario": "Vending machine plugged into standard outlet",
+          "consequence": "Shock hazard in potentially wet area",
+          "fix": "Provide GFCI protection for vending machine outlet"
+        }
+      ],
+      "relatedArticles": [
+        "210.8",
+        "422.5",
+        "550.15"
+      ],
+      "keyPoints": [
+        {
+          "id": "422.11(A)",
+          "text": "Automotive vacuum machines, drinking water coolers, high-pressure spray washing machines, tire inflation machines, vending machines, sump pumps, sewage pumps, dishwashers require GFCI protection",
+          "plainEnglish": "Many appliances need GFCI even if not in wet location",
+          "application": "Commercial appliances, residential dishwashers"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Dishwasher installed without GFCI protection",
+          "consequence": "Shock hazard, code violation",
+          "fix": "Install GFCI breaker or receptacle for dishwasher circuit"
+        },
+        {
+          "scenario": "Vending machine plugged into standard outlet",
+          "consequence": "Shock hazard in potentially wet area",
+          "fix": "Provide GFCI protection for vending machine outlet"
+        }
+      ]
+    },
+    {
+      "id": "art-430-52",
+      "articleNumber": "430.52",
+      "title": "Motor Branch Circuit Protection",
+      "chapter": "Chapter 4: Equipment for General Use",
+      "scope": "Maximum rating of motor branch-circuit short-circuit and ground-fault protective devices",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Dual-element fuse (time-delay): 175% of motor FLC; Instantaneous trip breaker: 800% of motor FLC (1100% for Design B energy efficient); Inverse time breaker: 250% of motor FLC",
+          "plainEnglish": "Motor breakers/fuses can be much larger than motor current to allow starting",
+          "application": "Sizing motor overload protection",
+          "id": "430.52(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "If value does not correspond to standard OCPD size, next higher standard size permitted",
+          "plainEnglish": "Round up to the next standard breaker size",
+          "application": "Selecting breaker size",
+          "id": "430.52(B)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Motor FLC from NEC tables 430.247-250 (not nameplate)",
+          "plainEnglish": "Use NEC tables, not motor nameplate, for full load current",
+          "application": "Lookup motor FLC based on horsepower and voltage",
+          "id": "430.52(C)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Using motor nameplate current instead of NEC table",
+          "consequence": "Incorrect OCPD sizing, nuisance trips or inadequate protection",
+          "fix": "Use NEC Table 430.247-250 for motor FLC"
+        },
+        {
+          "type": "violation",
+          "scenario": "Sizing breaker at 100% of motor FLC",
+          "consequence": "Breaker trips on motor startup",
+          "fix": "Size per 430.52 percentages (175% fuse, 250% breaker)"
+        }
+      ],
+      "relatedArticles": [
+        "430.6",
+        "430.32",
+        "430.250"
+      ],
+      "keyPoints": [
+        {
+          "id": "430.52(A)",
+          "text": "Dual-element fuse (time-delay): 175% of motor FLC; Instantaneous trip breaker: 800% of motor FLC (1100% for Design B energy efficient); Inverse time breaker: 250% of motor FLC",
+          "plainEnglish": "Motor breakers/fuses can be much larger than motor current to allow starting",
+          "application": "Sizing motor overload protection"
+        },
+        {
+          "id": "430.52(B)",
+          "text": "If value does not correspond to standard OCPD size, next higher standard size permitted",
+          "plainEnglish": "Round up to the next standard breaker size",
+          "application": "Selecting breaker size"
+        },
+        {
+          "id": "430.52(C)",
+          "text": "Motor FLC from NEC tables 430.247-250 (not nameplate)",
+          "plainEnglish": "Use NEC tables, not motor nameplate, for full load current",
+          "application": "Lookup motor FLC based on horsepower and voltage"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Using motor nameplate current instead of NEC table",
+          "consequence": "Incorrect OCPD sizing, nuisance trips or inadequate protection",
+          "fix": "Use NEC Table 430.247-250 for motor FLC"
+        },
+        {
+          "scenario": "Sizing breaker at 100% of motor FLC",
+          "consequence": "Breaker trips on motor startup",
+          "fix": "Size per 430.52 percentages (175% fuse, 250% breaker)"
+        }
+      ]
+    },
+    {
+      "id": "art-240-4",
+      "articleNumber": "240.4",
+      "title": "Overcurrent Protection General",
+      "chapter": "Chapter 2: Wiring and Protection",
+      "scope": "General requirements for overcurrent protection of conductors",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Conductors shall be protected against overcurrent in accordance with their ampacities",
+          "plainEnglish": "Breaker/fuse must match wire size",
+          "application": "Basic circuit protection",
+          "id": "240.4(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Next higher standard OCPD rating permitted if ampacity does not correspond to standard rating, under specific conditions",
+          "plainEnglish": "Can go up one size if wire ampacity is between standard breaker sizes",
+          "application": "Oversized conductors for voltage drop",
+          "id": "240.4(B)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Small conductor restrictions: 14 AWG = 15A, 12 AWG = 20A, 10 AWG = 30A",
+          "plainEnglish": "Don't put 14 gauge on a 20A breaker",
+          "application": "Residential and commercial branch circuits",
+          "id": "240.4(D)"
+        },
+        {
+          "type": "violation",
+          "scenario": "14 AWG wire on 20A breaker",
+          "consequence": "Fire hazard, insulation damage",
+          "fix": "Use 15A breaker or upgrade to 12 AWG wire"
+        },
+        {
+          "type": "violation",
+          "scenario": "Oversized breaker for voltage drop without meeting 240.4(B) conditions",
+          "consequence": "Inadequate protection, fire risk",
+          "fix": "Ensure all conditions met before using next higher size"
+        }
+      ],
+      "relatedArticles": [
+        "310.16",
+        "240.21",
+        "240.6"
+      ],
+      "keyPoints": [
+        {
+          "id": "240.4(A)",
+          "text": "Conductors shall be protected against overcurrent in accordance with their ampacities",
+          "plainEnglish": "Breaker/fuse must match wire size",
+          "application": "Basic circuit protection"
+        },
+        {
+          "id": "240.4(B)",
+          "text": "Next higher standard OCPD rating permitted if ampacity does not correspond to standard rating, under specific conditions",
+          "plainEnglish": "Can go up one size if wire ampacity is between standard breaker sizes",
+          "application": "Oversized conductors for voltage drop"
+        },
+        {
+          "id": "240.4(D)",
+          "text": "Small conductor restrictions: 14 AWG = 15A, 12 AWG = 20A, 10 AWG = 30A",
+          "plainEnglish": "Don't put 14 gauge on a 20A breaker",
+          "application": "Residential and commercial branch circuits"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "14 AWG wire on 20A breaker",
+          "consequence": "Fire hazard, insulation damage",
+          "fix": "Use 15A breaker or upgrade to 12 AWG wire"
+        },
+        {
+          "scenario": "Oversized breaker for voltage drop without meeting 240.4(B) conditions",
+          "consequence": "Inadequate protection, fire risk",
+          "fix": "Ensure all conditions met before using next higher size"
+        }
+      ]
+    },
+    {
+      "id": "art-210-19",
+      "articleNumber": "210.19",
+      "title": "Branch Circuit Conductor Sizing",
+      "chapter": "Chapter 2: Wiring and Protection",
+      "scope": "Requirements for sizing branch circuit conductors",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Conductors shall have an ampacity not less than the maximum load to be served",
+          "plainEnglish": "Wire must be big enough for the load",
+          "application": "Sizing branch circuits for appliances, outlets",
+          "id": "210.19(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "For other than continuous loads, 100% of load; for continuous loads, 125% of load",
+          "plainEnglish": "Continuous loads (on 3+ hours) require larger wire",
+          "application": "Lighting, motor loads",
+          "id": "210.19(A)(1)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Consider voltage drop: 3% for branch circuits, 5% total",
+          "plainEnglish": "Long wire runs may need bigger wire to prevent voltage drop",
+          "application": "Outbuildings, long circuits",
+          "id": "210.19(A)(2)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Sizing wire for continuous load at 100% instead of 125%",
+          "consequence": "Overheating, insulation damage",
+          "fix": "Multiply continuous load by 1.25 before selecting wire size"
+        },
+        {
+          "type": "violation",
+          "scenario": "Ignoring voltage drop on long runs",
+          "consequence": "Poor appliance performance, motor damage",
+          "fix": "Increase conductor size or reduce run length"
+        }
+      ],
+      "relatedArticles": [
+        "210.20",
+        "215.2",
+        "310.16"
+      ],
+      "keyPoints": [
+        {
+          "id": "210.19(A)",
+          "text": "Conductors shall have an ampacity not less than the maximum load to be served",
+          "plainEnglish": "Wire must be big enough for the load",
+          "application": "Sizing branch circuits for appliances, outlets"
+        },
+        {
+          "id": "210.19(A)(1)",
+          "text": "For other than continuous loads, 100% of load; for continuous loads, 125% of load",
+          "plainEnglish": "Continuous loads (on 3+ hours) require larger wire",
+          "application": "Lighting, motor loads"
+        },
+        {
+          "id": "210.19(A)(2)",
+          "text": "Consider voltage drop: 3% for branch circuits, 5% total",
+          "plainEnglish": "Long wire runs may need bigger wire to prevent voltage drop",
+          "application": "Outbuildings, long circuits"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Sizing wire for continuous load at 100% instead of 125%",
+          "consequence": "Overheating, insulation damage",
+          "fix": "Multiply continuous load by 1.25 before selecting wire size"
+        },
+        {
+          "scenario": "Ignoring voltage drop on long runs",
+          "consequence": "Poor appliance performance, motor damage",
+          "fix": "Increase conductor size or reduce run length"
+        }
+      ]
+    },
+    {
+      "id": "art-215-2",
+      "articleNumber": "215.2",
+      "title": "Feeder Conductor Sizing",
+      "chapter": "Chapter 2: Wiring and Protection",
+      "scope": "Requirements for sizing feeder conductors",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Feeder conductors shall have ampacity not less than required to supply the load",
+          "plainEnglish": "Feeder wires must handle total load of all branch circuits",
+          "application": "Sizing subpanel feeders",
+          "id": "215.2(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Continuous loads: 125% of load",
+          "plainEnglish": "Feeders for continuous loads need larger wire",
+          "application": "Commercial lighting feeders",
+          "id": "215.2(A)(1)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Consider voltage drop: 3% for feeders, 5% total",
+          "plainEnglish": "Long feeder runs need bigger wire",
+          "application": "Detached buildings, long feeders",
+          "id": "215.2(A)(2)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Feeder sized for total load without considering continuous load multiplier",
+          "consequence": "Overheating, insulation damage",
+          "fix": "Apply 125% multiplier to continuous portion of load"
+        },
+        {
+          "type": "violation",
+          "scenario": "Ignoring voltage drop on long feeder runs",
+          "consequence": "Poor voltage regulation, equipment issues",
+          "fix": "Upsize feeder conductors or reduce length"
+        }
+      ],
+      "relatedArticles": [
+        "215.3",
+        "220.42",
+        "310.16"
+      ],
+      "keyPoints": [
+        {
+          "id": "215.2(A)",
+          "text": "Feeder conductors shall have ampacity not less than required to supply the load",
+          "plainEnglish": "Feeder wires must handle total load of all branch circuits",
+          "application": "Sizing subpanel feeders"
+        },
+        {
+          "id": "215.2(A)(1)",
+          "text": "Continuous loads: 125% of load",
+          "plainEnglish": "Feeders for continuous loads need larger wire",
+          "application": "Commercial lighting feeders"
+        },
+        {
+          "id": "215.2(A)(2)",
+          "text": "Consider voltage drop: 3% for feeders, 5% total",
+          "plainEnglish": "Long feeder runs need bigger wire",
+          "application": "Detached buildings, long feeders"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Feeder sized for total load without considering continuous load multiplier",
+          "consequence": "Overheating, insulation damage",
+          "fix": "Apply 125% multiplier to continuous portion of load"
+        },
+        {
+          "scenario": "Ignoring voltage drop on long feeder runs",
+          "consequence": "Poor voltage regulation, equipment issues",
+          "fix": "Upsize feeder conductors or reduce length"
+        }
+      ]
+    },
+    {
+      "id": "art-220-42",
+      "articleNumber": "220.42",
+      "title": "General Lighting Load Demand Factors",
+      "chapter": "Chapter 2: Wiring and Protection",
+      "scope": "Demand factors for general lighting loads",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "First 12500 VA at 100%; next 112500 VA at 35%; remainder at 25%",
+          "plainEnglish": "Large lighting loads can be derated",
+          "application": "Commercial and industrial load calculations",
+          "id": "220.42(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dwelling units: 100% of lighting load",
+          "plainEnglish": "No demand factor for residential lighting",
+          "application": "Residential load calculations",
+          "id": "220.42(B)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Applying demand factor to residential lighting",
+          "consequence": "Undersized service, overcurrent protection",
+          "fix": "Use 100% for dwelling unit lighting"
+        },
+        {
+          "type": "violation",
+          "scenario": "Not applying demand factor to large commercial lighting",
+          "consequence": "Oversized feeders and service, increased cost",
+          "fix": "Apply demand factors per Table 220.42"
+        }
+      ],
+      "relatedArticles": [
+        "220.12",
+        "220.14",
+        "220.50"
+      ],
+      "keyPoints": [
+        {
+          "id": "220.42(A)",
+          "text": "First 12500 VA at 100%; next 112500 VA at 35%; remainder at 25%",
+          "plainEnglish": "Large lighting loads can be derated",
+          "application": "Commercial and industrial load calculations"
+        },
+        {
+          "id": "220.42(B)",
+          "text": "Dwelling units: 100% of lighting load",
+          "plainEnglish": "No demand factor for residential lighting",
+          "application": "Residential load calculations"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Applying demand factor to residential lighting",
+          "consequence": "Undersized service, overcurrent protection",
+          "fix": "Use 100% for dwelling unit lighting"
+        },
+        {
+          "scenario": "Not applying demand factor to large commercial lighting",
+          "consequence": "Oversized feeders and service, increased cost",
+          "fix": "Apply demand factors per Table 220.42"
+        }
+      ]
+    },
+    {
+      "id": "art-250-66",
+      "articleNumber": "250.66",
+      "title": "Grounding Electrode Conductor Sizing",
+      "chapter": "Chapter 2: Wiring and Protection",
+      "scope": "Sizing grounding electrode conductors for AC systems",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Size based on largest service entrance conductor or equivalent area",
+          "plainEnglish": "Ground wire to rods based on service wire size",
+          "application": "Sizing ground wire from panel to ground rods",
+          "id": "250.66(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Table 250.66: Up to 2/0 Cu service = #6 Cu GEC; 3/0-350 Cu = #4 Cu; 400-600 Cu = #2 Cu; etc.",
+          "plainEnglish": "Larger service requires larger ground wire",
+          "application": "Select GEC size from table",
+          "id": "250.66(B)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Using #8 Cu for 200A service (requires #6)",
+          "consequence": "Inadequate grounding, potential equipment damage",
+          "fix": "Size GEC per Table 250.66"
+        },
+        {
+          "type": "violation",
+          "scenario": "Splicing GEC without irreversible compression connector",
+          "consequence": "Poor connection, high impedance",
+          "fix": "Use exothermic weld or irreversible compression splice"
+        }
+      ],
+      "relatedArticles": [
+        "250.64",
+        "250.70",
+        "310.16"
+      ],
+      "keyPoints": [
+        {
+          "id": "250.66(A)",
+          "text": "Size based on largest service entrance conductor or equivalent area",
+          "plainEnglish": "Ground wire to rods based on service wire size",
+          "application": "Sizing ground wire from panel to ground rods"
+        },
+        {
+          "id": "250.66(B)",
+          "text": "Table 250.66: Up to 2/0 Cu service = #6 Cu GEC; 3/0-350 Cu = #4 Cu; 400-600 Cu = #2 Cu; etc.",
+          "plainEnglish": "Larger service requires larger ground wire",
+          "application": "Select GEC size from table"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Using #8 Cu for 200A service (requires #6)",
+          "consequence": "Inadequate grounding, potential equipment damage",
+          "fix": "Size GEC per Table 250.66"
+        },
+        {
+          "scenario": "Splicing GEC without irreversible compression connector",
+          "consequence": "Poor connection, high impedance",
+          "fix": "Use exothermic weld or irreversible compression splice"
+        }
+      ]
+    },
+    {
+      "id": "art-300-5",
+      "articleNumber": "300.5",
+      "title": "Underground Installation Depth",
+      "chapter": "Chapter 3: Wiring Methods",
+      "scope": "Minimum cover requirements for underground cables and raceways",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Direct burial cables: 24 inches for 0-600V residential, 30 inches for commercial/industrial",
+          "plainEnglish": "Bury cables deep enough to avoid damage",
+          "application": "Underground wiring for outbuildings, landscape lighting",
+          "id": "300.5(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Raceways (conduit): 18 inches for 0-600V residential, 24 inches for commercial/industrial",
+          "plainEnglish": "Conduit can be shallower than direct burial",
+          "application": "Underground conduit runs",
+          "id": "300.5(B)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Protection required when less than minimum depth (concrete pad, etc.)",
+          "plainEnglish": "If shallow, add protection",
+          "application": "Under driveways, sidewalks",
+          "id": "300.5(D)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Burying UF cable only 12 inches deep",
+          "consequence": "Damage from digging, shock hazard",
+          "fix": "Increase depth to minimum 24 inches or install protection"
+        },
+        {
+          "type": "violation",
+          "scenario": "No warning tape above underground cables",
+          "consequence": "Accidental dig-in, cable damage",
+          "fix": "Install caution tape 12 inches above cable"
+        }
+      ],
+      "relatedArticles": [
+        "300.50",
+        "310.10",
+        "338.12"
+      ],
+      "keyPoints": [
+        {
+          "id": "300.5(A)",
+          "text": "Direct burial cables: 24 inches for 0-600V residential, 30 inches for commercial/industrial",
+          "plainEnglish": "Bury cables deep enough to avoid damage",
+          "application": "Underground wiring for outbuildings, landscape lighting"
+        },
+        {
+          "id": "300.5(B)",
+          "text": "Raceways (conduit): 18 inches for 0-600V residential, 24 inches for commercial/industrial",
+          "plainEnglish": "Conduit can be shallower than direct burial",
+          "application": "Underground conduit runs"
+        },
+        {
+          "id": "300.5(D)",
+          "text": "Protection required when less than minimum depth (concrete pad, etc.)",
+          "plainEnglish": "If shallow, add protection",
+          "application": "Under driveways, sidewalks"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Burying UF cable only 12 inches deep",
+          "consequence": "Damage from digging, shock hazard",
+          "fix": "Increase depth to minimum 24 inches or install protection"
+        },
+        {
+          "scenario": "No warning tape above underground cables",
+          "consequence": "Accidental dig-in, cable damage",
+          "fix": "Install caution tape 12 inches above cable"
+        }
+      ]
+    },
+    {
+      "id": "art-314-28",
+      "articleNumber": "314.28",
+      "title": "Pull and Junction Box Sizing",
+      "chapter": "Chapter 3: Wiring Methods",
+      "scope": "Minimum size requirements for pull and junction boxes",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Straight pulls: length not less than 8 times the trade diameter of largest raceway",
+          "plainEnglish": "Box length for straight pull = 8x conduit diameter",
+          "application": "Sizing pull boxes for straight conduit runs",
+          "id": "314.28(A)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Angle or U pulls: distance from entry to opposite wall not less than 6 times raceway diameter plus sum of diameters of other raceways in same row",
+          "plainEnglish": "More complex calculation for angled pulls",
+          "application": "Pull boxes with multiple conduits",
+          "id": "314.28(B)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Splices and taps: box must be large enough for conductors and fittings",
+          "plainEnglish": "Junction boxes must have enough space",
+          "application": "Splicing boxes",
+          "id": "314.28(C)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Pull box too small for straight pull of 4-inch conduit",
+          "consequence": "Conductor damage during pulling, insulation damage",
+          "fix": "Size box at least 32 inches long (8x4)"
+        },
+        {
+          "type": "violation",
+          "scenario": "Ignoring multiple conduits in same row for angle pull",
+          "consequence": "Box too small, difficult pull",
+          "fix": "Calculate per 314.28(B)"
+        }
+      ],
+      "relatedArticles": [
+        "314.16",
+        "300.14",
+        "362.28"
+      ],
+      "keyPoints": [
+        {
+          "id": "314.28(A)",
+          "text": "Straight pulls: length not less than 8 times the trade diameter of largest raceway",
+          "plainEnglish": "Box length for straight pull = 8x conduit diameter",
+          "application": "Sizing pull boxes for straight conduit runs"
+        },
+        {
+          "id": "314.28(B)",
+          "text": "Angle or U pulls: distance from entry to opposite wall not less than 6 times raceway diameter plus sum of diameters of other raceways in same row",
+          "plainEnglish": "More complex calculation for angled pulls",
+          "application": "Pull boxes with multiple conduits"
+        },
+        {
+          "id": "314.28(C)",
+          "text": "Splices and taps: box must be large enough for conductors and fittings",
+          "plainEnglish": "Junction boxes must have enough space",
+          "application": "Splicing boxes"
+        }
+      ],
+      "commonViolations": [
+        {
+          "scenario": "Pull box too small for straight pull of 4-inch conduit",
+          "consequence": "Conductor damage during pulling, insulation damage",
+          "fix": "Size box at least 32 inches long (8x4)"
+        },
+        {
+          "scenario": "Ignoring multiple conduits in same row for angle pull",
+          "consequence": "Box too small, difficult pull",
+          "fix": "Calculate per 314.28(B)"
+        }
+      ]
     }
   ]
 }

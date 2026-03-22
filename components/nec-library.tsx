@@ -12,6 +12,7 @@ const fuseOptions: IFuseOptions<NECArticle> = {
     { name: 'articleNumber', weight: 2 },
     { name: 'title', weight: 1.5 },
     { name: 'scope', weight: 1 },
+    { name: 'content.text', weight: 0.5 },
   ],
   threshold: 0.4,
   includeMatches: true,
@@ -21,6 +22,7 @@ export default function NECLibrary() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedChapter, setSelectedChapter] = useState<string>('')
   const [bookmarked, setBookmarked] = useState<string[]>([])
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [selectedArticle, setSelectedArticle] = useState<NECArticle | null>(null)
   const fuseRef = useRef<Fuse<NECArticle> | null>(null)
@@ -30,18 +32,21 @@ export default function NECLibrary() {
     fuseRef.current = new Fuse(NEC_ARTICLES, fuseOptions)
   }, [])
 
-  // Filter articles based on search and chapter
+  // Filter articles based on search, chapter, and bookmarks
   const filteredArticles = useMemo(() => {
     let articles = NEC_ARTICLES
     if (selectedChapter) {
       articles = articles.filter(a => a.chapter === selectedChapter)
+    }
+    if (showBookmarkedOnly) {
+      articles = articles.filter(a => bookmarked.includes(a.id))
     }
     if (searchQuery.trim() && fuseRef.current) {
       const results = fuseRef.current.search(searchQuery)
       articles = results.map(r => r.item)
     }
     return articles
-  }, [searchQuery, selectedChapter])
+  }, [searchQuery, selectedChapter, showBookmarkedOnly, bookmarked])
 
   const startVoiceSearch = () => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
@@ -81,8 +86,16 @@ export default function NECLibrary() {
             placeholder="Search NEC articles by number, title, or content..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-10 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#555] focus:border-[#00ff88] focus:outline-none"
+            className="w-full bg-[#111] field-mode:bg-black border border-[#2a2a35] field-mode:border-yellow-400/30 pl-9 pr-20 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#555] focus:border-[#00ff88] focus:outline-none"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-10 top-1/2 -translate-y-1/2 p-1.5 text-[#888] hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
           <button
             onClick={startVoiceSearch}
             className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-[#00ff88]'}`}
@@ -114,6 +127,16 @@ export default function NECLibrary() {
             </button>
           ))}
         </div>
+        {/* Bookmark filter */}
+        <div className="flex items-center gap-2 mt-2">
+          <Bookmark className="h-4 w-4 text-[#555]" />
+          <button
+            onClick={() => setShowBookmarkedOnly(!showBookmarkedOnly)}
+            className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${showBookmarkedOnly ? 'bg-[#00ff88] text-[#0f1115] border-[#00ff88]' : 'bg-[#111] text-[#888] border-[#2a2a35]'}`}
+          >
+            Show bookmarked only
+          </button>
+        </div>
       </div>
 
       {/* Results count */}
@@ -127,17 +150,23 @@ export default function NECLibrary() {
 
       {/* Articles list */}
       <div className="space-y-4 overflow-y-auto flex-1 pb-6">
-        {filteredArticles.map(article => (
-          <ArticleCard
-            key={article.id}
-            article={article}
-            isBookmarked={bookmarked.includes(article.id)}
-            onBookmark={() => setBookmarked(prev =>
-              prev.includes(article.id) ? prev.filter(id => id !== article.id) : [...prev, article.id]
-            )}
-            onClick={() => handleArticleClick(article)}
-          />
-        ))}
+        {filteredArticles.length === 0 ? (
+          <div className="text-center py-8 text-[#666] text-sm">
+            No articles found. Try a different search or filter.
+          </div>
+        ) : (
+          filteredArticles.map(article => (
+            <ArticleCard
+              key={article.id}
+              article={article}
+              isBookmarked={bookmarked.includes(article.id)}
+              onBookmark={() => setBookmarked(prev =>
+                prev.includes(article.id) ? prev.filter(id => id !== article.id) : [...prev, article.id]
+              )}
+              onClick={() => handleArticleClick(article)}
+            />
+          ))
+        )}
       </div>
     </div>
   )

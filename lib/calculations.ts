@@ -4,7 +4,7 @@ import {
 WIRE_AREAS, K_FACTOR, AMPACITY_TABLE, WIRE_CROSS_SECTION,
 CONDUIT_AREAS, getConduitFillLimit, BOX_FILL_ALLOWANCE,
 BEND_MULTIPLIERS, TAKEUP, getConduitDerating, INSULATION_TEMP,
-TEMP_CORRECTION, STANDARD_BOXES,
+TEMP_CORRECTION, STANDARD_BOXES, WIRE_SIZES,
 } from './calculator-data'
 
 // ── Voltage Drop ──────────────────────────────────
@@ -315,7 +315,7 @@ export function calculateWireSizing(inputs: WireSizingInputs): WireSizingResult 
     ? (tempRating === 60 ? 'cu60' : tempRating === 90 ? 'cu90' : 'cu75')
     : (tempRating === 60 ? 'al60' : tempRating === 90 ? 'al90' : 'al75')
 
-  const sizes = Object.keys(AMPACITY_TABLE)
+  const sizes = WIRE_SIZES
 
   for (const size of sizes) {
     const baseAmp = AMPACITY_TABLE[size][ampKey as keyof typeof AMPACITY_TABLE[string]]

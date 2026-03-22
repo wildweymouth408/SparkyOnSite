@@ -5,6 +5,7 @@ import { calculateConduitFill, type ConduitFillInputs } from '@/lib/calculations
 import { CONDUIT_TYPES, CONDUIT_TRADE_SIZES, INSULATION_TYPES, COMMON_WIRE_SIZES } from '@/lib/calculator-data'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { toast } from 'sonner'
 import { Check, X, Save } from 'lucide-react'
 
@@ -143,6 +144,7 @@ export function ConduitFillCalculator() {
               <span className="font-mono text-[#f0f0f0]">{result.remainingArea} sq.in.</span>
             </div>
           </div>
+          <CalculatorDisclaimer />
         </div>
       )}
 

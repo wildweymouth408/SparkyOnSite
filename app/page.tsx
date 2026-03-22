@@ -6,6 +6,7 @@ import { ReferenceTab } from '@/components/reference-tab'
 import { AskSparkyTab } from '@/components/ask-sparky-tab'
 import { HomeTab } from '@/components/home-tab'
 import { MoreTab } from '@/components/more-tab'
+import { DisclaimerModal } from '@/components/disclaimer-modal'
 
 export default function SparkyApp() {
   const [activeTab, setActiveTab] = useState<TabId>('home')
@@ -14,18 +15,6 @@ export default function SparkyApp() {
 
   useEffect(() => {
     setMounted(true)
-    const savedField = localStorage.getItem('sparky_field_mode')
-    if (savedField === 'true') {
-      document.documentElement.classList.add('field-mode')
-    }
-    function handleFieldMode() {
-      const current = localStorage.getItem('sparky_field_mode')
-      if (current === 'true') {
-        document.documentElement.classList.add('field-mode')
-      } else {
-        document.documentElement.classList.remove('field-mode')
-      }
-    }
     function handleDarkMode() {
       const current = localStorage.getItem('sparky_dark_mode')
       if (current === 'false') {
@@ -34,10 +23,8 @@ export default function SparkyApp() {
         document.documentElement.classList.add('dark')
       }
     }
-    window.addEventListener('sparky_field_mode_changed', handleFieldMode)
     window.addEventListener('sparky_dark_mode_changed', handleDarkMode)
     return () => {
-      window.removeEventListener('sparky_field_mode_changed', handleFieldMode)
       window.removeEventListener('sparky_dark_mode_changed', handleDarkMode)
     }
   }, [])
@@ -114,6 +101,7 @@ export default function SparkyApp() {
       </main>
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <DisclaimerModal />
     </div>
   )
 }

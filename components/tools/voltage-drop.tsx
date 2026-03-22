@@ -5,8 +5,10 @@ import { calculateVoltageDrop, type VoltageDropInputs } from '@/lib/calculations
 import { WIRE_SIZES, SYSTEM_VOLTAGES } from '@/lib/calculator-data'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { toast } from 'sonner'
 import { Check, X, Save } from 'lucide-react'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
 export function VoltageDropCalculator() {
   const [inputs, setInputs] = useState<VoltageDropInputs>({
@@ -17,6 +19,25 @@ export function VoltageDropCalculator() {
     material: 'copper',
     phase: 'single',
   })
+
+  const [currentMode, setCurrentMode] = useState<'load' | 'circuit'>('load')
+  const displayedValue = currentMode === 'load' 
+    ? inputs.current 
+    : Math.round(inputs.current / 0.8 * 100) / 100
+
+  const handleDisplayedCurrentChange = (value: number) => {
+    if (currentMode === 'load') {
+      setInputs(p => ({ ...p, current: value }))
+    } else {
+      const loadAmps = value * 0.8
+      setInputs(p => ({ ...p, current: Math.round(loadAmps * 100) / 100 }))
+    }
+  }
+
+  const currentLabel = currentMode === 'load' ? 'Load (A)' : 'Circuit (A)'
+  const currentHelperText = currentMode === 'load' 
+    ? 'Actual load current' 
+    : 'Circuit size × 0.8 (80% rule for continuous loads per NEC 210.20(A))'
 
   // Input validation — NEC calculations are meaningless with negative or zero values
   const currentError = inputs.current <= 0 ? 'Current must be greater than 0A' : inputs.current > 6000 ? 'Exceeds 6000A maximum' : null
@@ -93,17 +114,35 @@ export function VoltageDropCalculator() {
 
         <div className="flex gap-3">
           <label className="flex flex-1 flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-[#888]">Current (A)</span>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider text-[#888]">{currentLabel}</span>
+              <ToggleGroup
+                type="single"
+                value={currentMode}
+                onValueChange={(value) => value && setCurrentMode(value as 'load' | 'circuit')}
+                className="h-6"
+                variant="outline"
+                disableDeactivation
+              >
+                <ToggleGroupItem value="load" className="px-2 py-0.5 text-[10px] h-6">Load</ToggleGroupItem>
+                <ToggleGroupItem value="circuit" className="px-2 py-0.5 text-[10px] h-6">Circuit</ToggleGroupItem>
+              </ToggleGroup>
+            </div>
             <input
               type="number"
-              value={inputs.current || ''}
+              value={displayedValue || ''}
               min={0.1}
-              max={6000}
-              onChange={e => setInputs(p => ({ ...p, current: Number(e.target.value) }))}
-              placeholder="20"
+              max={currentMode === 'load' ? 6000 : 7500}
+              onChange={e => handleDisplayedCurrentChange(Number(e.target.value))}
+              placeholder={currentMode === 'load' ? '20' : '25'}
               className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${currentError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
             />
-            {currentError && <span className="text-[10px] text-red-400">{currentError}</span>}
+            <div className="flex flex-col gap-0.5">
+              {!currentError && (
+                <span className="text-[10px] text-[#52525b]">{currentHelperText}</span>
+              )}
+              {currentError && <span className="text-[10px] text-red-400">{currentError}</span>}
+            </div>
           </label>
           <label className="flex flex-1 flex-col gap-1">
             <span className="text-[11px] uppercase tracking-wider text-[#888]">Distance (ft)</span>
@@ -171,6 +210,7 @@ export function VoltageDropCalculator() {
           <p className="text-xs text-[#888]">{result.recommendation}</p>
           {/* NEC citation — NEC 215.2(A)(1)(b): 3% max for branch/feeder; 5% max total */}
           <p className="text-[10px] text-[#444] mt-2">NEC 215.2(A)(1)(b) · NEC 310.15 · Formula: VD = ({inputs.phase === 'three' ? '√3' : '2'} × K × I × D) / CM</p>
+          <CalculatorDisclaimer />
         </div>
       )}
 

@@ -5,6 +5,7 @@ import { calculateWireSizing, type WireSizingInputs } from '@/lib/calculations'
 import { SYSTEM_VOLTAGES, INSULATION_TYPES } from '@/lib/calculator-data'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { toast } from 'sonner'
 import { Check, X, Save } from 'lucide-react'
 
@@ -179,6 +180,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
           </div>
           {/* NEC citations — 310.16 for ampacity; 240.4(D) for OCPD limits on small conductors */}
           <p className="text-[10px] text-[#444] mt-3">NEC 310.16 (ampacity) · NEC 240.4(D) (OCPD limit) · NEC 215.2(A)(1)(b) (voltage drop)</p>
+          <CalculatorDisclaimer />
         </div>
       )}
 
