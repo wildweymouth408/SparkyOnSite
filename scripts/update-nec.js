@@ -1,0 +1,564 @@
+const fs = require('fs');
+const path = require('path');
+
+// Read original file
+const originalPath = path.join(__dirname, 'generate-nec-data-v2.js');
+let content = fs.readFileSync(originalPath, 'utf8');
+
+// Split at the necDatabase array
+const startMarker = 'const necDatabase = [';
+const endMarker = '];';
+
+const startIndex = content.indexOf(startMarker);
+if (startIndex === -1) {
+  console.error('Could not find start marker');
+  process.exit(1);
+}
+// Find the matching ]; after startIndex
+let bracketCount = 0;
+let endIndex = -1;
+for (let i = startIndex + startMarker.length; i < content.length; i++) {
+  if (content[i] === '[') bracketCount++;
+  if (content[i] === ']') {
+    if (bracketCount === 0) {
+      endIndex = i;
+      break;
+    }
+    bracketCount--;
+  }
+}
+if (endIndex === -1) {
+  console.error('Could not find matching ]');
+  process.exit(1);
+}
+// Include the semicolon
+endIndex = content.indexOf(';', endIndex);
+if (endIndex === -1) {
+  console.error('Could not find ;');
+  process.exit(1);
+}
+endIndex += 1; // include semicolon
+
+const before = content.substring(0, startIndex);
+const after = content.substring(endIndex);
+
+// New articles array (original 8 plus new 12)
+const newNecDatabase = [
+  // Original 8 articles
+  {
+    article: "110.26",
+    title: "Working Space About Electrical Equipment",
+    scope: "Requirements for safe access and working space around electrical equipment",
+    keyPoints: [
+      {
+        id: "110.26(A)",
+        text: "Working space shall be not less than 30 inches wide, 36 inches deep, and 6.5 feet high",
+        plainEnglish: "3 feet clear space in front of panels, floor to ceiling",
+        application: "All panelboards, switchboards, motor control centers"
+      },
+      {
+        id: "110.26(B)",
+        text: "Clear working space required in front of equipment for safe operation",
+        plainEnglish: "No storage, boxes, or equipment blocking electrical panels",
+        application: "Electrical rooms, mechanical rooms, utility spaces"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Storage boxes blocking electrical panel", consequence: "No safe access for maintenance, arc flash hazard, OSHA violation", fix: "Clear 36-inch deep, 30-inch wide, 6.5-foot high working space. Mark with floor tape." },
+      { scenario: "Panel mounted too close to wall (less than 30 inches wide space)", consequence: "Unable to safely work on energized equipment", fix: "Relocate panel or widen access aisle to minimum 30 inches" }
+    ],
+    relatedArticles: ["110.27", "408.36", "250.24"]
+  },
+  {
+    article: "210.8",
+    title: "GFCI Protection for Personnel",
+    scope: "Ground-fault circuit-interrupter protection requirements to prevent shock",
+    keyPoints: [
+      {
+        id: "210.8(A)",
+        text: "GFCI protection required for all 125V single-phase 15A and 20A outlets in bathrooms, garages, outdoors, crawl spaces, unfinished basements, kitchens, laundry areas",
+        plainEnglish: "GFCI outlets or breakers required near water, outside, and damp locations",
+        application: "All residential, commercial, and industrial 120V general purpose outlets",
+        exceptions: ["Dedicated appliance circuits not readily accessible", "Garage door openers in some jurisdictions"]
+      },
+      {
+        id: "210.8(B)",
+        text: "Commercial and industrial facilities: GFCI for all 125V 15A/20A outlets in bathrooms, rooftops, kitchens",
+        plainEnglish: "Commercial kitchens, outdoor roof outlets, bathrooms need GFCI",
+        application: "Commercial tenant spaces, restaurants, office kitchens"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Standard outlet within 6 feet of commercial sink without GFCI", consequence: "Shock hazard in wet location, inspection failure", fix: "Install GFCI receptacle or GFCI circuit breaker" },
+      { scenario: "Missing GFCI in unfinished basement", consequence: "Electrocution risk in damp environment", fix: "Install GFCI protection for all 120V outlets in unfinished basements" }
+    ],
+    relatedArticles: ["210.12", "406.4", "590.6"]
+  },
+  {
+    article: "210.12",
+    title: "Arc-Fault Circuit-Interrupter Protection",
+    scope: "AFCI requirements to prevent fires from electrical arcing",
+    keyPoints: [
+      {
+        id: "210.12(A)",
+        text: "All 120V single-phase 15A and 20A branch circuits supplying outlets or devices in dwelling units shall be AFCI protected",
+        plainEnglish: "AFCI breakers required for almost all residential circuits (2023 NEC)",
+        application: "Bedrooms, living rooms, hallways, closets, kitchens, laundry rooms",
+        exceptions: ["Branch circuits supplying only fire alarm systems"]
+      }
+    ],
+    commonViolations: [
+      { scenario: "Standard breaker used for bedroom circuit instead of AFCI", consequence: "Fire safety violation, failed inspection, insurance issues", fix: "Install combination-type AFCI circuit breaker" },
+      { scenario: "AFCI breaker nuisance tripping with refrigerator or garage door opener", consequence: "Loss of power to critical equipment", fix: "Use AFCI breaker designed for motor loads, or dedicated non-AFCI circuit if code permits" }
+    ],
+    relatedArticles: ["210.8", "406.4", "550.25"]
+  },
+  {
+    article: "250.24",
+    title: "Grounding Service-Supplied AC Systems",
+    scope: "Connection of grounded conductor to grounding electrode system at service",
+    keyPoints: [
+      {
+        id: "250.24(A)",
+        text: "The grounded conductor shall be connected to the grounding electrode system at the service point",
+        plainEnglish: "Neutral connects to ground ONLY at the main service panel",
+        application: "Main service entrance - bonding screw/strap installed",
+        exceptions: ["Separately derived systems per 250.30"]
+      },
+      {
+        id: "250.24(B)",
+        text: "Main bonding jumper shall connect the grounded conductor to the equipment grounding conductor",
+        plainEnglish: "In main panel only, connect neutral bus to ground bus/case",
+        application: "Main service panel - remove this bond in subpanels"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Bonding screw left in subpanel (neutral and ground bonded)", consequence: "Neutral current flows on ground paths, creates shock hazard, violates 250.24", fix: "Remove green bonding screw or strap in subpanel. Neutral and ground must be separate downstream of main." },
+      { scenario: "Subpanel fed with 3-wire (no separate ground) instead of 4-wire", consequence: "No equipment grounding path, shock hazard", fix: "Run 4-wire feeder (2 hots, neutral, ground) to subpanel" }
+    ],
+    relatedArticles: ["250.32", "408.36", "310.16"]
+  },
+  {
+    article: "250.32",
+    title: "Grounding at Separate Buildings",
+    scope: "Grounding requirements for feeders to detached structures",
+    keyPoints: [
+      {
+        id: "250.32(A)",
+        text: "Grounding electrode required at separate building supplied by feeder",
+        plainEnglish: "Running power to garage or shed? Needs ground rod(s) there",
+        application: "Detached garages, workshops, outbuildings with subpanels",
+        exceptions: ["Single branch circuit with no subpanel"]
+      },
+      {
+        id: "250.32(B)",
+        text: "Grounded conductor not to be connected to equipment grounding conductors at separate buildings",
+        plainEnglish: "Subpanel in garage: neutral isolated from ground, remove bonding screw",
+        application: "All subpanels in detached structures"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Garage subpanel with neutral and ground bonded together", consequence: "Parallel paths for neutral current, shock hazard, code violation", fix: "Remove bonding screw in garage subpanel. Install separate ground bar." },
+      { scenario: "Missing ground rod(s) at detached structure", consequence: "Inadequate grounding, potential equipment damage, inspection fail", fix: "Install minimum two ground rods 6 feet apart at separate building" }
+    ],
+    relatedArticles: ["250.24", "250.53", "408.36"]
+  },
+  {
+    article: "250.53",
+    title: "Grounding Electrode Installation",
+    scope: "Requirements for grounding electrodes and their installation",
+    keyPoints: [
+      { id: "250.53(A)", text: "Rod, pipe, and plate electrodes shall not be less than 8 feet in length", plainEnglish: "Ground rods must be 8 feet long, driven fully except for connection", application: "Commercial and residential services" },
+      { id: "250.53(B)", text: "Two grounding electrodes required unless single rod proves <25 ohms resistance", plainEnglish: "Install two ground rods minimum - don't bother testing, just add the second", application: "All new construction, commercial services" },
+      { id: "250.53(C)", text: "Spacing of electrode shall be not less than 6 feet apart", plainEnglish: "Ground rods must be minimum 6 feet apart to be effective", application: "Multiple ground rod installations" }
+    ],
+    commonViolations: [
+      { scenario: "Single ground rod for commercial service without resistance test", consequence: "Inadequate grounding, potential equipment damage, inspection failure", fix: "Install second ground rod minimum 6 feet from first, or perform fall-of-potential test proving <25 ohms" },
+      { scenario: "Ground rods installed only 2-3 feet apart", consequence: "Electrodes act as single ground, ineffective grounding system", fix: "Space ground rods minimum 6 feet apart (more is better)" }
+    ],
+    relatedArticles: ["250.24", "250.32", "250.66"]
+  },
+  {
+    article: "310.16",
+    title: "Allowable Ampacities",
+    scope: "Ampacity tables for wire sizing based on temperature ratings",
+    keyPoints: [
+      { id: "310.16-General", text: "Ampacities for conductors rated 0-2000 volts per Table 310.16", plainEnglish: "How many amps can this wire carry? Depends on temperature rating (60°C, 75°C, 90°C)", application: "Sizing branch circuit and feeder conductors" },
+      { id: "310.15(B)(3)(a)", text: "Adjustment factors for more than three current-carrying conductors in raceway", plainEnglish: "4-6 wires in conduit = 80% of table ampacity. 7-9 wires = 70%.", application: "Conduit fill derating calculations" }
+    ],
+    commonViolations: [
+      { scenario: "14 AWG wire on 20A breaker (using 60°C ampacity)", consequence: "Fire hazard from overheated conductors, insulation damage", fix: "Use 12 AWG minimum for 20A circuits, or downsize breaker to 15A" },
+      { scenario: "Not derating ampacity for 6 circuits in single conduit", consequence: "Conductors overheat due to bundled heat, fire hazard", fix: "Apply 80% derating factor to Table 310.16 ampacities, or separate circuits into multiple conduits" }
+    ],
+    relatedArticles: ["210.19", "250.66", "314.16"]
+  },
+  {
+    article: "314.16",
+    title: "Box Fill Calculations",
+    scope: "Box fill calculations and volume requirements",
+    keyPoints: [
+      { id: "314.16(A)", text: "Boxes shall be of sufficient size to provide free space for all enclosed conductors", plainEnglish: "Count your wires - each box has maximum fill capacity", application: "All junction boxes, outlet boxes, device boxes" },
+      { id: "314.16(B)", text: "Volume allowance: 14 AWG = 2.00 cu.in., 12 AWG = 2.25 cu.in., 10 AWG = 2.50 cu.in.", plainEnglish: "14 gauge wire takes 2 cubic inches, 12 gauge takes 2.25, etc.", application: "Calculating required box size" },
+      { id: "314.16(B)(4)", text: "Device or equipment fill shall be counted as 2 conductors", plainEnglish: "Switch or receptacle in box counts as 2 wires worth of space", application: "Device box calculations" },
+      { id: "314.16(B)(2)", text: "Clamp fill shall be counted as 1 conductor", plainEnglish: "Cable clamps inside box count as 1 wire worth of space", application: "Metal box calculations" }
+    ],
+    commonViolations: [
+      { scenario: "Box overstuffed with too many wire connections", consequence: "Overheating, damaged wire insulation, short circuits, inspection fail", fix: "Calculate fill: count each wire + device (as 2) + clamps (as 1). Use larger box or add extension ring if overfilled." },
+      { scenario: "4-inch square box with 12 AWG wires and receptacle - no extension ring", consequence: "Box overfilled beyond 21 cubic inches, wires compressed", fix: "4-inch square = 21 cu.in. max. Add extension ring for additional wires." }
+    ],
+    relatedArticles: ["314.20", "314.24", "300.14"]
+  },
+  // New articles start here
+  {
+    article: "250.122",
+    title: "Equipment Grounding Conductor Sizing",
+    scope: "Minimum size of equipment grounding conductors based on overcurrent device rating",
+    keyPoints: [
+      {
+        id: "250.122(A)",
+        text: "Size based on the rating of the overcurrent device protecting the circuit",
+        plainEnglish: "Equipment ground wire size matches breaker size",
+        application: "Sizing equipment grounding conductors for feeders and branch circuits"
+      },
+      {
+        id: "250.122(B)",
+        text: "15A OCPD: #14 Cu / #12 Al; 20A OCPD: #12 Cu / #10 Al; 30A OCPD: #10 Cu / #8 Al; 40A OCPD: #10 Cu / #8 Al; 60A OCPD: #10 Cu / #8 Al; 100A OCPD: #8 Cu / #6 Al; 200A OCPD: #6 Cu / #4 Al; 400A OCPD: #3 Cu / #1 Al; 600A OCPD: #1 Cu / 1/0 Al; 800A OCPD: 1/0 Cu / 3/0 Al; 1000A OCPD: 2/0 Cu / 4/0 Al",
+        plainEnglish: "Larger breaker requires larger ground wire",
+        application: "Select EGC size from Table 250.122"
+      },
+      {
+        id: "250.122(C)",
+        text: "Where circuit conductors are increased in size for voltage drop, EGC must be proportionally increased",
+        plainEnglish: "If you upsize wires for voltage drop, you must also upsize the ground wire",
+        application: "Long wire runs with increased conductor size"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Using #14 ground with 20A circuit", consequence: "Inadequate fault current path, potential equipment damage and shock hazard", fix: "Use #12 copper ground for 20A circuits" },
+      { scenario: "Not up-sizing ground wire when conductors increased for voltage drop", consequence: "Ground wire undersized relative to circuit conductors, slow trip times", fix: "Increase ground wire size proportionally to the circuit conductor increase" }
+    ],
+    relatedArticles: ["250.66", "310.16", "240.4"]
+  },
+  {
+    article: "334.80",
+    title: "NM Cable Ampacity Adjustment",
+    scope: "Ampacity adjustment for NM (Romex) cables bundled together or in thermal insulation",
+    keyPoints: [
+      {
+        id: "334.80(A)",
+        text: "Where more than 2 NM cables containing 2 or more current-carrying conductors are installed in contact with thermal insulation without maintaining spacing, the ampacity of each conductor shall be adjusted per 310.15(C)(1)",
+        plainEnglish: "Bundled Romex in insulation must be derated",
+        application: "Attic runs, insulated wall cavities"
+      },
+      {
+        id: "334.80(B)",
+        text: "When NM cable is installed in thermal insulation, ampacity is limited to the 60°C column of Table 310.16",
+        plainEnglish: "Romex in insulation cannot use the 90°C column",
+        application: "NM cable in spray foam, batt insulation"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Running multiple NM cables through bored holes without spacing", consequence: "Overheating due to bundling, fire hazard", fix: "Maintain spacing between cables or derate ampacity per 310.15(C)(1)" },
+      { scenario: "Using 90°C ampacity for NM cable in insulation", consequence: "Conductors overheat, insulation damage", fix: "Use 60°C ampacity column for NM cable in thermal insulation" }
+    ],
+    relatedArticles: ["310.16", "310.15", "334.12"]
+  },
+  {
+    article: "408.36",
+    title: "Panelboard Overcurrent Protection",
+    scope: "Requirements for overcurrent protection of panelboards",
+    keyPoints: [
+      {
+        id: "408.36(A)",
+        text: "Each panelboard shall be protected by an overcurrent protective device having a rating not greater than that of the panelboard",
+        plainEnglish: "Breaker protecting panel must match or be less than panel rating",
+        application: "Main breaker sizing, feeder breaker sizing"
+      },
+      {
+        id: "408.36(B)",
+        text: "The overcurrent device shall be located within or at any point on the supply side of the panelboard",
+        plainEnglish: "Protection can be upstream, not necessarily inside panel",
+        application: "Feeder breaker location"
+      },
+      {
+        id: "408.36(C)",
+        text: "Back-fed devices used for supply shall be secured in the 'on' position with a fastener",
+        plainEnglish: "Main breaker in panel must be fastened",
+        application: "Panel installation, generator interlock kits"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Panelboard rated 100A fed by 125A breaker", consequence: "Panel may overheat, fire hazard", fix: "Replace breaker with 100A or smaller" },
+      { scenario: "Back-fed main breaker not secured with fastener", consequence: "Breaker can be accidentally turned off, arcing hazard", fix: "Install approved fastener kit to secure breaker" }
+    ],
+    relatedArticles: ["408.30", "408.40", "240.4"]
+  },
+  {
+    article: "422.11",
+    title: "GFCI Protection for Appliances",
+    scope: "Specific appliances requiring GFCI protection regardless of location",
+    keyPoints: [
+      {
+        id: "422.11(A)",
+        text: "Automotive vacuum machines, drinking water coolers, high-pressure spray washing machines, tire inflation machines, vending machines, sump pumps, sewage pumps, dishwashers require GFCI protection",
+        plainEnglish: "Many appliances need GFCI even if not in wet location",
+        application: "Commercial appliances, residential dishwashers"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Dishwasher installed without GFCI protection", consequence: "Shock hazard, code violation", fix: "Install GFCI breaker or receptacle for dishwasher circuit" },
+      { scenario: "Vending machine plugged into standard outlet", consequence: "Shock hazard in potentially wet area", fix: "Provide GFCI protection for vending machine outlet" }
+    ],
+    relatedArticles: ["210.8", "422.5", "550.15"]
+  },
+  {
+    article: "430.52",
+    title: "Motor Branch Circuit Protection",
+    scope: "Maximum rating of motor branch-circuit short-circuit and ground-fault protective devices",
+    keyPoints: [
+      {
+        id: "430.52(A)",
+        text: "Dual-element fuse (time-delay): 175% of motor FLC; Instantaneous trip breaker: 800% of motor FLC (1100% for Design B energy efficient); Inverse time breaker: 250% of motor FLC",
+        plainEnglish: "Motor breakers/fuses can be much larger than motor current to allow starting",
+        application: "Sizing motor overload protection"
+      },
+      {
+        id: "430.52(B)",
+        text: "If value does not correspond to standard OCPD size, next higher standard size permitted",
+        plainEnglish: "Round up to the next standard breaker size",
+        application: "Selecting breaker size"
+      },
+      {
+        id: "430.52(C)",
+        text: "Motor FLC from NEC tables 430.247-250 (not nameplate)",
+        plainEnglish: "Use NEC tables, not motor nameplate, for full load current",
+        application: "Lookup motor FLC based on horsepower and voltage"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Using motor nameplate current instead of NEC table", consequence: "Incorrect OCPD sizing, nuisance trips or inadequate protection", fix: "Use NEC Table 430.247-250 for motor FLC" },
+      { scenario: "Sizing breaker at 100% of motor FLC", consequence: "Breaker trips on motor startup", fix: "Size per 430.52 percentages (175% fuse, 250% breaker)" }
+    ],
+    relatedArticles: ["430.6", "430.32", "430.250"]
+  },
+  {
+    article: "240.4",
+    title: "Overcurrent Protection General",
+    scope: "General requirements for overcurrent protection of conductors",
+    keyPoints: [
+      {
+        id: "240.4(A)",
+        text: "Conductors shall be protected against overcurrent in accordance with their ampacities",
+        plainEnglish: "Breaker/fuse must match wire size",
+        application: "Basic circuit protection"
+      },
+      {
+        id: "240.4(B)",
+        text: "Next higher standard OCPD rating permitted if ampacity does not correspond to standard rating, under specific conditions",
+        plainEnglish: "Can go up one size if wire ampacity is between standard breaker sizes",
+        application: "Oversized conductors for voltage drop"
+      },
+      {
+        id: "240.4(D)",
+        text: "Small conductor restrictions: 14 AWG = 15A, 12 AWG = 20A, 10 AWG = 30A",
+        plainEnglish: "Don't put 14 gauge on a 20A breaker",
+        application: "Residential and commercial branch circuits"
+      }
+    ],
+    commonViolations: [
+      { scenario: "14 AWG wire on 20A breaker", consequence: "Fire hazard, insulation damage", fix: "Use 15A breaker or upgrade to 12 AWG wire" },
+      { scenario: "Oversized breaker for voltage drop without meeting 240.4(B) conditions", consequence: "Inadequate protection, fire risk", fix: "Ensure all conditions met before using next higher size" }
+    ],
+    relatedArticles: ["310.16", "240.21", "240.6"]
+  },
+  {
+    article: "210.19",
+    title: "Branch Circuit Conductor Sizing",
+    scope: "Requirements for sizing branch circuit conductors",
+    keyPoints: [
+      {
+        id: "210.19(A)",
+        text: "Conductors shall have an ampacity not less than the maximum load to be served",
+        plainEnglish: "Wire must be big enough for the load",
+        application: "Sizing branch circuits for appliances, outlets"
+      },
+      {
+        id: "210.19(A)(1)",
+        text: "For other than continuous loads, 100% of load; for continuous loads, 125% of load",
+        plainEnglish: "Continuous loads (on 3+ hours) require larger wire",
+        application: "Lighting, motor loads"
+      },
+      {
+        id: "210.19(A)(2)",
+        text: "Consider voltage drop: 3% for branch circuits, 5% total",
+        plainEnglish: "Long wire runs may need bigger wire to prevent voltage drop",
+        application: "Outbuildings, long circuits"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Sizing wire for continuous load at 100% instead of 125%", consequence: "Overheating, insulation damage", fix: "Multiply continuous load by 1.25 before selecting wire size" },
+      { scenario: "Ignoring voltage drop on long runs", consequence: "Poor appliance performance, motor damage", fix: "Increase conductor size or reduce run length" }
+    ],
+    relatedArticles: ["210.20", "215.2", "310.16"]
+  },
+  {
+    article: "215.2",
+    title: "Feeder Conductor Sizing",
+    scope: "Requirements for sizing feeder conductors",
+    keyPoints: [
+      {
+        id: "215.2(A)",
+        text: "Feeder conductors shall have ampacity not less than required to supply the load",
+        plainEnglish: "Feeder wires must handle total load of all branch circuits",
+        application: "Sizing subpanel feeders"
+      },
+      {
+        id: "215.2(A)(1)",
+        text: "Continuous loads: 125% of load",
+        plainEnglish: "Feeders for continuous loads need larger wire",
+        application: "Commercial lighting feeders"
+      },
+      {
+        id: "215.2(A)(2)",
+        text: "Consider voltage drop: 3% for feeders, 5% total",
+        plainEnglish: "Long feeder runs need bigger wire",
+        application: "Detached buildings, long feeders"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Feeder sized for total load without considering continuous load multiplier", consequence: "Overheating, insulation damage", fix: "Apply 125% multiplier to continuous portion of load" },
+      { scenario: "Ignoring voltage drop on long feeder runs", consequence: "Poor voltage regulation, equipment issues", fix: "Upsize feeder conductors or reduce length" }
+    ],
+    relatedArticles: ["215.3", "220.42", "310.16"]
+  },
+  {
+    article: "220.42",
+    title: "General Lighting Load Demand Factors",
+    scope: "Demand factors for general lighting loads",
+    keyPoints: [
+      {
+        id: "220.42(A)",
+        text: "First 12500 VA at 100%; next 112500 VA at 35%; remainder at 25%",
+        plainEnglish: "Large lighting loads can be derated",
+        application: "Commercial and industrial load calculations"
+      },
+      {
+        id: "220.42(B)",
+        text: "Dwelling units: 100% of lighting load",
+        plainEnglish: "No demand factor for residential lighting",
+        application: "Residential load calculations"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Applying demand factor to residential lighting", consequence: "Undersized service, overcurrent protection", fix: "Use 100% for dwelling unit lighting" },
+      { scenario: "Not applying demand factor to large commercial lighting", consequence: "Oversized feeders and service, increased cost", fix: "Apply demand factors per Table 220.42" }
+    ],
+    relatedArticles: ["220.12", "220.14", "220.50"]
+  },
+  {
+    article: "250.66",
+    title: "Grounding Electrode Conductor Sizing",
+    scope: "Sizing grounding electrode conductors for AC systems",
+    keyPoints: [
+      {
+        id: "250.66(A)",
+        text: "Size based on largest service entrance conductor or equivalent area",
+        plainEnglish: "Ground wire to rods based on service wire size",
+        application: "Sizing ground wire from panel to ground rods"
+      },
+      {
+        id: "250.66(B)",
+        text: "Table 250.66: Up to 2/0 Cu service = #6 Cu GEC; 3/0-350 Cu = #4 Cu; 400-600 Cu = #2 Cu; etc.",
+        plainEnglish: "Larger service requires larger ground wire",
+        application: "Select GEC size from table"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Using #8 Cu for 200A service (requires #6)", consequence: "Inadequate grounding, potential equipment damage", fix: "Size GEC per Table 250.66" },
+      { scenario: "Splicing GEC without irreversible compression connector", consequence: "Poor connection, high impedance", fix: "Use exothermic weld or irreversible compression splice" }
+    ],
+    relatedArticles: ["250.64", "250.70", "310.16"]
+  },
+  {
+    article: "300.5",
+    title: "Underground Installation Depth",
+    scope: "Minimum cover requirements for underground cables and raceways",
+    keyPoints: [
+      {
+        id: "300.5(A)",
+        text: "Direct burial cables: 24 inches for 0-600V residential, 30 inches for commercial/industrial",
+        plainEnglish: "Bury cables deep enough to avoid damage",
+        application: "Underground wiring for outbuildings, landscape lighting"
+      },
+      {
+        id: "300.5(B)",
+        text: "Raceways (conduit): 18 inches for 0-600V residential, 24 inches for commercial/industrial",
+        plainEnglish: "Conduit can be shallower than direct burial",
+        application: "Underground conduit runs"
+      },
+      {
+        id: "300.5(D)",
+        text: "Protection required when less than minimum depth (concrete pad, etc.)",
+        plainEnglish: "If shallow, add protection",
+        application: "Under driveways, sidewalks"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Burying UF cable only 12 inches deep", consequence: "Damage from digging, shock hazard", fix: "Increase depth to minimum 24 inches or install protection" },
+      { scenario: "No warning tape above underground cables", consequence: "Accidental dig-in, cable damage", fix: "Install caution tape 12 inches above cable" }
+    ],
+    relatedArticles: ["300.50", "310.10", "338.12"]
+  },
+  {
+    article: "314.28",
+    title: "Pull and Junction Box Sizing",
+    scope: "Minimum size requirements for pull and junction boxes",
+    keyPoints: [
+      {
+        id: "314.28(A)",
+        text: "Straight pulls: length not less than 8 times the trade diameter of largest raceway",
+        plainEnglish: "Box length for straight pull = 8x conduit diameter",
+        application: "Sizing pull boxes for straight conduit runs"
+      },
+      {
+        id: "314.28(B)",
+        text: "Angle or U pulls: distance from entry to opposite wall not less than 6 times raceway diameter plus sum of diameters of other raceways in same row",
+        plainEnglish: "More complex calculation for angled pulls",
+        application: "Pull boxes with multiple conduits"
+      },
+      {
+        id: "314.28(C)",
+        text: "Splices and taps: box must be large enough for conductors and fittings",
+        plainEnglish: "Junction boxes must have enough space",
+        application: "Splicing boxes"
+      }
+    ],
+    commonViolations: [
+      { scenario: "Pull box too small for straight pull of 4-inch conduit", consequence: "Conductor damage during pulling, insulation damage", fix: "Size box at least 32 inches long (8x4)" },
+      { scenario: "Ignoring multiple conduits in same row for angle pull", consequence: "Box too small, difficult pull", fix: "Calculate per 314.28(B)" }
+    ],
+    relatedArticles: ["314.16", "300.14", "362.28"]
+  }
+];
+
+// Convert to string with proper formatting (2 spaces indent)
+const newArrayString = JSON.stringify(newNecDatabase, null, 2)
+  .replace(/^/gm, '  ') // add two spaces to each line
+  .replace(/^  \[/, '[') // but not for first bracket
+  .replace(/^  \]/ , ']');
+
+// Reconstruct content
+const newContent = before + 'const necDatabase = ' + newArrayString + ';' + after;
+
+// Write back to original file
+fs.writeFileSync(originalPath, newContent);
+console.log('Updated generate-nec-data-v2.js with', newNecDatabase.length, 'articles');
+
+// Now run the generation script to produce new JSON and TS
+const { execSync } = require('child_process');
+try {
+  execSync(`node "${originalPath}"`, { cwd: __dirname, stdio: 'inherit' });
+} catch (err) {
+  console.error('Generation failed:', err.message);
+  process.exit(1);
+}
