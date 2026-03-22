@@ -1,0 +1,49 @@
+name: Notify Discord on Task Changes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'tasks.md'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # need full history for diff
+
+      - name: Get diff of tasks.md
+        id: diff
+        run: |
+          git diff HEAD^ HEAD -- tasks.md > diff.txt
+          if [ -s diff.txt ]; then
+            DIFF_CONTENT=$(cat diff.txt | sed -n '/^[+-]/p' | head -30)
+            echo "has_diff=true" >> $GITHUB_OUTPUT
+            echo "diff<<EOF" >> $GITHUB_OUTPUT
+            echo "$DIFF_CONTENT" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "has_diff=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Discord notification
+        if: steps.diff.outputs.has_diff == 'true'
+        uses: srveer/webhook-discord-action@v1
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: |
+            **📋 Tasks Updated**
+            Repository: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Changes to `tasks.md`:
+
+            ```diff
+            ${{ steps.diff.outputs.diff }}
+            ```
+            [View Commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          username: Sparky Task Bot
+          avatar_url: https://raw.githubusercontent.com/wildweymouth408/v0-electrician-calculator-redesign/main/public/icon.png

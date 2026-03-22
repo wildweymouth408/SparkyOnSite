@@ -1,0 +1,50 @@
+name: Post Task Summary to Discord
+
+on:
+  workflow_dispatch:  # manual trigger
+  schedule:
+    - cron: '0 8 * * *'  # daily at 8am UTC (optional)
+
+jobs:
+  summary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Parse tasks.md and build summary
+        id: parse
+        run: |
+          # Extract tasks from tasks.md (assuming markdown table)
+          # Lines start with | and contain L-xxx
+          grep -E '^\| L-[0-9]+' tasks.md > filtered.txt || true
+          # If no lines, fallback to whole file
+          if [ ! -s filtered.txt ]; then
+            cp tasks.md filtered.txt
+          fi
+          # Count lines for summary
+          TOTAL=$(grep -c '^\| L-' tasks.md || echo 0)
+          DONE=$(grep -c 'Done' tasks.md || echo 0)
+          IN_PROGRESS=$(grep -c 'In Progress\|Assigned' tasks.md || echo 0)
+          # Build message
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "**📊 Sparky Task Summary**" >> $GITHUB_OUTPUT
+          echo "Total tasks: $TOTAL | Done: $DONE | In Progress: $IN_PROGRESS" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "**Last 3 completed:**" >> $GITHUB_OUTPUT
+          grep 'Done' tasks.md | tail -3 | sed 's/^| //;s/|$//' >> $GITHUB_OUTPUT || echo "None" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "**Currently working on:**" >> $GITHUB_OUTPUT
+          grep -E 'In Progress|Assigned' tasks.md | head -5 | sed 's/^| //;s/|$//' >> $GITHUB_OUTPUT || echo "None" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "**Next 5 pending:**" >> $GITHUB_OUTPUT
+          grep -E 'Pending|To Do' tasks.md | head -5 | sed 's/^| //;s/|$//' >> $GITHUB_OUTPUT || echo "None" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Send summary to Discord
+        uses: srveer/webhook-discord-action@v1
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: ${{ steps.parse.outputs.summary }}
+          username: Sparky Task Bot
+          avatar_url: https://raw.githubusercontent.com/wildweymouth408/v0-electrician-calculator-redesign/main/public/icon.png
