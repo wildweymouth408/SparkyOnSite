@@ -16,8 +16,8 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Sparky - Electrician Field Management',
-  description: 'Professional electrician field management platform with NEC calculators, job tracking, and code reference. Sparky references NEC 2023 but does not guarantee compliance. Always consult the official NEC and a licensed professional.',
+  title: 'SparkyOnsite - Electrician Field Management',
+  description: 'Professional electrician field management platform with NEC calculators, job tracking, and code reference. SparkyOnsite references NEC 2023 but does not guarantee compliance. Always consult the official NEC and a licensed professional.',
   generator: 'v0.app',
   manifest: '/manifest.json',
   icons: {
@@ -75,4 +75,3 @@ export default function RootLayout({
     </html>
   )
 }
-
