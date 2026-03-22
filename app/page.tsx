@@ -86,7 +86,10 @@ export default function SparkyApp() {
       </header>
 
       {/* Content */}
-      <main className="flex-1 overflow-y-auto px-4 py-4 pb-24">
+      <main
+        className="flex-1 overflow-y-auto px-4 py-4 pb-32"
+        style={{ paddingBottom: 'calc(8rem + env(safe-area-inset-bottom, 0px))' }}
+      >
         {activeTab === 'home'        && <HomeTab onNavigate={handleNavigate} />}
         {activeTab === 'calculators' && (
           <ToolsTab
