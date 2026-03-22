@@ -44,12 +44,12 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
           {result && (
             <>
               {/* First mark */}
-              <line x1="120" y1="200" x2="180" y2="200" stroke="#ff6b00" strokeWidth="2"
+              <line x1="120" y1="200" x2="180" y2="200" stroke="#f97316" strokeWidth="2"
                 strokeDasharray="200" strokeDashoffset="200"
                 style={{ animation: 'draw-line 0.8s ease forwards 0.3s' }} />
-              <circle cx="150" cy="200" r="4" fill="#ff6b00" opacity="0"
+              <circle cx="150" cy="200" r="4" fill="#f97316" opacity="0"
                 style={{ animation: 'fade-in 0.3s ease forwards 0.8s' }} />
-              <text x="185" y="204" fill="#ff6b00" fontSize="12" fontFamily="var(--font-mono)" opacity="0"
+              <text x="185" y="204" fill="#f97316" fontSize="12" fontFamily="var(--font-mono)" opacity="0"
                 style={{ animation: 'fade-in 0.3s ease forwards 1s' }}>
                 Mark 1: {result.firstMark}"
               </text>
@@ -81,7 +81,7 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
               )}
 
               {/* Angle indicator */}
-              <path d="M 150 200 L 150 180 L 165 190" fill="none" stroke="#ff6b00" strokeWidth="1" opacity="0.6" />
+              <path d="M 150 200 L 150 180 L 165 190" fill="none" stroke="#f97316" strokeWidth="1" opacity="0.6" />
             </>
           )}
         </svg>
@@ -89,10 +89,10 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
         {/* Crosshair */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <svg width="40" height="40" viewBox="0 0 40 40">
-            <line x1="20" y1="0" x2="20" y2="16" stroke="#ff6b00" strokeWidth="1" opacity="0.5" />
-            <line x1="20" y1="24" x2="20" y2="40" stroke="#ff6b00" strokeWidth="1" opacity="0.5" />
-            <line x1="0" y1="20" x2="16" y2="20" stroke="#ff6b00" strokeWidth="1" opacity="0.5" />
-            <line x1="24" y1="20" x2="40" y2="20" stroke="#ff6b00" strokeWidth="1" opacity="0.5" />
+            <line x1="20" y1="0" x2="20" y2="16" stroke="#f97316" strokeWidth="1" opacity="0.5" />
+            <line x1="20" y1="24" x2="20" y2="40" stroke="#f97316" strokeWidth="1" opacity="0.5" />
+            <line x1="0" y1="20" x2="16" y2="20" stroke="#f97316" strokeWidth="1" opacity="0.5" />
+            <line x1="24" y1="20" x2="40" y2="20" stroke="#f97316" strokeWidth="1" opacity="0.5" />
           </svg>
         </div>
       </div>
@@ -103,7 +103,7 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
           Demo mode -- Real AR requires HTTPS + device camera access
         </p>
         {result && (
-          <div className="mt-2 text-center font-mono text-sm text-[#ff6b00]">
+          <div className="mt-2 text-center font-mono text-sm text-[#f97316]">
             {result.bendType} | {result.distanceBetweenBends > 0 ? `${result.distanceBetweenBends}" between bends` : `Mark at ${result.firstMark}"`}
           </div>
         )}

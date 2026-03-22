@@ -56,7 +56,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
               min={0.1}
               max={6000}
               onChange={e => setInputs(p => ({ ...p, loadAmps: Number(e.target.value) }))}
-              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${loadError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
+              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${loadError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#f97316]'}`}
             />
             {loadError && <span className="text-[10px] text-red-400">{loadError}</span>}
           </label>
@@ -68,7 +68,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
               min={1}
               max={10000}
               onChange={e => setInputs(p => ({ ...p, distance: Number(e.target.value) }))}
-              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${distanceError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
+              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${distanceError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#f97316]'}`}
             />
             {distanceError && <span className="text-[10px] text-red-400">{distanceError}</span>}
           </label>
@@ -80,7 +80,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
             <select
               value={inputs.systemVoltage}
               onChange={e => setInputs(p => ({ ...p, systemVoltage: Number(e.target.value) }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {SYSTEM_VOLTAGES.map(v => <option key={v} value={v}>{v}V</option>)}
             </select>
@@ -90,7 +90,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
             <select
               value={inputs.material}
               onChange={e => setInputs(p => ({ ...p, material: e.target.value as 'copper' | 'aluminum' }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               <option value="copper">Copper</option>
               <option value="aluminum">Aluminum</option>
@@ -104,7 +104,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
             <select
               value={inputs.insulationType}
               onChange={e => setInputs(p => ({ ...p, insulationType: e.target.value }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {INSULATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
@@ -114,7 +114,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
             <select
               value={inputs.maxDropPercent}
               onChange={e => setInputs(p => ({ ...p, maxDropPercent: Number(e.target.value) }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               <option value={3}>3% (Branch)</option>
               <option value={5}>5% (Total)</option>
@@ -131,7 +131,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
               min={-50}
               max={150}
               onChange={e => setInputs(p => ({ ...p, ambientTemp: Number(e.target.value) }))}
-              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${ambientError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
+              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${ambientError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#f97316]'}`}
             />
             {ambientError && <span className="text-[10px] text-red-400">{ambientError}</span>}
           </label>
@@ -143,7 +143,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
               min={1}
               max={100}
               onChange={e => setInputs(p => ({ ...p, conductorsInRaceway: Number(e.target.value) }))}
-              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${conductorsError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
+              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${conductorsError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#f97316]'}`}
             />
             {conductorsError && <span className="text-[10px] text-red-400">{conductorsError}</span>}
           </label>
@@ -156,8 +156,8 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
             <span className="text-[11px] uppercase tracking-wider text-[#888]">Recommended Wire</span>
             <span className={`flex items-center gap-1.5 border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
               result.pass
-                ? 'border-[#00ff88]/30 bg-[#00ff88]/10 text-[#00ff88]'
-                : 'border-[#ff3333]/30 bg-[#ff3333]/10 text-[#ff3333]'
+                ? 'border-[#22c55e]/30 bg-[#22c55e]/10 text-[#22c55e]'
+                : 'border-[#ef4444]/30 bg-[#ef4444]/10 text-[#ef4444]'
             }`}>
               {result.pass ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
               {result.pass ? 'PASS' : 'FAIL'}
@@ -165,7 +165,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
           </div>
 
           <div className="mb-3 flex items-baseline gap-2">
-            <span className="font-mono text-3xl font-bold text-[#ff6b00]">#{result.recommendedSize}</span>
+            <span className="font-mono text-3xl font-bold text-[#f97316]">#{result.recommendedSize}</span>
             <span className="text-sm text-[#888]">AWG</span>
           </div>
           <div className="flex flex-col gap-1 text-sm">

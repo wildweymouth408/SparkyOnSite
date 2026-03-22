@@ -73,7 +73,7 @@ export function VoltageDropCalculator() {
           <line x1="0" y1="24" x2="400" y2="24" stroke="#333" strokeWidth="2" />
           <line
             x1="0" y1="24" x2="400" y2="24"
-            stroke="#ff6b00"
+            stroke="#f97316"
             strokeWidth="2"
             strokeDasharray="4 8"
             style={{ animation: 'electron-flow 0.8s linear infinite' }}
@@ -94,7 +94,7 @@ export function VoltageDropCalculator() {
             <select
               value={inputs.systemVoltage}
               onChange={e => setInputs(p => ({ ...p, systemVoltage: Number(e.target.value) }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {SYSTEM_VOLTAGES.map(v => <option key={v} value={v}>{v}V</option>)}
             </select>
@@ -104,7 +104,7 @@ export function VoltageDropCalculator() {
             <select
               value={inputs.phase}
               onChange={e => setInputs(p => ({ ...p, phase: e.target.value as 'single' | 'three' }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               <option value="single">1-Phase</option>
               <option value="three">3-Phase</option>
@@ -135,7 +135,7 @@ export function VoltageDropCalculator() {
               max={currentMode === 'load' ? 6000 : 7500}
               onChange={e => handleDisplayedCurrentChange(Number(e.target.value))}
               placeholder={currentMode === 'load' ? '20' : '25'}
-              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${currentError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
+              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${currentError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#f97316]'}`}
             />
             <div className="flex flex-col gap-0.5">
               {!currentError && (
@@ -153,7 +153,7 @@ export function VoltageDropCalculator() {
               max={10000}
               onChange={e => setInputs(p => ({ ...p, distance: Number(e.target.value) }))}
               placeholder="100"
-              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${distanceError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#ff6b00]'}`}
+              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${distanceError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#f97316]'}`}
             />
             {distanceError && <span className="text-[10px] text-red-400">{distanceError}</span>}
           </label>
@@ -165,7 +165,7 @@ export function VoltageDropCalculator() {
             <select
               value={inputs.wireSize}
               onChange={e => setInputs(p => ({ ...p, wireSize: e.target.value }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {WIRE_SIZES.map(s => <option key={s} value={s}>#{s} AWG</option>)}
             </select>
@@ -175,7 +175,7 @@ export function VoltageDropCalculator() {
             <select
               value={inputs.material}
               onChange={e => setInputs(p => ({ ...p, material: e.target.value as 'copper' | 'aluminum' }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               <option value="copper">Copper</option>
               <option value="aluminum">Aluminum</option>
@@ -191,8 +191,8 @@ export function VoltageDropCalculator() {
             <span className="text-[11px] uppercase tracking-wider text-[#888]">Result</span>
             <span className={`flex items-center gap-1.5 border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
               result.pass
-                ? 'border-[#00ff88]/30 bg-[#00ff88]/10 text-[#00ff88]'
-                : 'border-[#ff3333]/30 bg-[#ff3333]/10 text-[#ff3333]'
+                ? 'border-[#22c55e]/30 bg-[#22c55e]/10 text-[#22c55e]'
+                : 'border-[#ef4444]/30 bg-[#ef4444]/10 text-[#ef4444]'
             }`}>
               {result.pass ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
               {result.pass ? 'PASS' : 'FAIL'}
@@ -200,7 +200,7 @@ export function VoltageDropCalculator() {
           </div>
 
           <div className="mb-2 flex items-baseline gap-2">
-            <span className="font-mono text-3xl font-bold text-[#ff6b00]">{result.dropPercent}%</span>
+            <span className="font-mono text-3xl font-bold text-[#f97316]">{result.dropPercent}%</span>
             <span className="text-sm text-[#888]">voltage drop</span>
           </div>
           <div className="mb-3 flex items-baseline gap-2">

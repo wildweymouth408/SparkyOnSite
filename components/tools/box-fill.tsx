@@ -65,7 +65,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
           <select
             value={boxType}
             onChange={e => setBoxType(e.target.value)}
-            className="h-12 border border-[#333] bg-[#111] px-3 text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+            className="h-12 border border-[#333] bg-[#111] px-3 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
           >
             {Object.entries(STANDARD_BOXES).map(([key, box]) => (
               <option key={key} value={key}>{box.description} ({box.volume} cu.in.)</option>
@@ -81,7 +81,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               type="number"
               value={customVolume || ''}
               onChange={e => setCustomVolume(Number(e.target.value))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             />
           </label>
         )}
@@ -90,7 +90,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
         <div>
           <div className="mb-2 flex items-center justify-between">
             <span className="text-[11px] uppercase tracking-wider text-[#888]">Conductors</span>
-            <button onClick={addConductorRow} className="flex items-center gap-1 text-xs text-[#ff6b00] hover:text-[#ff8533]">
+            <button onClick={addConductorRow} className="flex items-center gap-1 text-xs text-[#f97316] hover:text-[#fb923c]">
               <Plus className="h-3 w-3" /> Add Size
             </button>
           </div>
@@ -99,7 +99,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               <select
                 value={c.size}
                 onChange={e => updateConductor(i, 'size', e.target.value)}
-                className="h-10 flex-1 border border-[#333] bg-[#111] px-2 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                className="h-10 flex-1 border border-[#333] bg-[#111] px-2 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
               >
                 {COMMON_WIRE_SIZES.slice(0, 8).map(s => <option key={s} value={s}>#{s}</option>)}
               </select>
@@ -109,10 +109,10 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
                 onChange={e => updateConductor(i, 'count', Number(e.target.value))}
                 min={0}
                 placeholder="Qty"
-                className="h-10 w-16 border border-[#333] bg-[#111] px-2 text-center font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+                className="h-10 w-16 border border-[#333] bg-[#111] px-2 text-center font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
               />
               {conductors.length > 1 && (
-                <button onClick={() => removeConductorRow(i)} className="text-[#555] hover:text-[#ff3333]">
+                <button onClick={() => removeConductorRow(i)} className="text-[#555] hover:text-[#ef4444]">
                   <Minus className="h-4 w-4" />
                 </button>
               )}
@@ -129,7 +129,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               value={clamps}
               onChange={e => setClamps(Number(e.target.value))}
               min={0}
-              className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -139,7 +139,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               value={devices}
               onChange={e => setDevices(Number(e.target.value))}
               min={0}
-              className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -149,7 +149,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               value={supportFittings}
               onChange={e => setSupportFittings(Number(e.target.value))}
               min={0}
-              className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -159,7 +159,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               value={equipmentGrounds}
               onChange={e => setEquipmentGrounds(Number(e.target.value))}
               min={0}
-              className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             />
           </label>
         </div>
@@ -169,7 +169,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
           <select
             value={largestGroundSize}
             onChange={e => setLargestGroundSize(e.target.value)}
-            className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+            className="h-10 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
           >
             {COMMON_WIRE_SIZES.slice(0, 8).map(s => <option key={s} value={s}>#{s}</option>)}
           </select>
@@ -182,8 +182,8 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
           <span className="text-[11px] uppercase tracking-wider text-[#888]">Box Fill Result</span>
           <span className={`flex items-center gap-1.5 border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
             result.pass
-              ? 'border-[#00ff88]/30 bg-[#00ff88]/10 text-[#00ff88]'
-              : 'border-[#ff3333]/30 bg-[#ff3333]/10 text-[#ff3333]'
+              ? 'border-[#22c55e]/30 bg-[#22c55e]/10 text-[#22c55e]'
+              : 'border-[#ef4444]/30 bg-[#ef4444]/10 text-[#ef4444]'
           }`}>
             {result.pass ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
             {result.pass ? 'PASS' : 'FAIL'}
@@ -191,7 +191,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
         </div>
 
         <div className="mb-3 flex items-baseline gap-2">
-          <span className="font-mono text-2xl font-bold text-[#ff6b00]">{result.totalRequired}</span>
+          <span className="font-mono text-2xl font-bold text-[#f97316]">{result.totalRequired}</span>
           <span className="text-sm text-[#888]">of {result.boxCapacity} cu.in.</span>
         </div>
 
@@ -201,7 +201,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
             className="h-full transition-all duration-500"
             style={{
               width: `${Math.min((result.totalRequired / result.boxCapacity) * 100, 100)}%`,
-              backgroundColor: result.pass ? '#ff6b00' : '#ff3333',
+              backgroundColor: result.pass ? '#f97316' : '#ef4444',
             }}
           />
         </div>
@@ -211,7 +211,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
           <div className="flex justify-between"><span className="text-[#888]">Clamps</span><span className="font-mono text-[#f0f0f0]">{result.clampVolume} cu.in.</span></div>
           <div className="flex justify-between"><span className="text-[#888]">Devices</span><span className="font-mono text-[#f0f0f0]">{result.deviceVolume} cu.in.</span></div>
           <div className="flex justify-between"><span className="text-[#888]">Grounds</span><span className="font-mono text-[#f0f0f0]">{result.groundVolume} cu.in.</span></div>
-          <div className="flex justify-between"><span className="text-[#888]">Remaining</span><span className={`font-mono ${result.remainingVolume >= 0 ? 'text-[#00ff88]' : 'text-[#ff3333]'}`}>{result.remainingVolume} cu.in.</span></div>
+          <div className="flex justify-between"><span className="text-[#888]">Remaining</span><span className={`font-mono ${result.remainingVolume >= 0 ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>{result.remainingVolume} cu.in.</span></div>
         </div>
         <CalculatorDisclaimer />
       </div>

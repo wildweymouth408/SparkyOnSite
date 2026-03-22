@@ -68,17 +68,17 @@ export function OhmsLawCalculator() {
 
           {/* V at top */}
           <text x="100" y="72" textAnchor="middle" fontSize="22" fontWeight="bold" fontFamily="var(--font-mono)"
-            fill={triangleHighlight === 'voltage' ? '#ff6b00' : '#f0f0f0'}>
+            fill={triangleHighlight === 'voltage' ? '#f97316' : '#f0f0f0'}>
             V
           </text>
           {/* I at bottom-left */}
           <text x="65" y="140" textAnchor="middle" fontSize="22" fontWeight="bold" fontFamily="var(--font-mono)"
-            fill={triangleHighlight === 'current' ? '#ff6b00' : '#f0f0f0'}>
+            fill={triangleHighlight === 'current' ? '#f97316' : '#f0f0f0'}>
             I
           </text>
           {/* R at bottom-right */}
           <text x="135" y="140" textAnchor="middle" fontSize="22" fontWeight="bold" fontFamily="var(--font-mono)"
-            fill={triangleHighlight === 'resistance' ? '#ff6b00' : '#f0f0f0'}>
+            fill={triangleHighlight === 'resistance' ? '#f97316' : '#f0f0f0'}>
             R
           </text>
           {/* Multiply sign */}
@@ -94,40 +94,40 @@ export function OhmsLawCalculator() {
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1">
           <span className="text-[11px] uppercase tracking-wider text-[#888]">
-            Voltage (V) {result?.solvedFor === 'voltage' && <span className="text-[#ff6b00]">= {result.voltage}</span>}
+            Voltage (V) {result?.solvedFor === 'voltage' && <span className="text-[#f97316]">= {result.voltage}</span>}
           </span>
           <input
             type="number"
             value={voltage}
             onChange={e => setVoltage(e.target.value)}
             placeholder={result?.solvedFor === 'voltage' ? String(result.voltage) : 'Enter voltage'}
-            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
           />
         </label>
 
         <label className="flex flex-col gap-1">
           <span className="text-[11px] uppercase tracking-wider text-[#888]">
-            Current (A) {result?.solvedFor === 'current' && <span className="text-[#ff6b00]">= {result.current}</span>}
+            Current (A) {result?.solvedFor === 'current' && <span className="text-[#f97316]">= {result.current}</span>}
           </span>
           <input
             type="number"
             value={current}
             onChange={e => setCurrent(e.target.value)}
             placeholder={result?.solvedFor === 'current' ? String(result.current) : 'Enter current'}
-            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
           />
         </label>
 
         <label className="flex flex-col gap-1">
           <span className="text-[11px] uppercase tracking-wider text-[#888]">
-            Resistance ({'ohms'}) {result?.solvedFor === 'resistance' && <span className="text-[#ff6b00]">= {result.resistance}</span>}
+            Resistance ({'ohms'}) {result?.solvedFor === 'resistance' && <span className="text-[#f97316]">= {result.resistance}</span>}
           </span>
           <input
             type="number"
             value={resistance}
             onChange={e => setResistance(e.target.value)}
             placeholder={result?.solvedFor === 'resistance' ? String(result.resistance) : 'Enter resistance'}
-            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
           />
         </label>
       </div>
@@ -139,19 +139,19 @@ export function OhmsLawCalculator() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <div className="text-xs text-[#888]">Voltage</div>
-              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'voltage' ? 'text-[#ff6b00]' : 'text-[#f0f0f0]'}`}>
+              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'voltage' ? 'text-[#f97316]' : 'text-[#f0f0f0]'}`}>
                 {result.voltage}V
               </div>
             </div>
             <div>
               <div className="text-xs text-[#888]">Current</div>
-              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'current' ? 'text-[#ff6b00]' : 'text-[#f0f0f0]'}`}>
+              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'current' ? 'text-[#f97316]' : 'text-[#f0f0f0]'}`}>
                 {result.current}A
               </div>
             </div>
             <div>
               <div className="text-xs text-[#888]">Resistance</div>
-              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'resistance' ? 'text-[#ff6b00]' : 'text-[#f0f0f0]'}`}>
+              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'resistance' ? 'text-[#f97316]' : 'text-[#f0f0f0]'}`}>
                 {result.resistance}{'\u03A9'}
               </div>
             </div>

@@ -34,7 +34,7 @@ export function AttachToJob({ note }: AttachToJobProps) {
 
   if (attached) {
     return (
-      <div className="flex items-center gap-2 bg-[#00ff88]/10 px-3 py-2.5 text-xs font-medium text-[#00ff88]">
+      <div className="flex items-center gap-2 bg-[#22c55e]/10 px-3 py-2.5 text-xs font-medium text-[#22c55e]">
         <Check className="h-3.5 w-3.5" />
         Saved to {attached}
       </div>

@@ -45,7 +45,7 @@ export function ConduitFillCalculator() {
             className="absolute inset-y-0 left-0 transition-all duration-500"
             style={{
               width: `${Math.min(result.fillPercent / (result.fillLimit || 40) * 100, 100)}%`,
-              backgroundColor: result.pass ? '#ff6b00' : '#ff3333',
+              backgroundColor: result.pass ? '#f97316' : '#ef4444',
               opacity: 0.3,
             }}
           />
@@ -63,7 +63,7 @@ export function ConduitFillCalculator() {
             <select
               value={inputs.conduitType}
               onChange={e => setInputs(p => ({ ...p, conduitType: e.target.value as typeof inputs.conduitType }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {CONDUIT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
@@ -73,7 +73,7 @@ export function ConduitFillCalculator() {
             <select
               value={inputs.tradeSize}
               onChange={e => setInputs(p => ({ ...p, tradeSize: e.target.value }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {CONDUIT_TRADE_SIZES.map(s => <option key={s} value={s}>{s}"</option>)}
             </select>
@@ -86,7 +86,7 @@ export function ConduitFillCalculator() {
             <select
               value={inputs.wireType}
               onChange={e => setInputs(p => ({ ...p, wireType: e.target.value }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {INSULATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
@@ -96,7 +96,7 @@ export function ConduitFillCalculator() {
             <select
               value={inputs.wireSize}
               onChange={e => setInputs(p => ({ ...p, wireSize: e.target.value }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {COMMON_WIRE_SIZES.map(s => <option key={s} value={s}>#{s}</option>)}
             </select>
@@ -111,7 +111,7 @@ export function ConduitFillCalculator() {
             onChange={e => setInputs(p => ({ ...p, wireCount: Number(e.target.value) }))}
             min={1}
             placeholder="3"
-            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
           />
         </label>
       </div>
@@ -122,8 +122,8 @@ export function ConduitFillCalculator() {
             <span className="text-[11px] uppercase tracking-wider text-[#888]">Result</span>
             <span className={`flex items-center gap-1.5 border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
               result.pass
-                ? 'border-[#00ff88]/30 bg-[#00ff88]/10 text-[#00ff88]'
-                : 'border-[#ff3333]/30 bg-[#ff3333]/10 text-[#ff3333]'
+                ? 'border-[#22c55e]/30 bg-[#22c55e]/10 text-[#22c55e]'
+                : 'border-[#ef4444]/30 bg-[#ef4444]/10 text-[#ef4444]'
             }`}>
               {result.pass ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
               {result.pass ? 'PASS' : 'FAIL'}

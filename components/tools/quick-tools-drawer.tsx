@@ -35,7 +35,7 @@ export function QuickToolsDrawer({ open, onOpenChange }: QuickToolsDrawerProps) 
               onClick={() => setActiveTool(tool.id)}
               className={`flex-1 py-2 text-[10px] font-medium uppercase tracking-wider transition-colors ${
                 activeTool === tool.id
-                  ? 'bg-[#ff6b00] text-[#0f1115]'
+                  ? 'bg-[#f97316] text-[#0f1115]'
                   : 'border border-[#333] bg-[#111] text-[#888]'
               }`}
             >

@@ -626,7 +626,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   }
 
   const categoryColors: Record<string, string> = {
-    safety: '#ff3333', code: '#f97316', technique: '#f97316', tool: '#f97316',
+    safety: '#ef4444', code: '#f97316', technique: '#f97316', tool: '#f97316',
   }
 
   // ── Main home tab render ──────────────────────────────────────────────────

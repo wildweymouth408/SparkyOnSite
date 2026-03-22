@@ -43,7 +43,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
             <select
               value={inputs.wireSize}
               onChange={e => setInputs(p => ({ ...p, wireSize: e.target.value }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {COMMON_WIRE_SIZES.map(s => <option key={s} value={s}>#{s}</option>)}
             </select>
@@ -53,7 +53,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
             <select
               value={inputs.insulationType}
               onChange={e => setInputs(p => ({ ...p, insulationType: e.target.value }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               {INSULATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
@@ -66,7 +66,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
             <select
               value={inputs.material}
               onChange={e => setInputs(p => ({ ...p, material: e.target.value as 'copper' | 'aluminum' }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             >
               <option value="copper">Copper</option>
               <option value="aluminum">Aluminum</option>
@@ -78,7 +78,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
               type="number"
               value={inputs.ambientTemp || ''}
               onChange={e => setInputs(p => ({ ...p, ambientTemp: Number(e.target.value) }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
             />
           </label>
         </div>
@@ -90,7 +90,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
             value={inputs.conductorsInRaceway || ''}
             onChange={e => setInputs(p => ({ ...p, conductorsInRaceway: Number(e.target.value) }))}
             min={1}
-            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none"
+            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
           />
         </label>
       </div>
@@ -100,7 +100,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
           <div className="mb-2 text-[11px] uppercase tracking-wider text-[#888]">Ampacity Result</div>
 
           <div className="mb-3 flex items-baseline gap-2">
-            <span className="font-mono text-3xl font-bold text-[#ff6b00]">{result.correctedAmpacity}A</span>
+            <span className="font-mono text-3xl font-bold text-[#f97316]">{result.correctedAmpacity}A</span>
             <span className="text-sm text-[#888]">corrected</span>
           </div>
           <div className="flex flex-col gap-1 text-sm">

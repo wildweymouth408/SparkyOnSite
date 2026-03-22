@@ -227,8 +227,8 @@ export function MaterialTakeoffCalculator() {
   const jobNote = `[MTO] ${inputs.circuits} ckts #${inputs.wireSize} ${inputs.wireType} ${inputs.numConductors}-wire — ${totalAllConductors.toLocaleString()} ft total${useConduit ? `, ${totalConduitFt} ft ${inputs.conduitType} ${conduitSize}"` : ''} — est. $${laborCost.toFixed(0)} labor`
 
   // ── Styles ─────────────────────────────────────────────────────────────
-  const INP  = 'h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none w-full'
-  const SEL  = 'h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#ff6b00] focus:outline-none w-full appearance-none'
+  const INP  = 'h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none w-full'
+  const SEL  = 'h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none w-full appearance-none'
   const LBL  = 'text-[11px] uppercase tracking-wider text-[#888]'
   const FLD  = 'flex flex-col gap-1'
 
@@ -332,7 +332,7 @@ export function MaterialTakeoffCalculator() {
                 onClick={() => set('conduitSizeAuto', !inputs.conduitSizeAuto)}
                 className={`text-[10px] uppercase tracking-wider px-2 py-1 border transition-colors ${
                   inputs.conduitSizeAuto
-                    ? 'border-[#ff6b00]/50 bg-[#ff6b00]/10 text-[#ff6b00]'
+                    ? 'border-[#f97316]/50 bg-[#f97316]/10 text-[#f97316]'
                     : 'border-[#333] bg-[#1a1a1a] text-[#888]'
                 }`}
               >
@@ -340,7 +340,7 @@ export function MaterialTakeoffCalculator() {
               </button>
             </div>
             {inputs.conduitSizeAuto ? (
-              <div className="h-12 border border-[#ff6b00]/30 bg-[#ff6b00]/5 flex items-center px-3 font-mono text-sm text-[#ff6b00]">
+              <div className="h-12 border border-[#f97316]/30 bg-[#f97316]/5 flex items-center px-3 font-mono text-sm text-[#f97316]">
                 {autoConduitSize ? `${autoConduitSize}"` : 'N/A'} — NEC Ch.9 Table 4, 40% fill
               </div>
             ) : (
@@ -366,7 +366,7 @@ export function MaterialTakeoffCalculator() {
               onClick={() => set('includeHomeRun', !inputs.includeHomeRun)}
               className={`text-[10px] uppercase tracking-wider px-2 py-1 border transition-colors ${
                 inputs.includeHomeRun
-                  ? 'border-[#ff6b00]/50 bg-[#ff6b00]/10 text-[#ff6b00]'
+                  ? 'border-[#f97316]/50 bg-[#f97316]/10 text-[#f97316]'
                   : 'border-[#333] bg-[#1a1a1a] text-[#888]'
               }`}
             >
@@ -421,7 +421,7 @@ export function MaterialTakeoffCalculator() {
               </div>
               <div className="mt-1.5 flex justify-between border-t border-[#222] pt-2">
                 <span className="font-medium text-[#ccc]">Total all conductors</span>
-                <span className="font-mono font-bold text-[#ff6b00]">{totalAllConductors.toLocaleString()} ft</span>
+                <span className="font-mono font-bold text-[#f97316]">{totalAllConductors.toLocaleString()} ft</span>
               </div>
             </div>
             <CalculatorDisclaimer />
@@ -446,7 +446,7 @@ export function MaterialTakeoffCalculator() {
                 </div>
                 <div className="mt-1.5 flex justify-between border-t border-[#222] pt-2">
                   <span className="font-medium text-[#ccc]">Total footage</span>
-                  <span className="font-mono font-bold text-[#ff6b00]">{totalConduitFt.toLocaleString()} ft</span>
+                  <span className="font-mono font-bold text-[#f97316]">{totalConduitFt.toLocaleString()} ft</span>
                 </div>
               </div>
               <CalculatorDisclaimer />
@@ -469,15 +469,15 @@ export function MaterialTakeoffCalculator() {
               </div>
               <div className="mt-1.5 flex justify-between border-t border-[#222] pt-2">
                 <span className="font-medium text-[#ccc]">Est. labor cost</span>
-                <span className="font-mono font-bold text-[#ff6b00]">${laborCost.toFixed(0)}</span>
+                <span className="font-mono font-bold text-[#f97316]">${laborCost.toFixed(0)}</span>
               </div>
             </div>
             <CalculatorDisclaimer />
           </div>
 
           {/* Materials List summary box */}
-          <div className="border border-[#ff6b00]/25 bg-[#ff6b00]/5 p-4">
-            <div className="mb-3 text-[11px] uppercase tracking-wider text-[#ff6b00]">
+          <div className="border border-[#f97316]/25 bg-[#f97316]/5 p-4">
+            <div className="mb-3 text-[11px] uppercase tracking-wider text-[#f97316]">
               Materials List
             </div>
             <div className="flex flex-col gap-1 font-mono text-xs">
@@ -503,11 +503,11 @@ export function MaterialTakeoffCalculator() {
                 <span className="text-[#888]">Wire connectors</span>
                 <span className="text-[#f0f0f0] font-bold">{totalWireNuts} ea</span>
               </div>
-              <div className="mt-2 border-t border-[#ff6b00]/20 pt-2 flex justify-between">
+              <div className="mt-2 border-t border-[#f97316]/20 pt-2 flex justify-between">
                 <span className="text-[#888]">
                   Labor est. ({pullHours.toFixed(1)} hrs @ ${inputs.laborRate}/hr)
                 </span>
-                <span className="text-[#ff6b00] font-bold">${laborCost.toFixed(0)}</span>
+                <span className="text-[#f97316] font-bold">${laborCost.toFixed(0)}</span>
               </div>
             </div>
           </div>
@@ -516,7 +516,7 @@ export function MaterialTakeoffCalculator() {
           <div className="flex flex-col gap-2">
             <button
               onClick={handleCopy}
-              className="flex items-center justify-center gap-2 border border-[#ff6b00]/40 bg-[#ff6b00]/10 py-3 text-xs font-medium uppercase tracking-wider text-[#ff6b00] hover:bg-[#ff6b00]/20 transition-colors"
+              className="flex items-center justify-center gap-2 border border-[#f97316]/40 bg-[#f97316]/10 py-3 text-xs font-medium uppercase tracking-wider text-[#f97316] hover:bg-[#f97316]/20 transition-colors"
             >
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               {copied ? 'Copied!' : 'Copy Summary'}
