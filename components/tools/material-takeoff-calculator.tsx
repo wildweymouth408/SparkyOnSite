@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { toast } from 'sonner'
 import { Save, Copy, Check } from 'lucide-react'
 
@@ -423,6 +424,7 @@ export function MaterialTakeoffCalculator() {
                 <span className="font-mono font-bold text-[#ff6b00]">{totalAllConductors.toLocaleString()} ft</span>
               </div>
             </div>
+            <CalculatorDisclaimer />
           </div>
 
           {/* Conduit card */}
@@ -447,6 +449,7 @@ export function MaterialTakeoffCalculator() {
                   <span className="font-mono font-bold text-[#ff6b00]">{totalConduitFt.toLocaleString()} ft</span>
                 </div>
               </div>
+              <CalculatorDisclaimer />
             </div>
           )}
 
@@ -469,6 +472,7 @@ export function MaterialTakeoffCalculator() {
                 <span className="font-mono font-bold text-[#ff6b00]">${laborCost.toFixed(0)}</span>
               </div>
             </div>
+            <CalculatorDisclaimer />
           </div>
 
           {/* Materials List summary box */}

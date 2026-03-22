@@ -5,6 +5,7 @@ import { calculateAmpacity, type AmpacityInputs } from '@/lib/calculations'
 import { COMMON_WIRE_SIZES, INSULATION_TYPES } from '@/lib/calculator-data'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { toast } from 'sonner'
 import { Save } from 'lucide-react'
 
@@ -116,6 +117,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
               <span className="font-mono text-[#f0f0f0]">{'\u00D7'}{result.conduitDerating}</span>
             </div>
           </div>
+          <CalculatorDisclaimer />
         </div>
       )}
 

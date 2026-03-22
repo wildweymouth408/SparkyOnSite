@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { calculateOhmsLaw } from '@/lib/calculations'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { toast } from 'sonner'
 import { Save } from 'lucide-react'
 
@@ -161,6 +162,7 @@ export function OhmsLawCalculator() {
               </div>
             </div>
           </div>
+          <CalculatorDisclaimer />
         </div>
       )}
 

@@ -6,6 +6,7 @@ import {
   X, Save, Copy, Settings, LayoutGrid, BarChart3, Trash2,
   Plus, ChevronRight, AlertTriangle, CheckCircle, Zap,
 } from 'lucide-react'
+import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 
 // ─── Supabase client (client-side only) ──────────────────────────────────────
 const supabase = createClient(
@@ -829,6 +830,7 @@ export function PanelScheduleBuilder() {
               </span>
             </div>
           )}
+          <CalculatorDisclaimer />
         </div>
 
         {/* Phase balance */}
