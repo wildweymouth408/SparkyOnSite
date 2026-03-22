@@ -302,9 +302,9 @@ export function ConduitBendingChart() {
     { id: 'kickWith90',    label: 'Kick w/ 90°' },
   ]
 
-  const inputCls = 'h-11 w-full rounded-lg border border-[#374151] bg-[#111827] px-3 font-mono text-sm text-[#F9FAFB] focus:border-[#F97316] focus:outline-none transition-colors'
+  const inputCls = 'h-11 w-full rounded-lg border border-[#374151] bg-[#18181b827] px-3 font-mono text-sm text-[#F9FAFB] focus:border-[#F97316] focus:outline-none transition-colors'
   const labelCls = 'text-xs text-[#9CA3AF] mb-1 block'
-  const cardCls = 'rounded-xl border border-[#1F2937] bg-[#111827] p-4'
+  const cardCls = 'rounded-xl border border-[#1F2937] bg-[#18181b827] p-4'
 
   return (
     <div className="flex flex-col gap-4">
@@ -326,7 +326,7 @@ export function ConduitBendingChart() {
                     : 'border-[#1F2937] bg-[#0D1117] hover:border-[#374151]'
                 }`}
               >
-                <span className={`text-xs font-medium ${isActive ? 'text-[#F9FAFB]' : 'text-[#6B7280]'}`}>
+                <span className={`text-xs font-medium ${isActive ? 'text-[#F9FAFB]' : 'text-[#a1a1aa]'}`}>
                   {brd.name}
                 </span>
                 <span className="block text-[10px] text-[#4B5563]">{brd.model}</span>
@@ -338,7 +338,7 @@ export function ConduitBendingChart() {
 
       {/* ── Bender Marks Reference ── */}
       <div className={cardCls}>
-        <p className="text-xs text-[#6B7280] mb-2">{b.name} — mark reference</p>
+        <p className="text-xs text-[#a1a1aa] mb-2">{b.name} — mark reference</p>
         <div className="grid grid-cols-3 gap-3 text-center">
           <div>
             <div className="text-[10px] text-[#4B5563] mb-0.5">Front</div>
@@ -350,7 +350,7 @@ export function ConduitBendingChart() {
           </div>
           <div>
             <div className="text-[10px] text-[#4B5563] mb-0.5">Back</div>
-            <div className="text-sm font-mono text-[#6B7280]">{b.marks.back}</div>
+            <div className="text-sm font-mono text-[#a1a1aa]">{b.marks.back}</div>
           </div>
         </div>
         <p className="mt-2 text-[10px] text-[#4B5563] leading-relaxed">{b.tip}</p>
@@ -367,7 +367,7 @@ export function ConduitBendingChart() {
               className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${
                 bendType === bt.id
                   ? 'bg-[#F97316] text-[#0D1117]'
-                  : 'border border-[#1F2937] text-[#6B7280] hover:text-[#9CA3AF] hover:border-[#374151]'
+                  : 'border border-[#1F2937] text-[#a1a1aa] hover:text-[#9CA3AF] hover:border-[#374151]'
               }`}
             >
               {bt.label}
@@ -387,7 +387,7 @@ export function ConduitBendingChart() {
               className={`rounded-lg px-3 py-1.5 text-xs font-mono transition-all ${
                 conduitSize === size
                   ? 'bg-[#374151] text-[#F9FAFB]'
-                  : 'border border-[#1F2937] text-[#6B7280] hover:border-[#374151]'
+                  : 'border border-[#1F2937] text-[#a1a1aa] hover:border-[#374151]'
               }`}
             >
               {size}
@@ -420,7 +420,7 @@ export function ConduitBendingChart() {
 
       {bendType === '90' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#6B7280] mb-3">90° stub-up calculator</p>
+          <p className="text-xs text-[#a1a1aa] mb-3">90° stub-up calculator</p>
           <div className="flex gap-3 mb-3">
             <div className="flex-1">
               <label className={labelCls}>Stub length (in)</label>
@@ -435,11 +435,11 @@ export function ConduitBendingChart() {
           </div>
           <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-[#6B7280]">Take-up</span>
+              <span className="text-[#a1a1aa]">Take-up</span>
               <span className="font-mono text-[#9CA3AF]">{stubCalc.takeup}"</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-[#6B7280]">Place {b.marks.front} at</span>
+              <span className="text-[#a1a1aa]">Place {b.marks.front} at</span>
               <span className="font-mono font-bold text-[#F9FAFB] text-lg">{stubCalc.mark}"</span>
             </div>
             <p className="text-[10px] text-[#4B5563]">from the end of conduit · then pull to 90°</p>
@@ -449,7 +449,7 @@ export function ConduitBendingChart() {
 
       {bendType === 'offset' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#6B7280] mb-3">Offset calculator</p>
+          <p className="text-xs text-[#a1a1aa] mb-3">Offset calculator</p>
           <div className="flex gap-3 mb-3">
             <div className="flex-1">
               <label className={labelCls}>Offset height (in)</label>
@@ -465,11 +465,11 @@ export function ConduitBendingChart() {
           {offsetCalc && (
             <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-[#6B7280]">Distance between bends</span>
+                <span className="text-[#a1a1aa]">Distance between bends</span>
                 <span className="font-mono font-bold text-[#F9FAFB] text-lg">{offsetCalc.distance}"</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[#6B7280]">Shrinkage (deduct from run)</span>
+                <span className="text-[#a1a1aa]">Shrinkage (deduct from run)</span>
                 <span className="font-mono text-[#F97316]">{offsetCalc.shrinkage}"</span>
               </div>
               <p className="text-[10px] text-[#4B5563]">
@@ -482,7 +482,7 @@ export function ConduitBendingChart() {
 
       {bendType === 'saddle3' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#6B7280] mb-3">3-point saddle calculator</p>
+          <p className="text-xs text-[#a1a1aa] mb-3">3-point saddle calculator</p>
           <div className="flex gap-3 mb-3">
             <div className="flex-1">
               <label className={labelCls}>Obstacle height (in)</label>
@@ -492,11 +492,11 @@ export function ConduitBendingChart() {
           {saddleCalc && (
             <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-[#6B7280]">Outer marks from center</span>
+                <span className="text-[#a1a1aa]">Outer marks from center</span>
                 <span className="font-mono font-bold text-[#F9FAFB] text-lg">{saddleCalc.outerDistance}"</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[#6B7280]">Total shrinkage</span>
+                <span className="text-[#a1a1aa]">Total shrinkage</span>
                 <span className="font-mono text-[#F97316]">{saddleCalc.shrinkage}"</span>
               </div>
               <p className="text-[10px] text-[#4B5563]">
@@ -509,7 +509,7 @@ export function ConduitBendingChart() {
 
       {bendType === 'saddle4' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#6B7280] mb-3">4-point saddle calculator</p>
+          <p className="text-xs text-[#a1a1aa] mb-3">4-point saddle calculator</p>
           <div className="flex gap-3 mb-3">
             <div className="flex-1">
               <label className={labelCls}>Obstacle height (in)</label>
@@ -518,11 +518,11 @@ export function ConduitBendingChart() {
           </div>
           <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-[#6B7280]">Distance between bends</span>
+              <span className="text-[#a1a1aa]">Distance between bends</span>
               <span className="font-mono font-bold text-[#F9FAFB] text-lg">{(saddleHeight * 1.414).toFixed(2)}"</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-[#6B7280]">Shrinkage per bend pair</span>
+              <span className="text-[#a1a1aa]">Shrinkage per bend pair</span>
               <span className="font-mono text-[#F97316]">{(saddleHeight * 0.375).toFixed(3)}"</span>
             </div>
             <p className="text-[10px] text-[#4B5563]">
@@ -534,7 +534,7 @@ export function ConduitBendingChart() {
 
       {bendType === 'back2back' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#6B7280] mb-3">Back-to-back calculator</p>
+          <p className="text-xs text-[#a1a1aa] mb-3">Back-to-back calculator</p>
           <div className="flex gap-3 mb-3">
             <div className="flex-1">
               <label className={labelCls}>Back-to-back distance (in)</label>
@@ -549,11 +549,11 @@ export function ConduitBendingChart() {
           </div>
           <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-[#6B7280]">Make first 90° stub</span>
+              <span className="text-[#a1a1aa]">Make first 90° stub</span>
               <span className="font-mono text-[#9CA3AF]">standard method</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-[#6B7280]">Place {b.marks.back} at</span>
+              <span className="text-[#a1a1aa]">Place {b.marks.back} at</span>
               <span className="font-mono font-bold text-[#F9FAFB] text-lg">{b2bDistance}"</span>
             </div>
             <p className="text-[10px] text-[#4B5563]">
@@ -565,7 +565,7 @@ export function ConduitBendingChart() {
 
       {bendType === 'rollingOffset' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#6B7280] mb-3">Rolling offset calculator</p>
+          <p className="text-xs text-[#a1a1aa] mb-3">Rolling offset calculator</p>
           <div className="flex gap-3 mb-3">
             <div className="flex-1">
               <label className={labelCls}>Rise / vertical (in)</label>
@@ -585,15 +585,15 @@ export function ConduitBendingChart() {
           {rollingCalc && (
             <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-[#6B7280]">Travel (hypotenuse)</span>
+                <span className="text-[#a1a1aa]">Travel (hypotenuse)</span>
                 <span className="font-mono text-[#9CA3AF]">{rollingCalc.travel}"</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[#6B7280]">Distance between bends</span>
+                <span className="text-[#a1a1aa]">Distance between bends</span>
                 <span className="font-mono font-bold text-[#F9FAFB] text-lg">{rollingCalc.distance}"</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[#6B7280]">Shrinkage</span>
+                <span className="text-[#a1a1aa]">Shrinkage</span>
                 <span className="font-mono text-[#F97316]">{rollingCalc.shrinkage}"</span>
               </div>
               <p className="text-[10px] text-[#4B5563]">
@@ -606,7 +606,7 @@ export function ConduitBendingChart() {
 
       {bendType === 'kickWith90' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#6B7280] mb-3">Kick with 90° — method</p>
+          <p className="text-xs text-[#a1a1aa] mb-3">Kick with 90° — method</p>
           <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
             <p className="text-xs text-[#9CA3AF] leading-relaxed">
               Make the 90° first using standard stub-up method. Then add a small kick (10-15°) at the top to offset the stub from the wall/surface. Adjust by eye and check with a tape measure.
@@ -617,7 +617,7 @@ export function ConduitBendingChart() {
 
       {/* ── Multiplier Reference ── */}
       <div className={cardCls}>
-        <p className="text-xs text-[#6B7280] mb-2">Offset multiplier reference</p>
+        <p className="text-xs text-[#a1a1aa] mb-2">Offset multiplier reference</p>
         <table className="w-full text-xs font-mono">
           <thead>
             <tr className="text-[#4B5563]">
@@ -645,7 +645,7 @@ export function ConduitBendingChart() {
                     <span className={isSelected ? 'text-[#F9FAFB] font-bold' : 'text-[#9CA3AF]'}>{row.angle}°</span>
                   </td>
                   <td className="py-2 text-center">
-                    <span className={isSelected ? 'text-[#F9FAFB]' : 'text-[#6B7280]'}>{row.mult}</span>
+                    <span className={isSelected ? 'text-[#F9FAFB]' : 'text-[#a1a1aa]'}>{row.mult}</span>
                   </td>
                   <td className="py-2 text-right">
                     <span className={isSelected ? 'text-[#F97316]' : 'text-[#4B5563]'}>{row.shrink}</span>
@@ -659,7 +659,7 @@ export function ConduitBendingChart() {
 
       {/* ── 90° Take-Up Reference ── */}
       <div className={cardCls}>
-        <p className="text-xs text-[#6B7280] mb-2">90° take-up / deduct reference</p>
+        <p className="text-xs text-[#a1a1aa] mb-2">90° take-up / deduct reference</p>
         <table className="w-full text-xs font-mono">
           <thead>
             <tr className="text-[#4B5563]">
@@ -683,7 +683,7 @@ export function ConduitBendingChart() {
                     <span className={isSelected ? 'text-[#F9FAFB] font-bold' : 'text-[#9CA3AF]'}>{size}</span>
                   </td>
                   <td className="py-2 text-center">
-                    <span className={isSelected ? 'text-[#F9FAFB]' : 'text-[#6B7280]'}>{TAKEUP[size]}"</span>
+                    <span className={isSelected ? 'text-[#F9FAFB]' : 'text-[#a1a1aa]'}>{TAKEUP[size]}"</span>
                   </td>
                   <td className="py-2 text-right">
                     <span className={isSelected ? 'text-[#F9FAFB]' : 'text-[#4B5563]'}>{GAIN[size]}"</span>
@@ -697,12 +697,12 @@ export function ConduitBendingChart() {
 
       {/* ── Step-by-Step Instructions ── */}
       <div>
-        <p className="text-xs text-[#6B7280] mb-3">
+        <p className="text-xs text-[#a1a1aa] mb-3">
           {b.name} — {BEND_TYPES.find(bt => bt.id === bendType)?.label} steps
         </p>
         <div className="flex flex-col gap-2">
           {instructions.steps.map((step, i) => (
-            <div key={i} className="flex gap-3 rounded-lg bg-[#111827] border border-[#1F2937] p-3">
+            <div key={i} className="flex gap-3 rounded-lg bg-[#18181b827] border border-[#1F2937] p-3">
               <span className="shrink-0 w-6 h-6 flex items-center justify-center text-[11px] font-bold font-mono rounded-md bg-[#F97316]/10 text-[#F97316]">
                 {i + 1}
               </span>

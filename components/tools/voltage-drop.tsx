@@ -70,7 +70,7 @@ export function VoltageDropCalculator() {
       {/* Animated wire SVG */}
       <div className="relative h-12 w-full overflow-hidden">
         <svg viewBox="0 0 400 48" className="h-full w-full" preserveAspectRatio="none">
-          <line x1="0" y1="24" x2="400" y2="24" stroke="#333" strokeWidth="2" />
+          <line x1="0" y1="24" x2="400" y2="24" stroke="#27272a" strokeWidth="2" />
           <line
             x1="0" y1="24" x2="400" y2="24"
             stroke="#f97316"
@@ -79,7 +79,7 @@ export function VoltageDropCalculator() {
             style={{ animation: 'electron-flow 0.8s linear infinite' }}
           />
           {hasResult && result && (
-            <text x="200" y="14" textAnchor="middle" fill="#888" fontSize="10" fontFamily="var(--font-mono)">
+            <text x="200" y="14" textAnchor="middle" fill="#a1a1aa" fontSize="10" fontFamily="var(--font-mono)">
               {result.voltageDrop}V drop over {inputs.distance}ft
             </text>
           )}
@@ -90,21 +90,21 @@ export function VoltageDropCalculator() {
       <div className="flex flex-col gap-3">
         <div className="flex gap-3">
           <label className="flex flex-1 flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-[#888]">Voltage</span>
+            <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Voltage</span>
             <select
               value={inputs.systemVoltage}
               onChange={e => setInputs(p => ({ ...p, systemVoltage: Number(e.target.value) }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
             >
               {SYSTEM_VOLTAGES.map(v => <option key={v} value={v}>{v}V</option>)}
             </select>
           </label>
           <label className="flex flex-1 flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-[#888]">Phase</span>
+            <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Phase</span>
             <select
               value={inputs.phase}
               onChange={e => setInputs(p => ({ ...p, phase: e.target.value as 'single' | 'three' }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
             >
               <option value="single">1-Phase</option>
               <option value="three">3-Phase</option>
@@ -115,7 +115,7 @@ export function VoltageDropCalculator() {
         <div className="flex gap-3">
           <label className="flex flex-1 flex-col gap-1">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] uppercase tracking-wider text-[#888]">{currentLabel}</span>
+              <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">{currentLabel}</span>
               <ToggleGroup
                 type="single"
                 value={currentMode}
@@ -135,17 +135,17 @@ export function VoltageDropCalculator() {
               max={currentMode === 'load' ? 6000 : 7500}
               onChange={e => handleDisplayedCurrentChange(Number(e.target.value))}
               placeholder={currentMode === 'load' ? '20' : '25'}
-              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${currentError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#f97316]'}`}
+              className={`h-12 border bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:outline-none ${currentError ? 'border-red-500 focus:border-red-500' : 'border-[#27272a] focus:border-[#f97316]'}`}
             />
             <div className="flex flex-col gap-0.5">
               {!currentError && (
-                <span className="text-[10px] text-[#52525b]">{currentHelperText}</span>
+                <span className="text-[10px] text-[#a1a1aa]">{currentHelperText}</span>
               )}
               {currentError && <span className="text-[10px] text-red-400">{currentError}</span>}
             </div>
           </label>
           <label className="flex flex-1 flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-[#888]">Distance (ft)</span>
+            <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Distance (ft)</span>
             <input
               type="number"
               value={inputs.distance || ''}
@@ -153,7 +153,7 @@ export function VoltageDropCalculator() {
               max={10000}
               onChange={e => setInputs(p => ({ ...p, distance: Number(e.target.value) }))}
               placeholder="100"
-              className={`h-12 border bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:outline-none ${distanceError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#f97316]'}`}
+              className={`h-12 border bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:outline-none ${distanceError ? 'border-red-500 focus:border-red-500' : 'border-[#27272a] focus:border-[#f97316]'}`}
             />
             {distanceError && <span className="text-[10px] text-red-400">{distanceError}</span>}
           </label>
@@ -161,21 +161,21 @@ export function VoltageDropCalculator() {
 
         <div className="flex gap-3">
           <label className="flex flex-1 flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-[#888]">Wire Size</span>
+            <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Wire Size</span>
             <select
               value={inputs.wireSize}
               onChange={e => setInputs(p => ({ ...p, wireSize: e.target.value }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
             >
               {WIRE_SIZES.map(s => <option key={s} value={s}>#{s} AWG</option>)}
             </select>
           </label>
           <label className="flex flex-1 flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-[#888]">Material</span>
+            <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Material</span>
             <select
               value={inputs.material}
               onChange={e => setInputs(p => ({ ...p, material: e.target.value as 'copper' | 'aluminum' }))}
-              className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
             >
               <option value="copper">Copper</option>
               <option value="aluminum">Aluminum</option>
@@ -186,9 +186,9 @@ export function VoltageDropCalculator() {
 
       {/* Results */}
       {hasResult && result && (
-        <div className="border border-[#333] bg-[#111] p-4">
+        <div className="border border-[#27272a] bg-[#18181b] p-4">
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-[11px] uppercase tracking-wider text-[#888]">Result</span>
+            <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Result</span>
             <span className={`flex items-center gap-1.5 border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
               result.pass
                 ? 'border-[#22c55e]/30 bg-[#22c55e]/10 text-[#22c55e]'
@@ -201,15 +201,15 @@ export function VoltageDropCalculator() {
 
           <div className="mb-2 flex items-baseline gap-2">
             <span className="font-mono text-3xl font-bold text-[#f97316]">{result.dropPercent}%</span>
-            <span className="text-sm text-[#888]">voltage drop</span>
+            <span className="text-sm text-[#a1a1aa]">voltage drop</span>
           </div>
           <div className="mb-3 flex items-baseline gap-2">
-            <span className="font-mono text-xl text-[#f0f0f0]">{result.voltageDrop}V</span>
-            <span className="text-sm text-[#888]">of {inputs.systemVoltage}V</span>
+            <span className="font-mono text-xl text-[#fafafa]">{result.voltageDrop}V</span>
+            <span className="text-sm text-[#a1a1aa]">of {inputs.systemVoltage}V</span>
           </div>
-          <p className="text-xs text-[#888]">{result.recommendation}</p>
+          <p className="text-xs text-[#a1a1aa]">{result.recommendation}</p>
           {/* NEC citation — NEC 215.2(A)(1)(b): 3% max for branch/feeder; 5% max total */}
-          <p className="text-[10px] text-[#444] mt-2">NEC 215.2(A)(1)(b) · NEC 310.15 · Formula: VD = ({inputs.phase === 'three' ? '√3' : '2'} × K × I × D) / CM</p>
+          <p className="text-[10px] text-[#71717a] mt-2">NEC 215.2(A)(1)(b) · NEC 310.15 · Formula: VD = ({inputs.phase === 'three' ? '√3' : '2'} × K × I × D) / CM</p>
           <CalculatorDisclaimer />
         </div>
       )}
@@ -219,7 +219,7 @@ export function VoltageDropCalculator() {
         <div className="flex flex-col gap-2">
           <button
             onClick={handleSave}
-            className="flex items-center justify-center gap-2 border border-[#333] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#f0f0f0] transition-colors hover:bg-[#222]"
+            className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] transition-colors hover:bg-[#18181b]"
           >
             <Save className="h-4 w-4" /> Save Calculation
           </button>

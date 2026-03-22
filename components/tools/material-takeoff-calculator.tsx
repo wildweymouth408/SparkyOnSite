@@ -227,9 +227,9 @@ export function MaterialTakeoffCalculator() {
   const jobNote = `[MTO] ${inputs.circuits} ckts #${inputs.wireSize} ${inputs.wireType} ${inputs.numConductors}-wire — ${totalAllConductors.toLocaleString()} ft total${useConduit ? `, ${totalConduitFt} ft ${inputs.conduitType} ${conduitSize}"` : ''} — est. $${laborCost.toFixed(0)} labor`
 
   // ── Styles ─────────────────────────────────────────────────────────────
-  const INP  = 'h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none w-full'
-  const SEL  = 'h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none w-full appearance-none'
-  const LBL  = 'text-[11px] uppercase tracking-wider text-[#888]'
+  const INP  = 'h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none w-full'
+  const SEL  = 'h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none w-full appearance-none'
+  const LBL  = 'text-[11px] uppercase tracking-wider text-[#a1a1aa]'
   const FLD  = 'flex flex-col gap-1'
 
   const hasResult = inputs.circuits > 0 && inputs.avgRunLength > 0
@@ -333,7 +333,7 @@ export function MaterialTakeoffCalculator() {
                 className={`text-[10px] uppercase tracking-wider px-2 py-1 border transition-colors ${
                   inputs.conduitSizeAuto
                     ? 'border-[#f97316]/50 bg-[#f97316]/10 text-[#f97316]'
-                    : 'border-[#333] bg-[#1a1a1a] text-[#888]'
+                    : 'border-[#27272a] bg-[#1a1a1a] text-[#a1a1aa]'
                 }`}
               >
                 {inputs.conduitSizeAuto ? 'AUTO (NEC 40%)' : 'MANUAL'}
@@ -367,7 +367,7 @@ export function MaterialTakeoffCalculator() {
               className={`text-[10px] uppercase tracking-wider px-2 py-1 border transition-colors ${
                 inputs.includeHomeRun
                   ? 'border-[#f97316]/50 bg-[#f97316]/10 text-[#f97316]'
-                  : 'border-[#333] bg-[#1a1a1a] text-[#888]'
+                  : 'border-[#27272a] bg-[#1a1a1a] text-[#a1a1aa]'
               }`}
             >
               {inputs.includeHomeRun ? 'YES' : 'NO'}
@@ -404,22 +404,22 @@ export function MaterialTakeoffCalculator() {
       {hasResult && (
         <>
           {/* Wire Footage card */}
-          <div className="border border-[#333] bg-[#111] p-4">
-            <div className="mb-3 text-[11px] uppercase tracking-wider text-[#888]">Wire Footage</div>
+          <div className="border border-[#27272a] bg-[#18181b] p-4">
+            <div className="mb-3 text-[11px] uppercase tracking-wider text-[#a1a1aa]">Wire Footage</div>
             <div className="flex flex-col gap-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-[#888]">Phase ({phaseCount}× #{inputs.wireSize})</span>
-                <span className="font-mono text-[#f0f0f0]">{phaseFootage.toLocaleString()} ft</span>
+                <span className="text-[#a1a1aa]">Phase ({phaseCount}× #{inputs.wireSize})</span>
+                <span className="font-mono text-[#fafafa]">{phaseFootage.toLocaleString()} ft</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#888]">Neutral (#{inputs.wireSize})</span>
-                <span className="font-mono text-[#f0f0f0]">{neutralFootage.toLocaleString()} ft</span>
+                <span className="text-[#a1a1aa]">Neutral (#{inputs.wireSize})</span>
+                <span className="font-mono text-[#fafafa]">{neutralFootage.toLocaleString()} ft</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#888]">Ground (#{groundSize} EGC)</span>
-                <span className="font-mono text-[#f0f0f0]">{groundFootage.toLocaleString()} ft</span>
+                <span className="text-[#a1a1aa]">Ground (#{groundSize} EGC)</span>
+                <span className="font-mono text-[#fafafa]">{groundFootage.toLocaleString()} ft</span>
               </div>
-              <div className="mt-1.5 flex justify-between border-t border-[#222] pt-2">
+              <div className="mt-1.5 flex justify-between border-t border-[#18181b] pt-2">
                 <span className="font-medium text-[#ccc]">Total all conductors</span>
                 <span className="font-mono font-bold text-[#f97316]">{totalAllConductors.toLocaleString()} ft</span>
               </div>
@@ -429,22 +429,22 @@ export function MaterialTakeoffCalculator() {
 
           {/* Conduit card */}
           {useConduit && (
-            <div className="border border-[#333] bg-[#111] p-4">
-              <div className="mb-3 text-[11px] uppercase tracking-wider text-[#888]">Conduit</div>
+            <div className="border border-[#27272a] bg-[#18181b] p-4">
+              <div className="mb-3 text-[11px] uppercase tracking-wider text-[#a1a1aa]">Conduit</div>
               <div className="flex flex-col gap-1.5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[#888]">Type</span>
-                  <span className="font-mono text-[#f0f0f0]">{inputs.conduitType}</span>
+                  <span className="text-[#a1a1aa]">Type</span>
+                  <span className="font-mono text-[#fafafa]">{inputs.conduitType}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#888]">Size (NEC 40% fill)</span>
-                  <span className="font-mono text-[#f0f0f0]">{conduitSize}"</span>
+                  <span className="text-[#a1a1aa]">Size (NEC 40% fill)</span>
+                  <span className="font-mono text-[#fafafa]">{conduitSize}"</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#888]">Conductors in conduit</span>
-                  <span className="font-mono text-[#f0f0f0]">{conductorsInConduit}</span>
+                  <span className="text-[#a1a1aa]">Conductors in conduit</span>
+                  <span className="font-mono text-[#fafafa]">{conductorsInConduit}</span>
                 </div>
-                <div className="mt-1.5 flex justify-between border-t border-[#222] pt-2">
+                <div className="mt-1.5 flex justify-between border-t border-[#18181b] pt-2">
                   <span className="font-medium text-[#ccc]">Total footage</span>
                   <span className="font-mono font-bold text-[#f97316]">{totalConduitFt.toLocaleString()} ft</span>
                 </div>
@@ -454,20 +454,20 @@ export function MaterialTakeoffCalculator() {
           )}
 
           {/* Hardware + Labor card */}
-          <div className="border border-[#333] bg-[#111] p-4">
-            <div className="mb-3 text-[11px] uppercase tracking-wider text-[#888]">Hardware & Labor</div>
+          <div className="border border-[#27272a] bg-[#18181b] p-4">
+            <div className="mb-3 text-[11px] uppercase tracking-wider text-[#a1a1aa]">Hardware & Labor</div>
             <div className="flex flex-col gap-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-[#888]">Wire connectors (est.)</span>
-                <span className="font-mono text-[#f0f0f0]">{totalWireNuts} ea</span>
+                <span className="text-[#a1a1aa]">Wire connectors (est.)</span>
+                <span className="font-mono text-[#fafafa]">{totalWireNuts} ea</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#888]">
+                <span className="text-[#a1a1aa]">
                   Pull time ({isCableAssembly ? '0.5 hr/100ft' : '1 hr/100ft'})
                 </span>
-                <span className="font-mono text-[#f0f0f0]">{pullHours.toFixed(1)} hrs</span>
+                <span className="font-mono text-[#fafafa]">{pullHours.toFixed(1)} hrs</span>
               </div>
-              <div className="mt-1.5 flex justify-between border-t border-[#222] pt-2">
+              <div className="mt-1.5 flex justify-between border-t border-[#18181b] pt-2">
                 <span className="font-medium text-[#ccc]">Est. labor cost</span>
                 <span className="font-mono font-bold text-[#f97316]">${laborCost.toFixed(0)}</span>
               </div>
@@ -482,29 +482,29 @@ export function MaterialTakeoffCalculator() {
             </div>
             <div className="flex flex-col gap-1 font-mono text-xs">
               <div className="flex justify-between">
-                <span className="text-[#888]">#{inputs.wireSize} {inputs.wireType} phase ({phaseCount}×)</span>
-                <span className="text-[#f0f0f0] font-bold">{phaseFootage.toLocaleString()} ft</span>
+                <span className="text-[#a1a1aa]">#{inputs.wireSize} {inputs.wireType} phase ({phaseCount}×)</span>
+                <span className="text-[#fafafa] font-bold">{phaseFootage.toLocaleString()} ft</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#888]">#{inputs.wireSize} {inputs.wireType} neutral</span>
-                <span className="text-[#f0f0f0] font-bold">{neutralFootage.toLocaleString()} ft</span>
+                <span className="text-[#a1a1aa]">#{inputs.wireSize} {inputs.wireType} neutral</span>
+                <span className="text-[#fafafa] font-bold">{neutralFootage.toLocaleString()} ft</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#888]">#{groundSize} bare ground</span>
-                <span className="text-[#f0f0f0] font-bold">{groundFootage.toLocaleString()} ft</span>
+                <span className="text-[#a1a1aa]">#{groundSize} bare ground</span>
+                <span className="text-[#fafafa] font-bold">{groundFootage.toLocaleString()} ft</span>
               </div>
               {useConduit && (
                 <div className="flex justify-between">
-                  <span className="text-[#888]">{inputs.conduitType} {conduitSize}" conduit</span>
-                  <span className="text-[#f0f0f0] font-bold">{totalConduitFt.toLocaleString()} ft</span>
+                  <span className="text-[#a1a1aa]">{inputs.conduitType} {conduitSize}" conduit</span>
+                  <span className="text-[#fafafa] font-bold">{totalConduitFt.toLocaleString()} ft</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-[#888]">Wire connectors</span>
-                <span className="text-[#f0f0f0] font-bold">{totalWireNuts} ea</span>
+                <span className="text-[#a1a1aa]">Wire connectors</span>
+                <span className="text-[#fafafa] font-bold">{totalWireNuts} ea</span>
               </div>
               <div className="mt-2 border-t border-[#f97316]/20 pt-2 flex justify-between">
-                <span className="text-[#888]">
+                <span className="text-[#a1a1aa]">
                   Labor est. ({pullHours.toFixed(1)} hrs @ ${inputs.laborRate}/hr)
                 </span>
                 <span className="text-[#f97316] font-bold">${laborCost.toFixed(0)}</span>
@@ -523,7 +523,7 @@ export function MaterialTakeoffCalculator() {
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center justify-center gap-2 border border-[#333] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#222]"
+              className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]"
             >
               <Save className="h-4 w-4" /> Save Calculation
             </button>

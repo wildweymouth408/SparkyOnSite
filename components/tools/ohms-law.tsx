@@ -61,39 +61,39 @@ export function OhmsLawCalculator() {
       <div className="flex justify-center py-2">
         <svg viewBox="0 0 200 180" className="h-36 w-36">
           {/* Triangle */}
-          <line x1="100" y1="20" x2="20" y2="160" stroke="#333" strokeWidth="2" />
-          <line x1="100" y1="20" x2="180" y2="160" stroke="#333" strokeWidth="2" />
-          <line x1="20" y1="160" x2="180" y2="160" stroke="#333" strokeWidth="2" />
-          <line x1="20" y1="100" x2="180" y2="100" stroke="#333" strokeWidth="1" strokeDasharray="4" />
+          <line x1="100" y1="20" x2="20" y2="160" stroke="#27272a" strokeWidth="2" />
+          <line x1="100" y1="20" x2="180" y2="160" stroke="#27272a" strokeWidth="2" />
+          <line x1="20" y1="160" x2="180" y2="160" stroke="#27272a" strokeWidth="2" />
+          <line x1="20" y1="100" x2="180" y2="100" stroke="#27272a" strokeWidth="1" strokeDasharray="4" />
 
           {/* V at top */}
           <text x="100" y="72" textAnchor="middle" fontSize="22" fontWeight="bold" fontFamily="var(--font-mono)"
-            fill={triangleHighlight === 'voltage' ? '#f97316' : '#f0f0f0'}>
+            fill={triangleHighlight === 'voltage' ? '#f97316' : '#fafafa'}>
             V
           </text>
           {/* I at bottom-left */}
           <text x="65" y="140" textAnchor="middle" fontSize="22" fontWeight="bold" fontFamily="var(--font-mono)"
-            fill={triangleHighlight === 'current' ? '#f97316' : '#f0f0f0'}>
+            fill={triangleHighlight === 'current' ? '#f97316' : '#fafafa'}>
             I
           </text>
           {/* R at bottom-right */}
           <text x="135" y="140" textAnchor="middle" fontSize="22" fontWeight="bold" fontFamily="var(--font-mono)"
-            fill={triangleHighlight === 'resistance' ? '#f97316' : '#f0f0f0'}>
+            fill={triangleHighlight === 'resistance' ? '#f97316' : '#fafafa'}>
             R
           </text>
           {/* Multiply sign */}
-          <text x="100" y="142" textAnchor="middle" fontSize="14" fill="#555" fontFamily="var(--font-mono)">
+          <text x="100" y="142" textAnchor="middle" fontSize="14" fill="#71717a" fontFamily="var(--font-mono)">
             {'x'}
           </text>
         </svg>
       </div>
 
-      <p className="text-center text-xs text-[#888]">Enter any 2 values to solve for the third</p>
+      <p className="text-center text-xs text-[#a1a1aa]">Enter any 2 values to solve for the third</p>
 
       {/* Inputs */}
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-[11px] uppercase tracking-wider text-[#888]">
+          <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">
             Voltage (V) {result?.solvedFor === 'voltage' && <span className="text-[#f97316]">= {result.voltage}</span>}
           </span>
           <input
@@ -101,12 +101,12 @@ export function OhmsLawCalculator() {
             value={voltage}
             onChange={e => setVoltage(e.target.value)}
             placeholder={result?.solvedFor === 'voltage' ? String(result.voltage) : 'Enter voltage'}
-            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
+            className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-[11px] uppercase tracking-wider text-[#888]">
+          <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">
             Current (A) {result?.solvedFor === 'current' && <span className="text-[#f97316]">= {result.current}</span>}
           </span>
           <input
@@ -114,12 +114,12 @@ export function OhmsLawCalculator() {
             value={current}
             onChange={e => setCurrent(e.target.value)}
             placeholder={result?.solvedFor === 'current' ? String(result.current) : 'Enter current'}
-            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
+            className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-[11px] uppercase tracking-wider text-[#888]">
+          <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">
             Resistance ({'ohms'}) {result?.solvedFor === 'resistance' && <span className="text-[#f97316]">= {result.resistance}</span>}
           </span>
           <input
@@ -127,36 +127,36 @@ export function OhmsLawCalculator() {
             value={resistance}
             onChange={e => setResistance(e.target.value)}
             placeholder={result?.solvedFor === 'resistance' ? String(result.resistance) : 'Enter resistance'}
-            className="h-12 border border-[#333] bg-[#111] px-3 font-mono text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
+            className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
           />
         </label>
       </div>
 
       {/* Results */}
       {result && (
-        <div className="border border-[#333] bg-[#111] p-4">
-          <div className="mb-2 text-[11px] uppercase tracking-wider text-[#888]">Result</div>
+        <div className="border border-[#27272a] bg-[#18181b] p-4">
+          <div className="mb-2 text-[11px] uppercase tracking-wider text-[#a1a1aa]">Result</div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <div className="text-xs text-[#888]">Voltage</div>
-              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'voltage' ? 'text-[#f97316]' : 'text-[#f0f0f0]'}`}>
+              <div className="text-xs text-[#a1a1aa]">Voltage</div>
+              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'voltage' ? 'text-[#f97316]' : 'text-[#fafafa]'}`}>
                 {result.voltage}V
               </div>
             </div>
             <div>
-              <div className="text-xs text-[#888]">Current</div>
-              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'current' ? 'text-[#f97316]' : 'text-[#f0f0f0]'}`}>
+              <div className="text-xs text-[#a1a1aa]">Current</div>
+              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'current' ? 'text-[#f97316]' : 'text-[#fafafa]'}`}>
                 {result.current}A
               </div>
             </div>
             <div>
-              <div className="text-xs text-[#888]">Resistance</div>
-              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'resistance' ? 'text-[#f97316]' : 'text-[#f0f0f0]'}`}>
+              <div className="text-xs text-[#a1a1aa]">Resistance</div>
+              <div className={`font-mono text-lg font-bold ${result.solvedFor === 'resistance' ? 'text-[#f97316]' : 'text-[#fafafa]'}`}>
                 {result.resistance}{'\u03A9'}
               </div>
             </div>
             <div>
-              <div className="text-xs text-[#888]">Power</div>
+              <div className="text-xs text-[#a1a1aa]">Power</div>
               <div className="font-mono text-lg font-bold text-[#ffaa00]">
                 {result.power}W
               </div>
@@ -169,11 +169,11 @@ export function OhmsLawCalculator() {
       {/* Actions */}
       <div className="flex flex-col gap-2">
         <div className="flex gap-2">
-          <button onClick={handleClear} className="flex flex-1 items-center justify-center border border-[#333] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#888] hover:bg-[#222]">
+          <button onClick={handleClear} className="flex flex-1 items-center justify-center border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#a1a1aa] hover:bg-[#18181b]">
             Clear
           </button>
           {result && (
-            <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#333] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#f0f0f0] hover:bg-[#222]">
+            <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
               <Save className="h-4 w-4" /> Save
             </button>
           )}

@@ -210,10 +210,10 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
     <div className="flex flex-col min-h-full bg-[#09090b]">
 
       {/* ── Sticky header ──────────────────────────────────────────────── */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-[#2a2a35] sticky top-0 bg-[#09090b] z-10">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-[#27272a] sticky top-0 bg-[#09090b] z-10">
         <button
           onClick={onBack}
-          className="p-1.5 -ml-1.5 text-[#52525b] hover:text-[#f0f0f0] active:scale-90 transition-all"
+          className="p-1.5 -ml-1.5 text-[#a1a1aa] hover:text-[#fafafa] active:scale-90 transition-all"
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
@@ -228,24 +228,24 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
                 if (e.key === 'Enter') saveName()
                 if (e.key === 'Escape') { setNameValue(job.name); setEditingName(false) }
               }}
-              className="flex-1 bg-[#111] border border-[#f97316] px-2 py-1 text-base font-bold text-[#f0f0f0] focus:outline-none min-w-0"
+              className="flex-1 bg-[#18181b] border border-[#f97316] px-2 py-1 text-base font-bold text-[#fafafa] focus:outline-none min-w-0"
             />
             <button onClick={saveName} className="p-1 text-[#f97316] shrink-0">
               <Check className="h-4 w-4" />
             </button>
             <button
               onClick={() => { setNameValue(job.name); setEditingName(false) }}
-              className="p-1 text-[#52525b] shrink-0"
+              className="p-1 text-[#a1a1aa] shrink-0"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
         ) : (
           <div className="flex-1 flex items-center gap-2 min-w-0">
-            <h1 className="text-base font-bold text-[#f0f0f0] truncate">{job.name}</h1>
+            <h1 className="text-base font-bold text-[#fafafa] truncate">{job.name}</h1>
             <button
               onClick={() => setEditingName(true)}
-              className="p-1 text-[#52525b] hover:text-[#f97316] shrink-0 transition-colors"
+              className="p-1 text-[#a1a1aa] hover:text-[#f97316] shrink-0 transition-colors"
             >
               <Edit2 className="h-3.5 w-3.5" />
             </button>
@@ -253,7 +253,7 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
         )}
 
         {saving && (
-          <span className="text-[10px] text-[#52525b] uppercase tracking-wider shrink-0">Saving…</span>
+          <span className="text-[10px] text-[#a1a1aa] uppercase tracking-wider shrink-0">Saving…</span>
         )}
       </div>
 
@@ -262,13 +262,13 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
 
         {/* Job Info */}
         <section className="flex flex-col gap-3">
-          <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#888]">Job Info</h2>
+          <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#a1a1aa]">Job Info</h2>
 
           {/* Address */}
           <div>
-            <label className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5">Address</label>
+            <label className="block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5">Address</label>
             <input
-              className="w-full bg-[#111] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] placeholder-[#3f3f46] focus:border-[#f97316] focus:outline-none"
+              className="w-full bg-[#18181b] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] placeholder-[#3f3f46] focus:border-[#f97316] focus:outline-none"
               defaultValue={job.address || ''}
               placeholder="123 Main St, San Jose CA"
               onBlur={e => saveField('address', e.target.value)}
@@ -277,9 +277,9 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
 
           {/* Job Type */}
           <div>
-            <label className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5">Job Type</label>
+            <label className="block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5">Job Type</label>
             <select
-              className="w-full bg-[#111] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none appearance-none"
+              className="w-full bg-[#18181b] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none appearance-none"
               defaultValue={job.job_type || ''}
               onChange={e => saveField('job_type', e.target.value)}
             >
@@ -292,9 +292,9 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
 
           {/* Notes */}
           <div>
-            <label className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5">Notes</label>
+            <label className="block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5">Notes</label>
             <textarea
-              className="w-full bg-[#111] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] placeholder-[#3f3f46] focus:border-[#f97316] focus:outline-none resize-none"
+              className="w-full bg-[#18181b] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] placeholder-[#3f3f46] focus:border-[#f97316] focus:outline-none resize-none"
               rows={4}
               defaultValue={job.notes || ''}
               placeholder="Panel location, contact info, special instructions…"
@@ -306,7 +306,7 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
         {/* Photos */}
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#888]">Photos</h2>
+            <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#a1a1aa]">Photos</h2>
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingPhoto}
@@ -331,13 +331,13 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
           />
 
           {uploadError && (
-            <p className="text-xs text-[#ff4444]">{uploadError}</p>
+            <p className="text-xs text-[#ef4444]">{uploadError}</p>
           )}
 
           {photos.length === 0 ? (
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center justify-center gap-2 border border-dashed border-[#2a2a35] py-10 text-[#52525b] hover:border-[#f97316]/50 hover:text-[#f97316] transition-colors active:scale-[0.99]"
+              className="flex flex-col items-center justify-center gap-2 border border-dashed border-[#27272a] py-10 text-[#a1a1aa] hover:border-[#f97316]/50 hover:text-[#f97316] transition-colors active:scale-[0.99]"
             >
               <Camera className="h-7 w-7" />
               <span className="text-xs uppercase tracking-wider">Tap to add photos from camera or gallery</span>
@@ -350,7 +350,7 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
                     <img
                       src={photo.url}
                       alt="Job photo"
-                      className="w-full h-full object-cover border border-[#2a2a35]"
+                      className="w-full h-full object-cover border border-[#27272a]"
                     />
                   )}
                   <button
@@ -364,7 +364,7 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
               {/* Add more photos tile */}
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="aspect-square border border-dashed border-[#2a2a35] flex flex-col items-center justify-center gap-1 text-[#3f3f46] hover:border-[#f97316]/50 hover:text-[#f97316] transition-colors"
+                className="aspect-square border border-dashed border-[#27272a] flex flex-col items-center justify-center gap-1 text-[#3f3f46] hover:border-[#f97316]/50 hover:text-[#f97316] transition-colors"
               >
                 <Plus className="h-5 w-5" />
                 <span className="text-[9px] uppercase tracking-wider">Add</span>
@@ -375,38 +375,38 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
 
         {/* Saved Calculations */}
         <section className="flex flex-col gap-3">
-          <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#888]">Saved Calculations</h2>
+          <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#a1a1aa]">Saved Calculations</h2>
 
           {calculations.length === 0 ? (
-            <div className="border border-dashed border-[#2a2a35] py-8 text-center">
+            <div className="border border-dashed border-[#27272a] py-8 text-center">
               <Calculator className="h-5 w-5 text-[#3f3f46] mx-auto mb-2" />
-              <p className="text-xs text-[#52525b]">No calculations saved to this job yet</p>
+              <p className="text-xs text-[#a1a1aa]">No calculations saved to this job yet</p>
               <p className="text-[10px] text-[#3f3f46] mt-1">Save results from any calculator to this job</p>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
               {calculations.map(calc => (
-                <div key={calc.id} className="bg-[#111] border border-[#2a2a35] p-3">
+                <div key={calc.id} className="bg-[#18181b] border border-[#27272a] p-3">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[10px] font-bold text-[#f97316] uppercase tracking-wider">
                       {calc.calculator_type}
                     </span>
-                    <span className="text-[10px] text-[#52525b]">
+                    <span className="text-[10px] text-[#a1a1aa]">
                       {new Date(calc.created_at).toLocaleDateString('en-US', {
                         month: 'short', day: 'numeric', year: 'numeric'
                       })}
                     </span>
                   </div>
-                  <div className="text-sm text-[#f0f0f0] flex flex-wrap gap-x-4">
+                  <div className="text-sm text-[#fafafa] flex flex-wrap gap-x-4">
                     {Object.entries(calc.result).slice(0, 3).map(([k, v]) => (
                       <span key={k} className="text-xs">
-                        <span className="text-[#888]">{k}:</span>{' '}
-                        <strong className="text-[#f0f0f0]">{String(v)}</strong>
+                        <span className="text-[#a1a1aa]">{k}:</span>{' '}
+                        <strong className="text-[#fafafa]">{String(v)}</strong>
                       </span>
                     ))}
                   </div>
                   {calc.notes && (
-                    <p className="text-[11px] text-[#888] mt-1.5 border-t border-[#1a1d22] pt-1.5">{calc.notes}</p>
+                    <p className="text-[11px] text-[#a1a1aa] mt-1.5 border-t border-[#1a1d22] pt-1.5">{calc.notes}</p>
                   )}
                 </div>
               ))}
@@ -422,17 +422,17 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
         </p>
 
         {/* Delete Job */}
-        <div className="pt-2 border-t border-[#2a2a35]">
+        <div className="pt-2 border-t border-[#27272a]">
           {showDeleteConfirm ? (
             <div className="bg-[#140a0a] border border-red-900/50 p-4 flex flex-col gap-3">
-              <p className="text-sm text-[#f0f0f0] leading-relaxed">
+              <p className="text-sm text-[#fafafa] leading-relaxed">
                 Delete <strong className="text-white">{job.name}</strong>?{' '}
                 All photos and calculations will be permanently removed. This cannot be undone.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="flex-1 py-3 border border-[#2a2a35] text-sm text-[#888] uppercase tracking-wider font-bold active:scale-[0.98]"
+                  className="flex-1 py-3 border border-[#27272a] text-sm text-[#a1a1aa] uppercase tracking-wider font-bold active:scale-[0.98]"
                 >
                   Cancel
                 </button>

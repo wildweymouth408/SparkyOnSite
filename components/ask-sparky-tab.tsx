@@ -270,14 +270,14 @@ export function AskSparkyTab() {
 
   // Field mode style tokens (removed field mode, using default dark theme)
   const fm = {
-    topBar:     'text-[#52525b]',
-    voiceBtn:   'border-[#3f3f46] text-[#52525b]',
-    userBubble: 'bg-[#1a1f2e] text-[#f0f0f0] border border-[#3f3f46]',
-    botBubble:  'bg-[#111] text-[#e0e0e0] border border-[#2a2a2a]',
+    topBar:     'text-[#a1a1aa]',
+    voiceBtn:   'border-[#3f3f46] text-[#a1a1aa]',
+    userBubble: 'bg-[#1a1f2e] text-[#fafafa] border border-[#3f3f46]',
+    botBubble:  'bg-[#18181b] text-[#e0e0e0] border border-[#2a2a2a]',
     inputBar:   'border-t border-[#27272a]',
-    input:      'border border-[#3f3f46] bg-[#111] text-[#f0f0f0] placeholder-[#52525b] focus:border-[#f97316]',
-    micBtn:     'border-[#3f3f46] text-[#52525b] hover:border-[#f97316] hover:text-[#f97316]',
-    hint:       'text-[#444]',
+    input:      'border border-[#3f3f46] bg-[#18181b] text-[#fafafa] placeholder-[#a1a1aa] focus:border-[#f97316]',
+    micBtn:     'border-[#3f3f46] text-[#a1a1aa] hover:border-[#f97316] hover:text-[#f97316]',
+    hint:       'text-[#71717a]',
   }
 
   return (
@@ -295,7 +295,7 @@ export function AskSparkyTab() {
             className={`flex items-center gap-1.5 px-2.5 py-1.5 border text-[10px] uppercase tracking-wider font-bold transition-all ${
               speakEnabled
                 ? 'border-[#f97316] text-[#f97316] bg-[#f9731612]'
-                : 'border-[#3f3f46] text-[#52525b]'
+                : 'border-[#3f3f46] text-[#a1a1aa]'
             }`}
           >
             {isSpeaking
@@ -346,7 +346,7 @@ export function AskSparkyTab() {
         {isListening && transcript && (
           <div className="flex gap-2.5 flex-row-reverse">
             <div className={`max-w-[82%] px-3 py-2.5 text-sm italic border border-dashed ${
-              'text-[#888] border-[#444] bg-[#111]'
+              'text-[#a1a1aa] border-[#71717a] bg-[#18181b]'
             }`}>
               {transcript}...
             </div>
@@ -358,7 +358,7 @@ export function AskSparkyTab() {
             <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[#f97316] mt-1">
               <Zap className="h-3.5 w-3.5 text-[#09090b]" />
             </div>
-            <div className={`border px-3 py-2.5 bg-[#111] border-[#2a2a2a]`}>
+            <div className={`border px-3 py-2.5 bg-[#18181b] border-[#2a2a2a]`}>
               <div className="flex gap-1 items-center h-5">
                 <span className="w-1.5 h-1.5 bg-[#f97316] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-1.5 h-1.5 bg-[#f97316] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />

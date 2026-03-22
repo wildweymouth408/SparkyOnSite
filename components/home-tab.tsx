@@ -123,8 +123,8 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-3 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5'
 
   async function handleSubmit() {
     setError('')
@@ -151,7 +151,7 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
           <Zap className="h-7 w-7 text-[#09090b]" />
         </div>
         <h1 className="text-2xl font-bold text-[#f97316] uppercase tracking-wider">Sparky</h1>
-        <p className="text-[11px] text-[#52525b] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
+        <p className="text-[11px] text-[#a1a1aa] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
       </div>
       <div className="flex flex-col gap-4">
         <div>
@@ -162,7 +162,7 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
           <label className={lbl}>Password</label>
           <input className={inp} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
         </div>
-        {error && <p className="text-xs text-[#ff4444]">{error}</p>}
+        {error && <p className="text-xs text-[#ef4444]">{error}</p>}
         <button
           onClick={handleSubmit}
           disabled={loading || !email || !password}
@@ -170,7 +170,7 @@ function AuthScreen({ onAuth }: { onAuth: () => void }) {
         >
           {loading ? 'Please wait...' : isLogin ? 'Sign In →' : 'Create Account →'}
         </button>
-        <button onClick={() => setIsLogin(!isLogin)} className="text-xs text-[#52525b] underline text-center">
+        <button onClick={() => setIsLogin(!isLogin)} className="text-xs text-[#a1a1aa] underline text-center">
           {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
         </button>
       </div>
@@ -189,9 +189,9 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
   const [licenseState, setLicenseState] = useState('CA')
   const [step, setStep] = useState(1)
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none'
-  const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-3 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none appearance-none'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-3 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none'
+  const sel = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-3 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none appearance-none'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5'
 
   return (
     <div className="flex flex-col h-full justify-center px-2 py-6">
@@ -200,13 +200,13 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
           <Zap className="h-7 w-7 text-[#09090b]" />
         </div>
         <h1 className="text-2xl font-bold text-[#f97316] uppercase tracking-wider">Sparky</h1>
-        <p className="text-[11px] text-[#52525b] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
+        <p className="text-[11px] text-[#a1a1aa] uppercase tracking-widest mt-1">Your Field Electrical Assistant</p>
       </div>
 
       {step === 1 && (
         <div className="flex flex-col gap-4">
           <div className="text-center mb-2">
-            <p className="text-sm text-[#888]">Let's set up your profile so Sparky knows who you are.</p>
+            <p className="text-sm text-[#a1a1aa]">Let's set up your profile so Sparky knows who you are.</p>
           </div>
           <div>
             <label className={lbl}>Your First Name</label>
@@ -227,7 +227,7 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
             <div className="grid grid-cols-2 gap-2">
               {WORK_TYPES.map(w => (
                 <button key={w} onClick={() => setWorkType(w)}
-                  className={`py-2.5 text-xs font-bold uppercase tracking-wider border transition-all ${workType === w ? 'border-[#f97316] text-[#f97316] bg-[#f9731612]' : 'border-[#2a2a35] text-[#52525b]'}`}>
+                  className={`py-2.5 text-xs font-bold uppercase tracking-wider border transition-all ${workType === w ? 'border-[#f97316] text-[#f97316] bg-[#f9731612]' : 'border-[#27272a] text-[#a1a1aa]'}`}>
                   {w}
                 </button>
               ))}
@@ -243,7 +243,7 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
       {step === 2 && (
         <div className="flex flex-col gap-4">
           <div className="text-center mb-2">
-            <p className="text-sm text-[#888]">Optional — add your license info now or later.</p>
+            <p className="text-sm text-[#a1a1aa]">Optional — add your license info now or later.</p>
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div className="col-span-2">
@@ -255,13 +255,13 @@ function OnboardingScreen({ onComplete }: { onComplete: (profile: UserProfile) =
               <input className={inp} value={licenseState} onChange={e => setLicenseState(e.target.value.toUpperCase().slice(0, 2))} placeholder="CA" maxLength={2} />
             </div>
           </div>
-          <div className="bg-[#111] border border-[#2a2a35] p-3 mt-2">
-            <p className="text-[10px] text-[#52525b] leading-relaxed">
+          <div className="bg-[#18181b] border border-[#27272a] p-3 mt-2">
+            <p className="text-[10px] text-[#a1a1aa] leading-relaxed">
               You can add OSHA cards, certifications, and other credentials in the Profile tab after setup.
             </p>
           </div>
           <div className="flex gap-2 mt-2">
-            <button onClick={() => setStep(1)} className="flex-1 py-3.5 border border-[#2a2a35] text-[#52525b] text-sm font-bold uppercase tracking-wider">
+            <button onClick={() => setStep(1)} className="flex-1 py-3.5 border border-[#27272a] text-[#a1a1aa] text-sm font-bold uppercase tracking-wider">
               ← Back
             </button>
             <button onClick={() => onComplete({ name: name.trim(), role, yearsExp, workType, licenseNumber, licenseState })}
@@ -397,8 +397,8 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
     }
   }
 
-  const border = 'border-[#2a2a35] bg-[#111]'
-  const inputCls = 'flex-1 h-11 px-3 text-sm bg-[#0a0b0e] border border-[#3f3f46] text-[#f0f0f0] placeholder-[#444] focus:outline-none focus:border-[#f97316]'
+  const border = 'border-[#27272a] bg-[#18181b]'
+  const inputCls = 'flex-1 h-11 px-3 text-sm bg-[#0a0b0e] border border-[#3f3f46] text-[#fafafa] placeholder-[#71717a] focus:outline-none focus:border-[#f97316]'
 
   return (
     <div className={`border p-4 flex flex-col gap-3 ${border}`}>
@@ -409,13 +409,13 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
         </span>
         <span className={`ml-auto text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border ${
           modelUsed === 'ollama' ? 'border-green-500/60 text-green-400'
-            : modelUsed === 'cloud' ? 'border-[#3f3f46] text-[#444]'
+            : modelUsed === 'cloud' ? 'border-[#3f3f46] text-[#71717a]'
             : 'border-[#27272a] text-[#3f3f46]'
         }`}>
           {modelUsed === 'ollama' ? 'Local' : modelUsed === 'cloud' ? 'Cloud' : 'Local→Cloud'}
         </span>
         {voiceSupported && (
-          <span className={`text-[9px] uppercase tracking-wider text-[#444]`}>
+          <span className={`text-[9px] uppercase tracking-wider text-[#71717a]`}>
             {usedVoice ? '🎤 → spoken' : 'mic on'}
           </span>
         )}
@@ -429,7 +429,7 @@ function AskSparkyWidget({ fieldMode }: { fieldMode: boolean }) {
             className={`h-11 w-11 shrink-0 flex items-center justify-center border transition-all ${
               isListening
                 ? 'border-[#f97316] bg-[#f9721620] text-[#f97316] animate-pulse'
-                : 'border-[#3f3f46] text-[#52525b] hover:border-[#f97316] hover:text-[#f97316]'
+                : 'border-[#3f3f46] text-[#a1a1aa] hover:border-[#f97316] hover:text-[#f97316]'
             }`}
           >
             {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
@@ -491,17 +491,17 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   // ── Field mode style tokens ───────────────────────────────────────────────
   const fm = {
     page:       '',
-    card:       'bg-[#111] border-[#2a2a35]',
-    heading:    'text-[#888]',
-    body:       'text-[#f0f0f0]',
-    muted:      'text-[#888]',
-    dim:        'text-[#52525b]',
-    tipCard:    'relative overflow-hidden border border-[#2a2a35] bg-[#111]',
+    card:       'bg-[#18181b] border-[#27272a]',
+    heading:    'text-[#a1a1aa]',
+    body:       'text-[#fafafa]',
+    muted:      'text-[#a1a1aa]',
+    dim:        'text-[#a1a1aa]',
+    tipCard:    'relative overflow-hidden border border-[#27272a] bg-[#18181b]',
     tipText:    'text-xs font-medium leading-relaxed text-[#ccc]',
     tipBody:    'mt-1 text-[11px] leading-relaxed text-[#777]',
-    actionBtn:  'border border-[#2a2a35] bg-[#111] p-3 flex flex-col gap-1.5 text-left transition-colors hover:border-[#3f3f46] active:scale-[0.98]',
-    actionLabel: 'text-xs font-bold text-[#f0f0f0]',
-    actionDesc:  'text-[10px] text-[#52525b]',
+    actionBtn:  'border border-[#27272a] bg-[#18181b] p-3 flex flex-col gap-1.5 text-left transition-colors hover:border-[#3f3f46] active:scale-[0.98]',
+    actionLabel: 'text-xs font-bold text-[#fafafa]',
+    actionDesc:  'text-[10px] text-[#a1a1aa]',
   }
 
   useEffect(() => {
@@ -657,7 +657,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
         </div>
         <button
           onClick={() => setShowEditProfile(true)}
-          className={`transition-colors p-1 shrink-0 ${fieldMode ? 'text-yellow-400/60 hover:text-yellow-300' : 'text-[#52525b] hover:text-[#f97316]'}`}
+          className={`transition-colors p-1 shrink-0 ${fieldMode ? 'text-yellow-400/60 hover:text-yellow-300' : 'text-[#a1a1aa] hover:text-[#f97316]'}`}
         >
           <Edit2 className="h-4 w-4" />
         </button>
@@ -751,7 +751,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
               className={`w-full px-3 py-2.5 text-sm focus:outline-none ${
                 fieldMode
                   ? 'bg-black border border-yellow-400/30 text-yellow-100 placeholder-yellow-400/30 focus:border-yellow-400'
-                  : 'bg-[#0a0b0e] border border-[#2a2a35] text-[#f0f0f0] placeholder-[#444] focus:border-[#f97316]'
+                  : 'bg-[#0a0b0e] border border-[#27272a] text-[#fafafa] placeholder-[#71717a] focus:border-[#f97316]'
               }`}
             />
             <div className="flex gap-2">
@@ -778,7 +778,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
         {loadingJobs ? (
           <div className={`text-xs text-center py-6 ${fm.dim}`}>Loading jobs…</div>
         ) : jobs.length === 0 ? (
-          <div className={`border border-dashed p-8 text-center ${fieldMode ? 'border-yellow-400/20' : 'border-[#2a2a35]'}`}>
+          <div className={`border border-dashed p-8 text-center ${fieldMode ? 'border-yellow-400/20' : 'border-[#27272a]'}`}>
             <Briefcase className={`h-6 w-6 mx-auto mb-2 ${fm.dim}`} />
             <p className={`text-[11px] ${fm.dim}`}>No jobs yet — tap + to add your first job</p>
           </div>
@@ -813,12 +813,12 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
       {showEditProfile && profile && (
         <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={() => setShowEditProfile(false)}>
           <div
-            className="w-full bg-[#09090b] border-t border-[#2a2a35] p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto"
+            className="w-full bg-[#09090b] border-t border-[#27272a] p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">Edit Profile</span>
-              <button onClick={() => setShowEditProfile(false)}><X className="h-4 w-4 text-[#52525b]" /></button>
+              <span className="text-sm font-bold uppercase tracking-wider text-[#fafafa]">Edit Profile</span>
+              <button onClick={() => setShowEditProfile(false)}><X className="h-4 w-4 text-[#a1a1aa]" /></button>
             </div>
 
             {([
@@ -828,9 +828,9 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
               { label: 'License State',     value: profile.licenseState,  key: 'licenseState',  type: 'text' },
             ] as const).map(f => (
               <div key={f.key}>
-                <label className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5">{f.label}</label>
+                <label className="block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5">{f.label}</label>
                 <input
-                  className="w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none"
+                  className="w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
                   type={f.type}
                   value={f.value}
                   onChange={e => setProfile(prev => prev ? {
@@ -842,9 +842,9 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
             ))}
 
             <div>
-              <label className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-1.5">Role</label>
+              <label className="block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5">Role</label>
               <select
-                className="w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none appearance-none"
+                className="w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none appearance-none"
                 value={profile.role}
                 onChange={e => setProfile(prev => prev ? { ...prev, role: e.target.value } : prev)}
               >
@@ -853,12 +853,12 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
             </div>
 
             <div>
-              <label className="block text-[10px] uppercase tracking-wider text-[#52525b] mb-2">Work Type</label>
+              <label className="block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-2">Work Type</label>
               <div className="grid grid-cols-2 gap-2">
                 {WORK_TYPES.map(w => (
                   <button key={w}
                     onClick={() => setProfile(prev => prev ? { ...prev, workType: w } : prev)}
-                    className={`py-2.5 text-xs font-bold uppercase tracking-wider border transition-all ${profile.workType === w ? 'border-[#f97316] text-[#f97316] bg-[#f9731612]' : 'border-[#2a2a35] text-[#52525b]'}`}>
+                    className={`py-2.5 text-xs font-bold uppercase tracking-wider border transition-all ${profile.workType === w ? 'border-[#f97316] text-[#f97316] bg-[#f9731612]' : 'border-[#27272a] text-[#a1a1aa]'}`}>
                     {w}
                   </button>
                 ))}

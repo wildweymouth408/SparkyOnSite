@@ -126,8 +126,8 @@ function CircuitSlot({ slot, circuit, isBlocked, voltageSystem, onClick }: Circu
   if (isBlocked) {
     return (
       <div className="flex items-center gap-1 bg-[#0a0b0e] border border-[#1a1a24] border-dashed rounded px-2 py-1.5 opacity-40">
-        <span className="text-[9px] text-[#2a2a35] font-mono w-5">{slot}</span>
-        <span className="text-[9px] text-[#2a2a35] italic flex-1">↑ multi-pole</span>
+        <span className="text-[9px] text-[#27272a] font-mono w-5">{slot}</span>
+        <span className="text-[9px] text-[#27272a] italic flex-1">↑ multi-pole</span>
       </div>
     )
   }
@@ -140,10 +140,10 @@ function CircuitSlot({ slot, circuit, isBlocked, voltageSystem, onClick }: Circu
     over:  'border-red-800 bg-red-950/30',
     warn:  'border-yellow-700 bg-yellow-950/20',
     ok:    'border-[#1a3025] bg-[#0a120e]',
-    empty: 'border-[#1e2028] bg-[#0a0b0e]',
+    empty: 'border-[#18181b] bg-[#0a0b0e]',
   }
   const dotColor: Record<LoadStatus, string> = {
-    over: 'bg-red-500', warn: 'bg-yellow-500', ok: 'bg-emerald-500', empty: 'bg-[#2a2a35]',
+    over: 'bg-red-500', warn: 'bg-yellow-500', ok: 'bg-emerald-500', empty: 'bg-[#27272a]',
   }
   const phaseColor: Record<Phase, string> = {
     A: 'text-blue-400', B: 'text-red-400', C: 'text-yellow-400',
@@ -158,7 +158,7 @@ function CircuitSlot({ slot, circuit, isBlocked, voltageSystem, onClick }: Circu
       className={`flex items-center gap-1.5 border rounded px-2 py-1.5 text-left w-full transition-all active:scale-[0.98] hover:border-[#3a3a48] ${borderBg[status]}`}
     >
       {/* Circuit number */}
-      <span className="text-[9px] font-mono text-[#52525b] w-5 shrink-0">{slot}</span>
+      <span className="text-[9px] font-mono text-[#a1a1aa] w-5 shrink-0">{slot}</span>
 
       {/* Phase indicator */}
       <span className={`text-[8px] font-bold w-3 shrink-0 ${phaseColor[phase]}`}>{phase}</span>
@@ -166,21 +166,21 @@ function CircuitSlot({ slot, circuit, isBlocked, voltageSystem, onClick }: Circu
       {/* Description */}
       <span className="flex-1 text-[10px] truncate min-w-0">
         {circuit ? (
-          <span className={circuit.description ? 'text-[#d0d0d0]' : 'text-[#52525b] italic'}>
+          <span className={circuit.description ? 'text-[#d0d0d0]' : 'text-[#a1a1aa] italic'}>
             {circuit.description || `${circuit.poles}P/${circuit.breakerSize}A`}
           </span>
         ) : (
-          <span className="text-[#2a2a35]">tap to add</span>
+          <span className="text-[#27272a]">tap to add</span>
         )}
       </span>
 
       {/* Load info */}
       {circuit && circuit.watts > 0 && (
         <div className="flex flex-col items-end gap-0.5 shrink-0">
-          <span className="text-[9px] font-mono text-[#888]">
+          <span className="text-[9px] font-mono text-[#a1a1aa]">
             {circuit.watts >= 1000 ? `${(circuit.watts / 1000).toFixed(1)}k` : Math.round(circuit.watts)}W
           </span>
-          <div className="w-10 h-1 bg-[#1e2028] rounded-full overflow-hidden">
+          <div className="w-10 h-1 bg-[#18181b] rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all ${dotColor[status]}`}
               style={{ width: `${Math.min(loadPct, 100)}%` }}
@@ -191,7 +191,7 @@ function CircuitSlot({ slot, circuit, isBlocked, voltageSystem, onClick }: Circu
 
       {/* Breaker badge */}
       {circuit && (
-        <span className="text-[8px] font-mono shrink-0 px-1 py-0.5 rounded bg-[#0a0b0e] text-[#52525b]">
+        <span className="text-[8px] font-mono shrink-0 px-1 py-0.5 rounded bg-[#0a0b0e] text-[#a1a1aa]">
           {circuit.poles}P/{circuit.breakerSize}A
         </span>
       )}
@@ -220,8 +220,8 @@ function CircuitEditor({ circuit, voltageSystem, onSave, onDelete, onClose }: Ci
   const [isContinuous, setIsContinuous] = useState(circuit.isContinuous ?? false)
 
   const inp =
-    'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none rounded'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1'
+    'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none rounded'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
   const phase = getPhaseForSlot(circuit.circuitNumber, voltageSystem)
   const phaseColor: Record<Phase, string> = {
     A: 'text-blue-400', B: 'text-red-400', C: 'text-yellow-400',
@@ -259,20 +259,20 @@ function CircuitEditor({ circuit, voltageSystem, onSave, onDelete, onClose }: Ci
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-[#111318] border border-[#2a2a35] rounded-t-2xl p-5 pb-10"
+        className="w-full max-w-md bg-[#18181b318] border border-[#27272a] rounded-t-2xl p-5 pb-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div>
             <div className="text-sm font-bold text-[#f97316]">Circuit {circuit.circuitNumber}</div>
-            <div className="text-[10px] text-[#52525b]">
+            <div className="text-[10px] text-[#a1a1aa]">
               {circuit.circuitNumber % 2 === 1 ? 'Left side (odd)' : 'Right side (even)'}
               {' · '}
               <span className={phaseColor[phase]}>Phase {phase}</span>
             </div>
           </div>
-          <button onClick={onClose} className="text-[#52525b] hover:text-[#f0f0f0] p-1">
+          <button onClick={onClose} className="text-[#a1a1aa] hover:text-[#fafafa] p-1">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -342,7 +342,7 @@ function CircuitEditor({ circuit, voltageSystem, onSave, onDelete, onClose }: Ci
               </select>
             </div>
             {rawLoad && parseFloat(rawLoad) > 0 && loadUnit === 'A' && (
-              <div className="text-[10px] text-[#52525b] mt-1">
+              <div className="text-[10px] text-[#a1a1aa] mt-1">
                 = {Math.round(ampsToWatts(parseFloat(rawLoad), poles, voltageSystem))}W
               </div>
             )}
@@ -352,7 +352,7 @@ function CircuitEditor({ circuit, voltageSystem, onSave, onDelete, onClose }: Ci
           <label className="flex items-center gap-3 cursor-pointer py-1">
             <div
               className={`w-5 h-5 rounded border flex items-center justify-center transition-colors flex-shrink-0 ${
-                isContinuous ? 'bg-[#f97316] border-[#f97316]' : 'border-[#2a2a35] bg-[#0a0b0e]'
+                isContinuous ? 'bg-[#f97316] border-[#f97316]' : 'border-[#27272a] bg-[#0a0b0e]'
               }`}
               onClick={() => setIsContinuous(!isContinuous)}
             >
@@ -360,7 +360,7 @@ function CircuitEditor({ circuit, voltageSystem, onSave, onDelete, onClose }: Ci
             </div>
             <div>
               <div className="text-xs text-[#d0d0d0]">Continuous load</div>
-              <div className="text-[10px] text-[#52525b]">Applies 125% demand factor (NEC 210.20)</div>
+              <div className="text-[10px] text-[#a1a1aa]">Applies 125% demand factor (NEC 210.20)</div>
             </div>
           </label>
 
@@ -408,9 +408,9 @@ export function PanelScheduleBuilder() {
 
   // Shared style tokens
   const inp =
-    'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none rounded'
+    'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none rounded'
   const sel = `${inp} appearance-none`
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
 
   // Get current user
   useEffect(() => {
@@ -639,7 +639,7 @@ export function PanelScheduleBuilder() {
         </div>
 
         {/* Panel info card */}
-        <div className="bg-[#0a0b0e] border border-[#1e2028] border-l-4 border-l-[#f97316] rounded p-3 space-y-2">
+        <div className="bg-[#0a0b0e] border border-[#18181b] border-l-4 border-l-[#f97316] rounded p-3 space-y-2">
           {[
             ['Panel Capacity', `${mainKVA.toFixed(1)} kVA`],
             ['Circuit Slots', `${config.spaces} (${totalRows} rows)`],
@@ -647,7 +647,7 @@ export function PanelScheduleBuilder() {
             ['Line Voltage', `${mainLineV}V`],
           ].map(([label, val]) => (
             <div key={label} className="flex justify-between text-xs">
-              <span className="text-[#52525b]">{label}</span>
+              <span className="text-[#a1a1aa]">{label}</span>
               <span className="font-mono text-[#f97316]">{val}</span>
             </div>
           ))}
@@ -661,7 +661,7 @@ export function PanelScheduleBuilder() {
         </button>
 
         {circuits.length > 0 && (
-          <div className="text-[10px] text-center text-[#52525b]">
+          <div className="text-[10px] text-center text-[#a1a1aa]">
             {circuits.length} circuit{circuits.length !== 1 ? 's' : ''} entered
           </div>
         )}
@@ -677,10 +677,10 @@ export function PanelScheduleBuilder() {
     return (
       <div className="flex flex-col gap-2">
         {/* Panel header strip */}
-        <div className="bg-[#0a0b0e] border border-[#2a2a35] rounded p-3 flex items-center justify-between">
+        <div className="bg-[#0a0b0e] border border-[#27272a] rounded p-3 flex items-center justify-between">
           <div>
-            <div className="text-sm font-bold text-[#f0f0f0]">{config.name}</div>
-            <div className="text-[10px] text-[#52525b]">
+            <div className="text-sm font-bold text-[#fafafa]">{config.name}</div>
+            <div className="text-[10px] text-[#a1a1aa]">
               {config.mainBreakerSize}A ·{' '}
               {VOLTAGE_SYSTEMS.find((v) => v.value === config.voltageSystem)?.label} ·{' '}
               {config.spaces} spaces
@@ -690,7 +690,7 @@ export function PanelScheduleBuilder() {
             <div className={`text-lg font-bold font-mono ${loadColor}`}>
               {loadPct.toFixed(1)}%
             </div>
-            <div className="text-[9px] text-[#52525b]">loading</div>
+            <div className="text-[9px] text-[#a1a1aa]">loading</div>
           </div>
         </div>
 
@@ -698,11 +698,11 @@ export function PanelScheduleBuilder() {
         <div className="grid grid-cols-[1fr_6px_1fr] gap-1 px-0.5">
           {[0, 1].map((side) => (
             <div key={side} className="grid grid-cols-[20px_10px_1fr_44px_28px_8px] gap-0.5 items-center px-1">
-              <span className="text-[8px] font-bold uppercase tracking-wider text-[#52525b]">CKT</span>
-              <span className="text-[8px] font-bold uppercase tracking-wider text-[#52525b]">Ø</span>
-              <span className="text-[8px] font-bold uppercase tracking-wider text-[#52525b]">DESCRIPTION</span>
-              <span className="text-[8px] font-bold uppercase tracking-wider text-[#52525b] text-right">LOAD</span>
-              <span className="text-[8px] font-bold uppercase tracking-wider text-[#52525b] text-right">BKR</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-[#a1a1aa]">CKT</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-[#a1a1aa]">Ø</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-[#a1a1aa]">DESCRIPTION</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-[#a1a1aa] text-right">LOAD</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-[#a1a1aa] text-right">BKR</span>
               <span />
             </div>
           ))}
@@ -720,7 +720,7 @@ export function PanelScheduleBuilder() {
                 voltageSystem={config.voltageSystem}
                 onClick={() => !isSlotBlocked(ls) && setEditingSlot(ls)}
               />
-              <div className="bg-[#1e2028] rounded-full w-1 self-stretch mx-auto" />
+              <div className="bg-[#18181b] rounded-full w-1 self-stretch mx-auto" />
               <CircuitSlot
                 slot={rs}
                 circuit={getCircuitAtSlot(rs)}
@@ -757,7 +757,7 @@ export function PanelScheduleBuilder() {
         </div>
 
         {/* Quick tip */}
-        <div className="text-[10px] text-center text-[#2a2a35] mt-1">
+        <div className="text-[10px] text-center text-[#27272a] mt-1">
           Tap any slot to add or edit a circuit
         </div>
       </div>
@@ -777,24 +777,24 @@ export function PanelScheduleBuilder() {
     return (
       <div className="flex flex-col gap-4">
         {/* Load summary */}
-        <div className="bg-[#0a0b0e] border border-[#1e2028] border-l-4 border-l-[#f97316] rounded p-4">
-          <div className="text-[10px] uppercase tracking-wider text-[#52525b] mb-3">
+        <div className="bg-[#0a0b0e] border border-[#18181b] border-l-4 border-l-[#f97316] rounded p-4">
+          <div className="text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-3">
             Load Summary
           </div>
           <div className="space-y-2">
             {[
               ['Connected Load', `${(totalConnectedW / 1000).toFixed(2)} kW`, 'text-[#f97316]'],
-              ['Demand Load (×1.25 cont.)', `${(totalDemandW / 1000).toFixed(2)} kW`, 'text-[#f0f0f0]'],
-              ['Panel Capacity', `${mainKVA.toFixed(2)} kVA`, 'text-[#888]'],
+              ['Demand Load (×1.25 cont.)', `${(totalDemandW / 1000).toFixed(2)} kW`, 'text-[#fafafa]'],
+              ['Panel Capacity', `${mainKVA.toFixed(2)} kVA`, 'text-[#a1a1aa]'],
             ].map(([label, val, color]) => (
               <div key={label} className="flex justify-between text-sm">
-                <span className="text-[#888]">{label}</span>
+                <span className="text-[#a1a1aa]">{label}</span>
                 <span className={`font-bold font-mono ${color}`}>{val}</span>
               </div>
             ))}
-            <div className="h-px bg-[#1e2028]" />
+            <div className="h-px bg-[#18181b]" />
             <div className="flex justify-between items-center">
-              <span className="text-sm text-[#888]">% Loading (demand / capacity)</span>
+              <span className="text-sm text-[#a1a1aa]">% Loading (demand / capacity)</span>
               <span className={`text-sm font-bold font-mono px-2 py-0.5 rounded ${loadColor}`}>
                 {loadPct.toFixed(1)}%
               </span>
@@ -802,7 +802,7 @@ export function PanelScheduleBuilder() {
           </div>
 
           {/* Load bar */}
-          <div className="mt-3 h-2 bg-[#1e2028] rounded-full overflow-hidden">
+          <div className="mt-3 h-2 bg-[#18181b] rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all ${
                 loadPct > 100 ? 'bg-red-500' : loadPct > 80 ? 'bg-yellow-500' : 'bg-emerald-500'
@@ -810,7 +810,7 @@ export function PanelScheduleBuilder() {
               style={{ width: `${Math.min(loadPct, 100)}%` }}
             />
           </div>
-          <div className="flex justify-between text-[9px] text-[#2a2a35] mt-1">
+          <div className="flex justify-between text-[9px] text-[#27272a] mt-1">
             <span>0%</span>
             <span className="text-yellow-700">80%</span>
             <span className="text-red-700">100%</span>
@@ -834,9 +834,9 @@ export function PanelScheduleBuilder() {
         </div>
 
         {/* Phase balance */}
-        <div className="bg-[#0a0b0e] border border-[#1e2028] rounded p-4">
+        <div className="bg-[#0a0b0e] border border-[#18181b] rounded p-4">
           <div className="flex items-center justify-between mb-3">
-            <div className="text-[10px] uppercase tracking-wider text-[#52525b]">
+            <div className="text-[10px] uppercase tracking-wider text-[#a1a1aa]">
               Phase Balance
             </div>
             <div
@@ -856,17 +856,17 @@ export function PanelScheduleBuilder() {
             return (
               <div key={ph} className="mb-2.5">
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-[#888]">Phase {ph}</span>
-                  <span className="font-mono text-[#f0f0f0]">
+                  <span className="text-[#a1a1aa]">Phase {ph}</span>
+                  <span className="font-mono text-[#fafafa]">
                     {(phaseTotals[ph] / 1000).toFixed(2)} kW
                     {totalConnectedW > 0 && (
-                      <span className="text-[#52525b] ml-1">
+                      <span className="text-[#a1a1aa] ml-1">
                         ({((phaseTotals[ph] / totalConnectedW) * 100).toFixed(0)}%)
                       </span>
                     )}
                   </span>
                 </div>
-                <div className="h-2 bg-[#1e2028] rounded-full overflow-hidden">
+                <div className="h-2 bg-[#18181b] rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${phaseColor[ph]}`}
                     style={{ width: `${pct}%` }}
@@ -901,12 +901,12 @@ export function PanelScheduleBuilder() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="bg-[#0a0b0e] border border-[#1e2028] rounded p-2.5 text-center"
+              className="bg-[#0a0b0e] border border-[#18181b] rounded p-2.5 text-center"
             >
-              <div className="text-[9px] uppercase tracking-wider text-[#52525b] mb-0.5">
+              <div className="text-[9px] uppercase tracking-wider text-[#a1a1aa] mb-0.5">
                 {stat.label}
               </div>
-              <div className="text-xs font-bold font-mono text-[#f0f0f0]">{stat.value}</div>
+              <div className="text-xs font-bold font-mono text-[#fafafa]">{stat.value}</div>
             </div>
           ))}
         </div>
@@ -915,7 +915,7 @@ export function PanelScheduleBuilder() {
         <div className="flex flex-col gap-2">
           <button
             onClick={handleCopy}
-            className="flex items-center justify-center gap-2 w-full py-3 bg-[#1a1a24] border border-[#2a2a35] text-[#f0f0f0] text-sm font-medium rounded hover:bg-[#22222e] transition-colors"
+            className="flex items-center justify-center gap-2 w-full py-3 bg-[#1a1a24] border border-[#27272a] text-[#fafafa] text-sm font-medium rounded hover:bg-[#22222e] transition-colors"
           >
             <Copy className="h-4 w-4" />
             {copyStatus === 'copied' ? '✓ Copied to clipboard!' : 'Copy Schedule (Text Table)'}
@@ -944,7 +944,7 @@ export function PanelScheduleBuilder() {
             </button>
           )}
 
-          <div className="text-[10px] text-center text-[#2a2a35]">
+          <div className="text-[10px] text-center text-[#27272a]">
             PDF export — coming soon
           </div>
         </div>
@@ -956,7 +956,7 @@ export function PanelScheduleBuilder() {
   return (
     <div className="flex flex-col gap-4 pb-6">
       {/* Tab nav */}
-      <div className="flex gap-1 bg-[#0a0b0e] border border-[#1e2028] rounded-lg p-1">
+      <div className="flex gap-1 bg-[#0a0b0e] border border-[#18181b] rounded-lg p-1">
         {(
           [
             { id: 'setup' as const, label: 'Setup', Icon: Settings },
@@ -970,7 +970,7 @@ export function PanelScheduleBuilder() {
             className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium rounded transition-colors ${
               view === id
                 ? 'bg-[#f97316] text-black'
-                : 'text-[#888] hover:text-[#f0f0f0]'
+                : 'text-[#a1a1aa] hover:text-[#fafafa]'
             }`}
           >
             <Icon className="h-3.5 w-3.5" />

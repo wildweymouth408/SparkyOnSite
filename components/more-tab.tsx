@@ -86,18 +86,18 @@ export function MoreTab() {
             <User className="h-6 w-6 text-[#f97316]" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-sm font-semibold text-[#f0f0f0] truncate">{displayName}</span>
+            <span className="text-sm font-semibold text-[#fafafa] truncate">{displayName}</span>
             {roleLabel && (
               <span className="text-xs text-[#f97316] uppercase tracking-wider mt-0.5">{roleLabel}</span>
             )}
-            <span className="text-[11px] text-[#52525b] truncate mt-0.5">{email}</span>
+            <span className="text-[11px] text-[#a1a1aa] truncate mt-0.5">{email}</span>
           </div>
         </div>
       </div>
 
       {/* Credential Wallet */}
       <div className="flex flex-col gap-1">
-        <span className="text-[10px] font-medium uppercase tracking-widest text-[#444] px-1 mb-1">
+        <span className="text-[10px] font-medium uppercase tracking-widest text-[#71717a] px-1 mb-1">
           Wallet
         </span>
         <button
@@ -108,10 +108,10 @@ export function MoreTab() {
             <Wallet className="h-4 w-4 text-[#f97316]" />
             <div className="flex flex-col">
               <span className="text-sm text-[#ccc]">Credential Wallet</span>
-              <span className="text-[10px] text-[#444] uppercase tracking-wider">Licenses · Certs · Cards</span>
+              <span className="text-[10px] text-[#71717a] uppercase tracking-wider">Licenses · Certs · Cards</span>
             </div>
           </div>
-          <ChevronRight className={`h-4 w-4 text-[#52525b] transition-transform duration-200 ${showWallet ? 'rotate-90' : ''}`} />
+          <ChevronRight className={`h-4 w-4 text-[#a1a1aa] transition-transform duration-200 ${showWallet ? 'rotate-90' : ''}`} />
         </button>
         {showWallet && (
           <div className="rounded border border-[#27272a] bg-[#0d1014] px-3 py-4">
@@ -122,7 +122,7 @@ export function MoreTab() {
 
       {/* Settings */}
       <div className="flex flex-col gap-1">
-        <span className="text-[10px] font-medium uppercase tracking-widest text-[#444] px-1 mb-1">
+        <span className="text-[10px] font-medium uppercase tracking-widest text-[#71717a] px-1 mb-1">
           Settings
         </span>
 
@@ -131,7 +131,7 @@ export function MoreTab() {
         {/* Dark Mode */}
         <div className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3">
           <div className="flex items-center gap-3">
-            {darkMode ? <Moon className="h-4 w-4 text-[#888]" /> : <Sun className="h-4 w-4 text-[#888]" />}
+            {darkMode ? <Moon className="h-4 w-4 text-[#a1a1aa]" /> : <Sun className="h-4 w-4 text-[#a1a1aa]" />}
             <span className="text-sm text-[#ccc]">Dark Mode</span>
           </div>
           <button
@@ -146,7 +146,7 @@ export function MoreTab() {
         {/* Notifications */}
         <div className="flex items-center justify-between rounded border border-[#27272a] bg-[#13161a] px-4 py-3">
           <div className="flex items-center gap-3">
-            <Bell className="h-4 w-4 text-[#888]" />
+            <Bell className="h-4 w-4 text-[#a1a1aa]" />
             <span className="text-sm text-[#ccc]">Notifications</span>
           </div>
           <button
@@ -161,7 +161,7 @@ export function MoreTab() {
 
       {/* About */}
       <div className="flex flex-col gap-1">
-        <span className="text-[10px] font-medium uppercase tracking-widest text-[#444] px-1 mb-1">
+        <span className="text-[10px] font-medium uppercase tracking-widest text-[#71717a] px-1 mb-1">
           About
         </span>
         <button
@@ -172,7 +172,7 @@ export function MoreTab() {
             <Zap className="h-4 w-4 text-[#f97316]" />
             <span className="text-sm text-[#ccc]">About Sparky</span>
           </div>
-          <ChevronRight className={`h-4 w-4 text-[#52525b] transition-transform duration-200 ${showAbout ? 'rotate-90' : ''}`} />
+          <ChevronRight className={`h-4 w-4 text-[#a1a1aa] transition-transform duration-200 ${showAbout ? 'rotate-90' : ''}`} />
         </button>
         {showAbout && (
           <div className="rounded border border-[#27272a] bg-[#0d1014] px-4 py-4 flex flex-col gap-3">
@@ -182,7 +182,7 @@ export function MoreTab() {
               </div>
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-[#f97316]">Sparky</div>
-                <div className="text-[10px] text-[#52525b] uppercase tracking-wider">Field Electrical Assistant</div>
+                <div className="text-[10px] text-[#a1a1aa] uppercase tracking-wider">Field Electrical Assistant</div>
               </div>
             </div>
             <p className="text-xs text-[#777] leading-relaxed">
@@ -190,8 +190,8 @@ export function MoreTab() {
               Fast NEC lookups, load calculations, conduit math, and an AI assistant that speaks your language.
             </p>
             <div className="flex items-center gap-2 pt-1 border-t border-[#1a1d22]">
-              <Info className="h-3 w-3 text-[#444]" />
-              <span className="text-[10px] text-[#444] uppercase tracking-wider">Version 1.0 · Built with ⚡ in California</span>
+              <Info className="h-3 w-3 text-[#71717a]" />
+              <span className="text-[10px] text-[#71717a] uppercase tracking-wider">Version 1.0 · Built with ⚡ in California</span>
             </div>
           </div>
         )}
@@ -199,7 +199,7 @@ export function MoreTab() {
 
       {/* Legal */}
       <div className="flex flex-col gap-1">
-        <span className="text-[10px] font-medium uppercase tracking-widest text-[#444] px-1 mb-1">
+        <span className="text-[10px] font-medium uppercase tracking-widest text-[#71717a] px-1 mb-1">
           Legal
         </span>
         <a
@@ -210,7 +210,7 @@ export function MoreTab() {
             <FileText className="h-4 w-4 text-[#f97316]" />
             <span className="text-sm text-[#ccc]">Terms of Service</span>
           </div>
-          <ExternalLink className="h-4 w-4 text-[#52525b]" />
+          <ExternalLink className="h-4 w-4 text-[#a1a1aa]" />
         </a>
         <a
           href="/privacy"
@@ -220,7 +220,7 @@ export function MoreTab() {
             <Shield className="h-4 w-4 text-[#f97316]" />
             <span className="text-sm text-[#ccc]">Privacy Policy</span>
           </div>
-          <ExternalLink className="h-4 w-4 text-[#52525b]" />
+          <ExternalLink className="h-4 w-4 text-[#a1a1aa]" />
         </a>
       </div>
 

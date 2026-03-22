@@ -43,7 +43,7 @@ const MARK_RED = '#ef4444'    // destructive red
 const DIM_LINE = '#a1a1aa'    // muted-foreground
 const DIM_TEXT = '#d4d4d8'    // lighter foreground
 const CONTROL_DRAGGABLE = '#22c55e' // green for draggable point
-const CONTROL_FIXED = '#555'   // gray for fixed points
+const CONTROL_FIXED = '#71717a'   // gray for fixed points
 const OBSTACLE_FILL = '#27272a'    // secondary
 const OBSTACLE_STROKE = '#374151'  // border
 
@@ -363,12 +363,12 @@ export function InteractiveConduitCanvas({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        className="border border-[#2a2a35] rounded-lg cursor-pointer"
+        className="border border-[#27272a] rounded-lg cursor-pointer"
       />
-      <p className="text-xs text-[#888] mt-2">
+      <p className="text-xs text-[#a1a1aa] mt-2">
         Drag the green dot to adjust {bendType === '90' ? 'stub length' : 'height'}.{bendType === 'offset' && ' Angle snaps to standard bender angles.'}
       </p>
-      <div className="mt-2 text-xs text-[#555]">
+      <div className="mt-2 text-xs text-[#71717a]">
         {distanceBetweenBends > 0 && (
           <span>Distance between bends: <strong>{distanceBetweenBends.toFixed(2)}"</strong></span>
         )}

@@ -12,9 +12,9 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col bg-[#0a0b0d]" style={{ animation: 'slide-up 0.3s ease' }}>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#333] px-4 py-3">
-        <span className="text-xs font-medium uppercase tracking-wider text-[#888]">AR Measure (Demo)</span>
-        <button onClick={onClose} className="text-[#888] hover:text-[#f0f0f0]" aria-label="Close AR view">
+      <div className="flex items-center justify-between border-b border-[#27272a] px-4 py-3">
+        <span className="text-xs font-medium uppercase tracking-wider text-[#a1a1aa]">AR Measure (Demo)</span>
+        <button onClick={onClose} className="text-[#a1a1aa] hover:text-[#fafafa]" aria-label="Close AR view">
           <X className="h-5 w-5" />
         </button>
       </div>
@@ -26,8 +26,8 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
           <svg width="100%" height="100%">
             <defs>
               <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <line x1="40" y1="0" x2="40" y2="40" stroke="#333" strokeWidth="0.5" />
-                <line x1="0" y1="40" x2="40" y2="40" stroke="#333" strokeWidth="0.5" />
+                <line x1="40" y1="0" x2="40" y2="40" stroke="#27272a" strokeWidth="0.5" />
+                <line x1="0" y1="40" x2="40" y2="40" stroke="#27272a" strokeWidth="0.5" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
@@ -37,8 +37,8 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
         {/* Conduit with bend marks */}
         <svg viewBox="0 0 300 400" className="relative z-10 h-[80%] w-[80%]" preserveAspectRatio="xMidYMid meet">
           {/* Conduit body */}
-          <rect x="135" y="20" width="30" height="360" fill="#444" rx="0" />
-          <rect x="137" y="20" width="26" height="360" fill="#555" rx="0" />
+          <rect x="135" y="20" width="30" height="360" fill="#71717a" rx="0" />
+          <rect x="137" y="20" width="26" height="360" fill="#71717a" rx="0" />
 
           {/* Bend marks */}
           {result && (
@@ -72,8 +72,8 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
               {/* Distance dimension */}
               {result.distanceBetweenBends > 0 && (
                 <>
-                  <line x1="110" y1="200" x2="110" y2="280" stroke="#888" strokeWidth="1" strokeDasharray="3" />
-                  <text x="95" y="244" fill="#888" fontSize="9" textAnchor="end" fontFamily="var(--font-mono)"
+                  <line x1="110" y1="200" x2="110" y2="280" stroke="#a1a1aa" strokeWidth="1" strokeDasharray="3" />
+                  <text x="95" y="244" fill="#a1a1aa" fontSize="9" textAnchor="end" fontFamily="var(--font-mono)"
                     transform="rotate(-90 95 244)">
                     {result.distanceBetweenBends}"
                   </text>
@@ -98,8 +98,8 @@ export function ArDemoOverlay({ onClose, result }: ArDemoOverlayProps) {
       </div>
 
       {/* Bottom info bar */}
-      <div className="border-t border-[#333] bg-[#0f1115] p-4">
-        <p className="text-center text-[10px] uppercase tracking-wider text-[#555]">
+      <div className="border-t border-[#27272a] bg-[#0f1115] p-4">
+        <p className="text-center text-[10px] uppercase tracking-wider text-[#71717a]">
           Demo mode -- Real AR requires HTTPS + device camera access
         </p>
         {result && (

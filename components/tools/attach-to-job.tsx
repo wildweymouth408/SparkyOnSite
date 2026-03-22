@@ -54,7 +54,7 @@ export function AttachToJob({ note }: AttachToJobProps) {
 
       {open && (
         <div
-          className="absolute bottom-full left-0 z-50 mb-1 w-full border border-[#333] bg-[#111] shadow-lg"
+          className="absolute bottom-full left-0 z-50 mb-1 w-full border border-[#27272a] bg-[#18181b] shadow-lg"
           style={{ animation: 'fade-in 0.15s ease' }}
         >
           <div className="max-h-40 overflow-y-auto">
@@ -62,12 +62,12 @@ export function AttachToJob({ note }: AttachToJobProps) {
               <button
                 key={job.id}
                 onClick={() => handleAttach(job)}
-                className="flex w-full items-center gap-2 border-b border-[#222] px-3 py-2.5 text-left transition-colors last:border-b-0 hover:bg-[#1a1a1a]"
+                className="flex w-full items-center gap-2 border-b border-[#18181b] px-3 py-2.5 text-left transition-colors last:border-b-0 hover:bg-[#1a1a1a]"
               >
                 <div className="h-2 w-2 shrink-0" style={{ backgroundColor: job.color }} />
                 <div className="flex-1">
-                  <div className="text-xs font-medium text-[#f0f0f0]">{job.name}</div>
-                  {job.address && <div className="text-[9px] text-[#666]">{job.address}</div>}
+                  <div className="text-xs font-medium text-[#fafafa]">{job.name}</div>
+                  {job.address && <div className="text-[9px] text-[#71717a]">{job.address}</div>}
                 </div>
               </button>
             ))}

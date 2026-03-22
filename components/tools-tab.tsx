@@ -106,8 +106,8 @@ function MotorFLACalculator() {
   const safeVoltage = voltageOptions.includes(voltage) ? voltage : voltageOptions[voltageOptions.length - 2]
   const fla = table[hp]?.[parseInt(safeVoltage)] || 0
 
-  const sel = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none appearance-none'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1'
+  const sel = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none appearance-none'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
 
   return (
     <div className="flex flex-col gap-4 p-1">
@@ -135,14 +135,14 @@ function MotorFLACalculator() {
 
       {fla > 0 ? (
         <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[#f97316] p-4 space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Full Load Amps</span><span className="font-bold text-[#f97316] font-mono">{fla} A</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Wire (125% FLA)</span><span className="font-bold text-[#f97316] font-mono">{(fla * 1.25).toFixed(1)} A min</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Breaker (250% FLA)</span><span className="font-bold text-[#f97316] font-mono">{(fla * 2.5).toFixed(1)} A max</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Overload (115%)</span><span className="font-mono text-[#f0f0f0]">{(fla * 1.15).toFixed(2)} A</span></div>
-          <div className="text-[10px] text-[#444] pt-1">NEC 430.22 (wire) · 430.52 (breaker) · 430.32 (overload)</div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Full Load Amps</span><span className="font-bold text-[#f97316] font-mono">{fla} A</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Wire (125% FLA)</span><span className="font-bold text-[#f97316] font-mono">{(fla * 1.25).toFixed(1)} A min</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Breaker (250% FLA)</span><span className="font-bold text-[#f97316] font-mono">{(fla * 2.5).toFixed(1)} A max</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Overload (115%)</span><span className="font-mono text-[#fafafa]">{(fla * 1.15).toFixed(2)} A</span></div>
+          <div className="text-[10px] text-[#71717a] pt-1">NEC 430.22 (wire) · 430.52 (breaker) · 430.32 (overload)</div>
         </div>
       ) : (
-        <div className="text-sm text-[#52525b] text-center py-4">No NEC table data for this combination</div>
+        <div className="text-sm text-[#a1a1aa] text-center py-4">No NEC table data for this combination</div>
       )}
     </div>
   )
@@ -156,8 +156,8 @@ function ConstructionCalculator() {
   const [num, setNum] = useState('')
   const [den, setDen] = useState('')
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#2a2a35] px-3 py-2.5 text-sm text-[#f0f0f0] focus:border-[#f97316] focus:outline-none font-mono'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#52525b] mb-1'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none font-mono'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
 
   const result = (() => {
     const d = parseInt(den)
@@ -176,7 +176,7 @@ function ConstructionCalculator() {
   return (
     <div className="flex flex-col gap-4 p-1">
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-[#52525b] mb-2">Fraction → Decimal</div>
+        <div className="text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-2">Fraction → Decimal</div>
         <div className="grid grid-cols-4 gap-2">
           <div><label className={lbl}>Feet</label><input type="number" className={inp} value={feet} onChange={e => setFeet(e.target.value)} placeholder="0" /></div>
           <div><label className={lbl}>Inches</label><input type="number" className={inp} value={inches} onChange={e => setInches(e.target.value)} placeholder="0" /></div>
@@ -187,16 +187,16 @@ function ConstructionCalculator() {
 
       {result && (
         <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[#f97316] p-4 space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Decimal Inches</span><span className="font-bold text-[#f97316] font-mono">{result.totalInches}"</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Decimal Feet</span><span className="font-bold text-[#f97316] font-mono">{result.totalFeet}'</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#888]">Millimeters</span><span className="font-mono text-[#f0f0f0]">{result.mm} mm</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Decimal Inches</span><span className="font-bold text-[#f97316] font-mono">{result.totalInches}"</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Decimal Feet</span><span className="font-bold text-[#f97316] font-mono">{result.totalFeet}'</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Millimeters</span><span className="font-mono text-[#fafafa]">{result.mm} mm</span></div>
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-[#52525b]">
+      <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-[#a1a1aa]">
         {[['1/8','0.125'],['1/4','0.25'],['3/8','0.375'],['1/2','0.5'],['5/8','0.625'],['3/4','0.75'],['7/8','0.875']].map(([f,d]) => (
-          <div key={f} className="flex justify-between bg-[#0a0b0e] border border-[#1e2028] px-2 py-1">
-            <span>{f}"</span><span className="text-[#444]">{d}"</span>
+          <div key={f} className="flex justify-between bg-[#0a0b0e] border border-[#18181b] px-2 py-1">
+            <span>{f}"</span><span className="text-[#71717a]">{d}"</span>
           </div>
         ))}
       </div>
@@ -268,7 +268,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
     <div className="flex flex-col gap-5">
       {/* Primary calculators grid */}
       <div>
- <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888] field-mode:text-yellow-300">Calculators</h2>       <div className="grid grid-cols-2 gap-2">
+ <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#a1a1aa] field-mode:text-yellow-300">Calculators</h2>       <div className="grid grid-cols-2 gap-2">
           {CALCULATORS.slice(0, 4).map(calc => {
             const Icon = calc.icon
             return (
@@ -276,8 +276,8 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
                 className="group flex flex-col gap-2 border border-border bg-card rounded-lg shadow-md p-4 text-left transition-all duration-200 hover:shadow-lg active:scale-[0.98]">
                 <Icon className="h-5 w-5" style={{ color: calc.color }} />
                 <div>
-                  <div className="text-xs font-bold text-[#f0f0f0]">{calc.label}</div>
-                  <div className="text-[10px] text-[#666]">{calc.desc}</div>
+                  <div className="text-xs font-bold text-[#fafafa]">{calc.label}</div>
+                  <div className="text-[10px] text-[#71717a]">{calc.desc}</div>
                 </div>
               </button>
             )
@@ -287,7 +287,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
 
       {/* Secondary calculators list */}
       <div>
-        <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888] field-mode:text-yellow-300">More Tools</h2>
+        <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#a1a1aa] field-mode:text-yellow-300">More Tools</h2>
         <div className="flex flex-col gap-1">
           {CALCULATORS.slice(4).map(calc => {
             const Icon = calc.icon
@@ -296,10 +296,10 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
                 className="flex items-center gap-3 border border-border bg-card rounded-lg shadow-md p-3 text-left transition-all duration-200 hover:shadow-lg active:scale-[0.99] field-mode:bg-black field-mode:border-yellow-400/30 field-mode:min-h-[56px]">
                 <Icon className="h-4 w-4 shrink-0" style={{ color: calc.color }} />
                 <div className="flex-1">
-                  <div className="text-xs font-medium text-[#f0f0f0] field-mode:text-yellow-100">{calc.label}</div>
-                  <div className="text-[10px] text-[#666] field-mode:text-yellow-400/60">{calc.desc}</div>
+                  <div className="text-xs font-medium text-[#fafafa] field-mode:text-yellow-100">{calc.label}</div>
+                  <div className="text-[10px] text-[#71717a] field-mode:text-yellow-400/60">{calc.desc}</div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-[#52525b] field-mode:text-yellow-400/40" />
+                <ChevronRight className="h-4 w-4 text-[#a1a1aa] field-mode:text-yellow-400/40" />
               </button>
             )
           })}
@@ -309,7 +309,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
       {/* Recent Calculations */}
       {recentCalcs.length > 0 && (
         <div>
-          <h2 className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#888] field-mode:text-yellow-300">
+          <h2 className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#a1a1aa] field-mode:text-yellow-300">
             <Clock className="h-3.5 w-3.5" /> Recent Calculations
           </h2>
           <div className="flex flex-col gap-1">
@@ -321,7 +321,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
               >
                 <div className="flex items-center justify-between border border-border bg-card rounded-lg shadow-sm px-3 py-2 field-mode:bg-black field-mode:border-yellow-400/20">
                   <div className="flex-1">
-                    <div className="text-[10px] font-medium uppercase tracking-wider text-[#888] field-mode:text-yellow-400/60">{calc.type}</div>
+                    <div className="text-[10px] font-medium uppercase tracking-wider text-[#a1a1aa] field-mode:text-yellow-400/60">{calc.type}</div>
                     <div className="text-xs text-[#ccc] field-mode:text-yellow-100">{calc.label}</div>
                   </div>
                   <div className="text-right font-mono text-xs text-[#f97316] field-mode:text-yellow-300">{calc.result}</div>

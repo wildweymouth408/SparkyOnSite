@@ -49,7 +49,7 @@ export default function SparkyApp() {
           </div>
           <div className="flex flex-col items-center gap-1">
             <span className="text-sm font-semibold text-foreground">Sparky</span>
-            <span className="text-xs text-[#52525b]">Loading your tools...</span>
+            <span className="text-xs text-[#a1a1aa]">Loading your tools...</span>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default function SparkyApp() {
           <span className="text-sm font-bold text-foreground">
             Sparky
           </span>
-          <span className="text-xs text-[#52525b]">
+          <span className="text-xs text-[#a1a1aa]">
             {activeTab === 'home' ? '' : 
              activeTab === 'calculators' ? '/ Tools' :
              activeTab === 'nec' ? '/ Codes' :

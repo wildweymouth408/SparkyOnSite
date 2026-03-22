@@ -18,9 +18,9 @@ export function QuickToolsDrawer({ open, onOpenChange }: QuickToolsDrawerProps) 
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[85vh] border-t border-[#333] bg-[#0f1115]">
+      <DrawerContent className="max-h-[85vh] border-t border-[#27272a] bg-[#0f1115]">
         <DrawerHeader className="pb-2">
-          <DrawerTitle className="text-sm font-bold uppercase tracking-wider text-[#f0f0f0]">Quick Tools</DrawerTitle>
+          <DrawerTitle className="text-sm font-bold uppercase tracking-wider text-[#fafafa]">Quick Tools</DrawerTitle>
         </DrawerHeader>
 
         {/* Tool selector */}
@@ -36,7 +36,7 @@ export function QuickToolsDrawer({ open, onOpenChange }: QuickToolsDrawerProps) 
               className={`flex-1 py-2 text-[10px] font-medium uppercase tracking-wider transition-colors ${
                 activeTool === tool.id
                   ? 'bg-[#f97316] text-[#0f1115]'
-                  : 'border border-[#333] bg-[#111] text-[#888]'
+                  : 'border border-[#27272a] bg-[#18181b] text-[#a1a1aa]'
               }`}
             >
               {tool.label}
@@ -49,7 +49,7 @@ export function QuickToolsDrawer({ open, onOpenChange }: QuickToolsDrawerProps) 
           {activeTool === 'wire' && <WireSizingCalculator compact />}
           {activeTool === 'ampacity' && <AmpacityCalculator compact />}
           {activeTool === 'box' && <BoxFillCalculator compact />}
-          <div className="mt-6 border-t border-[#333] pt-4 text-xs text-[#888]">
+          <div className="mt-6 border-t border-[#27272a] pt-4 text-xs text-[#a1a1aa]">
             <p><strong>Disclaimer:</strong> Calculations are for reference only. Always verify with the NEC codebook and local regulations.</p>
             <p className="mt-1">Sparky references NEC 2023 but does not guarantee compliance. Always consult the official NEC and a licensed professional.</p>
           </div>
