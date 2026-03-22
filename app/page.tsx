@@ -59,7 +59,7 @@ export default function SparkyApp() {
   return (
     <div className="flex h-dvh flex-col bg-background text-foreground">
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-border glass px-4 py-3">
+      <header className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#f97316] to-[#f59e0b] flex items-center justify-center">
             <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
