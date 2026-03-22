@@ -5,40 +5,40 @@
 @custom-variant field-mode (&:is(.field-mode *));
 
 :root {
-  /* ── Sparky Design System v2 ─────────────────────── */
+  /* -- Sparky Design System v2 - LIGHT MODE ---------  */
 
-  /* Backgrounds (zinc scale) */
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #18181b;
-  --card-foreground: #fafafa;
-  --popover: #18181b;
-  --popover-foreground: #fafafa;
+  /* Backgrounds */
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #f4f4f5;
+  --card-foreground: #18181b;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
 
   /* Single accent: Orange */
   --primary: #f97316;
-  --primary-foreground: #09090b;
+  --primary-foreground: #ffffff;
 
   /* Surfaces */
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
-  --muted: #1c1c1f;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272a;
-  --accent-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
 
   /* Semantic */
   --destructive: #ef4444;
-  --destructive-foreground: #fafafa;
+  --destructive-foreground: #ffffff;
   --success: #22c55e;
   --warning: #f59e0b;
 
-  /* Borders & inputs */
-  --border: #27272a;
-  --input: #1c1c1f;
+  /* Borders and inputs */
+  --border: #e4e4e7;
+  --input: #e4e4e7;
   --ring: #f97316;
 
-  /* Charts — orange tonal scale */
+  /* Charts - orange tonal scale */
   --chart-1: #f97316;
   --chart-2: #fb923c;
   --chart-3: #fdba74;
@@ -49,22 +49,21 @@
   --radius: 0.75rem;
 
   /* Surface variants */
-  --surface-elevated: #1c1c1f;
-  --surface-sunken: #050506;
-  --text-tertiary: #52525b;
+  --surface-elevated: #fafafa;
+  --surface-sunken: #e4e4e7;
+  --text-tertiary: #a1a1aa;
 
   /* Sidebar */
-  --sidebar: #09090b;
-  --sidebar-foreground: #fafafa;
+  --sidebar: #f4f4f5;
+  --sidebar-foreground: #18181b;
   --sidebar-primary: #f97316;
-  --sidebar-primary-foreground: #09090b;
-  --sidebar-accent: #18181b;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #27272a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e4e4e7;
+  --sidebar-accent-foreground: #18181b;
+  --sidebar-border: #e4e4e7;
   --sidebar-ring: #f97316;
 }
 
-/* Force dark mode identical to root */
 .dark {
   --background: #09090b;
   --foreground: #fafafa;
