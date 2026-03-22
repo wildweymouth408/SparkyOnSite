@@ -40,14 +40,20 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
             try {
               var field = localStorage.getItem('sparky_field_mode');
               if (field === 'true') document.documentElement.classList.add('field-mode');
-            } catch(e) {}
+              var dark = localStorage.getItem('sparky_dark_mode');
+              if (dark === null || dark === 'true') {
+                document.documentElement.classList.add('dark');
+              }
+            } catch(e) {
+              document.documentElement.classList.add('dark');
+            }
           })();
         `}} />
       </head>
@@ -69,3 +75,4 @@ export default function RootLayout({
     </html>
   )
 }
+
