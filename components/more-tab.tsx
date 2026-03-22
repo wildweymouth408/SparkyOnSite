@@ -194,7 +194,7 @@ export function MoreTab() {
         >
           <div className="flex items-center gap-3">
             <Zap className="h-4 w-4 text-[#f97316]" />
-            <span className="text-sm text-[#ccc]">About Sparky</span>
+            <span className="text-sm text-[#ccc]">About SparkyOnsite</span>
           </div>
           <ChevronRight className={`h-4 w-4 text-[#52525b] transition-transform duration-200 ${showAbout ? 'rotate-90' : ''}`} />
         </button>
@@ -205,7 +205,7 @@ export function MoreTab() {
                 <Zap className="h-4 w-4 text-black" strokeWidth={2.5} />
               </div>
               <div>
-                <div className="text-xs font-bold uppercase tracking-wider text-[#f97316]">Sparky</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-[#f97316]">SparkyOnsite</div>
                 <div className="text-[10px] text-[#52525b] uppercase tracking-wider">Field Electrical Assistant</div>
               </div>
             </div>
