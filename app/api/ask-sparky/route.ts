@@ -70,14 +70,27 @@ CONDUIT BENDING REFERENCE (Compiled from Ideal, Klein, Dave's Bendbook, Jack‑B
 6. Cite exact formulas from compiled reference to avoid copyright issues
 `
 const CONDUIT_EXACT_QUOTES = `
-## Practical Field Tips (Paraphrased from industry manuals)
-• Use the Arrow (Klein) or Hook (Ideal) as the front mark for 90° stubs, offsets, and outer marks of saddle bends.
-• Use the Star (Klein) or Center Notch (Ideal) as the back mark for back‑to‑back 90° bends.
-• For 3‑point saddles, bend the center 45° first, then the side 22.5° bends.
-• Keep all bends in the same plane to avoid dog‑legs.
-• When bending offsets, apply steady foot pressure and keep the conduit snug in the bender groove.
-• Always account for shrinkage – every offset reduces the overall run length.
-• Test bend on scrap conduit when unsure.
+## Exact Quotes from Industry Manuals (verbatim with citations)
+
+1. "Arrow Uses: Stub-up, Offset and outer marking of saddle bends. Star Point Uses: Back bends." – Klein p.1
+
+2. "From the desired stub-up height, subtract the appropriate 'take-up' for the bender and place a mark on the conduit at that distance from the end." – Benfield p.8
+
+3. "The offset bend is used when an obstruction requires a change in the conduit's plane. Before making an offset bend, you must choose the most appropriate angles for the offset." – Ideal p.5
+
+4. "For shallow offset depths (3" or 4"), 30° bends are best. It's easier to pull wire through gentle 30° bends and it is easier to calculate the needed distance between bends because the multiplier is exactly 2.0." – Benfield p.12
+
+5. "Three Point Saddle Bend: The three point saddle bend is a variant of the offset bend since it is an offset bend that returns to the original in-line run after clearing an obstacle." – Klein p.9
+
+6. "Measure the diameter of the object to be crossed over (depth 'D') and multiply that depth by 2 1/2. This will give you the distance 'L' between marks." – Benfield p.23
+
+7. "To find centers of KO's in cabinet and maintain centers (2") of conduits, multiply center to center (C-C) measurement by the cosecant of the bend angle." – Dave p.5
+
+8. "All offset bends should be started with the mark on the conduit opposite the arrow on the tool." – Benfield p.14
+
+9. "A 'dog leg' occurs when the two bends of an offset are not in the same plane. To avoid this, bend the second half of the offset just a tiny bit (8° to 10° or even less...then sight down the pipe...if the bends are out of line, twist the conduit into correct alignment." – Benfield p.16
+
+10. "The 'gain' for 90° bends is clear to me but suppose there is also a 4 inch deep offset (using 30° bends)...Offsets use up -extra conduit. See offset Table B, Chapter Two. The table tells you that 30° bends shrink 1/4 inch per inch of offset depth." – Benfield p.21
 `;
 
 // Safety topics that must always be refused — NFPA 70E / OSHA requirement

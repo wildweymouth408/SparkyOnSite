@@ -6,8 +6,10 @@ import { WIRE_SIZES, SYSTEM_VOLTAGES } from '@/lib/calculator-data'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
 import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
+import { ShareCard } from '@/components/share-card'
+import { useShareCard } from '@/hooks/useShareCard'
 import { toast } from 'sonner'
-import { Check, X, Save } from 'lucide-react'
+import { Check, X, Save, Share2 } from 'lucide-react'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
 export function VoltageDropCalculator() {
@@ -24,6 +26,9 @@ export function VoltageDropCalculator() {
   const displayedValue = currentMode === 'load' 
     ? inputs.current 
     : Math.round(inputs.current / 0.8 * 100) / 100
+
+  // Share card functionality
+  const { cardRef, shareCard, isGenerating } = useShareCard()
 
   const handleDisplayedCurrentChange = (value: number) => {
     if (currentMode === 'load') {
@@ -65,8 +70,40 @@ export function VoltageDropCalculator() {
     ? `[Voltage Drop] ${inputs.systemVoltage}V, ${inputs.current}A, ${inputs.distance}ft, #${inputs.wireSize} ${inputs.material === 'copper' ? 'Cu' : 'Al'} = ${result.voltageDrop}V / ${result.dropPercent}% (${result.pass ? 'PASS' : 'FAIL'})`
     : ''
 
+  // Prepare data for ShareCard
+  const shareCardData = result ? {
+    calculatorName: 'Voltage Drop',
+    inputs: [
+      { label: 'Voltage', value: `${inputs.systemVoltage}V` },
+      { label: 'Current', value: `${inputs.current}A` },
+      { label: 'Distance', value: `${inputs.distance} ft` },
+      { label: 'Wire Size', value: `#${inputs.wireSize} AWG` },
+      { label: 'Material', value: inputs.material === 'copper' ? 'Copper' : 'Aluminum' },
+      { label: 'Phase', value: inputs.phase === 'single' ? '1-Phase' : '3-Phase' },
+    ],
+    results: [
+      { label: 'Voltage Drop', value: `${result.voltageDrop}V`, highlight: true },
+      { label: 'Drop Percentage', value: `${result.dropPercent}%` },
+      { label: 'NEC Status', value: result.pass ? 'PASS' : 'FAIL' },
+    ],
+    passFailBadge: result.pass ? 'PASS' : 'FAIL' as 'PASS' | 'FAIL',
+  } : null
+
   return (
     <div className="flex flex-col gap-5">
+      {/* Hidden ShareCard for PNG generation */}
+      <div className="fixed left-[-9999px] top-[-9999px] overflow-hidden" style={{ width: 540 }}>
+        {shareCardData && (
+          <ShareCard
+            ref={cardRef}
+            calculatorName={shareCardData.calculatorName}
+            inputs={shareCardData.inputs}
+            results={shareCardData.results}
+            passFailBadge={shareCardData.passFailBadge}
+          />
+        )}
+      </div>
+
       {/* Animated wire SVG */}
       <div className="relative h-12 w-full overflow-hidden">
         <svg viewBox="0 0 400 48" className="h-full w-full" preserveAspectRatio="none">
@@ -217,12 +254,21 @@ export function VoltageDropCalculator() {
       {/* Actions */}
       {hasResult && result && (
         <div className="flex flex-col gap-2">
-          <button
-            onClick={handleSave}
-            className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] transition-colors hover:bg-[#18181b]"
-          >
-            <Save className="h-4 w-4" /> Save Calculation
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleSave}
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] transition-colors hover:bg-[#18181b]"
+            >
+              <Save className="h-4 w-4" /> Save
+            </button>
+            <button
+              onClick={() => shareCard(`voltage-drop-${inputs.systemVoltage}v-${inputs.current}a-${inputs.distance}ft`)}
+              disabled={isGenerating || !shareCardData}
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] transition-colors hover:bg-[#18181b] disabled:opacity-50"
+            >
+              <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
+            </button>
+          </div>
           <AttachToJob note={jobNote} />
         </div>
       )}

@@ -317,6 +317,58 @@ export function calculateWireSizing(inputs: WireSizingInputs): WireSizingResult 
 
   const sizes = WIRE_SIZES
 
+  // First, check standard NEC wire sizes for common circuit ratings
+  // NEC 240.4(D) specifies maximum OCPD ratings for small conductors
+  const standardSizes: Record<number, string> = {
+    15: '14',
+    20: '12', 
+    30: '10',
+    40: '8',  // #8 copper @ 75°C = 50A, but 40A is next standard OCPD
+    50: '8',  // #8 copper @ 75°C = 50A
+    60: '6',  // #6 copper @ 75°C = 65A
+    70: '4',  // #4 copper @ 75°C = 85A
+    100: '3', // #3 copper @ 75°C = 100A
+  }
+
+  // If load matches a standard circuit rating, check that wire size first
+  const standardLoad = Object.keys(standardSizes)
+    .map(Number)
+    .find(standardAmp => Math.abs(standardAmp - loadAmps) <= 2) // Within 2A of standard rating
+  
+  if (standardLoad) {
+    const standardSize = standardSizes[standardLoad]
+    const ampacityResult = calculateAmpacity({
+      wireSize: standardSize,
+      insulationType,
+      material,
+      ambientTemp,
+      conductorsInRaceway,
+    })
+    
+    if (ampacityResult && ampacityResult.correctedAmpacity >= loadAmps) {
+      // Standard size meets ampacity requirements
+      const cm = WIRE_AREAS[standardSize]
+      const k = K_FACTOR[material]
+      const vd = (phaseFactor * k * loadAmps * distance) / cm
+      const percent = (vd / systemVoltage) * 100
+      const baseAmp = AMPACITY_TABLE[standardSize][ampKey as keyof typeof AMPACITY_TABLE[string]]
+      
+      // If voltage drop is excessive (more than 2x the max), don't use standard size
+      // This handles cases like very long runs where standard size would have huge voltage drop
+      if (percent <= maxDropPercent * 2) {
+        return {
+          recommendedSize: standardSize,
+          ampacity: baseAmp,
+          voltageDrop: Math.round(vd * 100) / 100,
+          dropPercent: Math.round(percent * 100) / 100,
+          pass: true, // Passes because it meets NEC ampacity requirements
+        }
+      }
+      // If voltage drop is excessive, fall through to find better size
+    }
+  }
+
+  // If no standard size or it doesn't meet ampacity, find smallest wire that meets ampacity
   for (const size of sizes) {
     const baseAmp = AMPACITY_TABLE[size][ampKey as keyof typeof AMPACITY_TABLE[string]]
     // Calculate corrected ampacity using ambient temperature and conduit derating
@@ -347,7 +399,7 @@ export function calculateWireSizing(inputs: WireSizingInputs): WireSizingResult 
     }
   }
 
-  // If no size found with acceptable drop, return largest that fits corrected ampacity
+  // If no size found with acceptable drop, return smallest that fits corrected ampacity
   for (const size of sizes) {
     const baseAmp = AMPACITY_TABLE[size][ampKey as keyof typeof AMPACITY_TABLE[string]]
     const ampacityResult = calculateAmpacity({
@@ -421,17 +473,17 @@ export function calculateAmpacity(inputs: AmpacityInputs): AmpacityResult | null
   const ambient = Math.floor(inputs.ambientTemp)
   if (ambient <= 30) {
     tempCorr = 1.0
-  } else if (ambient <= 36) {
+  } else if (ambient <= 35) {
     tempCorr = tempRating === 60 ? 0.91 : tempRating === 75 ? 0.94 : 0.96
-  } else if (ambient <= 41) {
+  } else if (ambient <= 40) {
     tempCorr = tempRating === 60 ? 0.91 : tempRating === 75 ? 0.94 : 0.96
-  } else if (ambient <= 46) {
+  } else if (ambient <= 45) {
     tempCorr = tempRating === 60 ? 0.82 : tempRating === 75 ? 0.88 : 0.91
-  } else if (ambient <= 51) {
+  } else if (ambient <= 50) {
     tempCorr = tempRating === 60 ? 0.71 : tempRating === 75 ? 0.82 : 0.87
-  } else if (ambient <= 56) {
+  } else if (ambient <= 55) {
     tempCorr = tempRating === 60 ? 0.58 : tempRating === 75 ? 0.75 : 0.82
-  } else if (ambient <= 61) {
+  } else if (ambient <= 60) {
     tempCorr = tempRating === 60 ? 0.41 : tempRating === 75 ? 0.67 : 0.76
   } else {
     tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.58 : 0.71

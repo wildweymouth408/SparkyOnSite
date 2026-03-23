@@ -596,16 +596,22 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
 
   async function saveProfile(p: UserProfile) {
     if (!userId) return
-    await supabase.from('profiles').upsert({
-      id: userId,
-      name: p.name,
-      role: p.role,
-      years_exp: p.yearsExp,
-      work_type: p.workType,
-      license_number: p.licenseNumber,
-      license_state: p.licenseState,
-    })
-    setProfile(p)
+    try {
+      const { error } = await supabase.from('profiles').upsert({
+        id: userId,
+        name: p.name,
+        role: p.role,
+        years_exp: p.yearsExp,
+        work_type: p.workType,
+        license_number: p.licenseNumber || null,
+        license_state: p.licenseState || null,
+      })
+      if (error) throw error
+      setProfile(p)
+    } catch (err: any) {
+      console.error('Profile save error:', err)
+      alert('Could not save profile: ' + (err.message || 'Unknown error'))
+    }
   }
 
   // ── Guard states ──────────────────────────────────────────────────────────
@@ -811,9 +817,9 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
 
       {/* Edit Profile modal */}
       {showEditProfile && profile && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={() => setShowEditProfile(false)}>
+        <div className="fixed inset-0 z-[60] flex items-end bg-black/70" onClick={() => setShowEditProfile(false)}>
           <div
-            className="w-full bg-[#09090b] border-t border-[#27272a] p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto"
+            className="w-full bg-[#09090b] border-t border-[#27272a] p-4 flex flex-col gap-4 max-h-[85vh] overflow-y-auto pb-[calc(4rem+env(safe-area-inset-bottom))]"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">

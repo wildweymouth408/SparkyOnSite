@@ -6,8 +6,10 @@ import { CONDUIT_TYPES, CONDUIT_TRADE_SIZES, INSULATION_TYPES, COMMON_WIRE_SIZES
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
 import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
+import { ShareCard } from '@/components/share-card'
+import { useShareCard } from '@/hooks/useShareCard'
 import { toast } from 'sonner'
-import { Check, X, Save } from 'lucide-react'
+import { Check, X, Save, Share2 } from 'lucide-react'
 
 export function ConduitFillCalculator() {
   const [inputs, setInputs] = useState<ConduitFillInputs>({
@@ -17,6 +19,9 @@ export function ConduitFillCalculator() {
     wireSize: '12',
     wireCount: 3,
   })
+
+  // Share card functionality
+  const { cardRef, shareCard, isGenerating } = useShareCard()
 
   const result = calculateConduitFill(inputs)
   const hasResult = inputs.wireCount > 0
@@ -36,8 +41,40 @@ export function ConduitFillCalculator() {
 
   const jobNote = `[Conduit Fill] ${inputs.conduitType} ${inputs.tradeSize}", ${inputs.wireCount}x #${inputs.wireSize} ${inputs.wireType} = ${result.fillPercent}% fill (${result.pass ? 'PASS' : 'FAIL'})`
 
+  // Prepare data for ShareCard
+  const shareCardData = hasResult && result.totalWireArea > 0 ? {
+    calculatorName: 'Conduit Fill',
+    inputs: [
+      { label: 'Conduit Type', value: inputs.conduitType },
+      { label: 'Trade Size', value: `${inputs.tradeSize}"` },
+      { label: 'Wire Type', value: inputs.wireType },
+      { label: 'Wire Size', value: `#${inputs.wireSize} AWG` },
+      { label: 'Wire Count', value: `${inputs.wireCount} conductors` },
+    ],
+    results: [
+      { label: 'Fill Percentage', value: `${result.fillPercent}%`, highlight: true },
+      { label: 'Total Wire Area', value: `${result.totalWireArea} sq.in.` },
+      { label: 'Allowable Area', value: `${result.allowableArea} sq.in.` },
+      { label: 'NEC Status', value: result.pass ? 'PASS' : 'FAIL' },
+    ],
+    passFailBadge: result.pass ? 'PASS' : 'FAIL' as 'PASS' | 'FAIL',
+  } : null
+
   return (
     <div className="flex flex-col gap-5">
+      {/* Hidden ShareCard for PNG generation */}
+      <div className="fixed left-[-9999px] top-[-9999px] overflow-hidden" style={{ width: 540 }}>
+        {shareCardData && (
+          <ShareCard
+            ref={cardRef}
+            calculatorName={shareCardData.calculatorName}
+            inputs={shareCardData.inputs}
+            results={shareCardData.results}
+            passFailBadge={shareCardData.passFailBadge}
+          />
+        )}
+      </div>
+
       {/* Visual conduit fill bar */}
       {hasResult && (
         <div className="relative h-16 border border-[#27272a] bg-[#18181b]">
@@ -150,9 +187,18 @@ export function ConduitFillCalculator() {
 
       {hasResult && result.totalWireArea > 0 && (
         <div className="flex flex-col gap-2">
-          <button onClick={handleSave} className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
-            <Save className="h-4 w-4" /> Save Calculation
-          </button>
+          <div className="flex gap-2">
+            <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
+              <Save className="h-4 w-4" /> Save
+            </button>
+            <button
+              onClick={() => shareCard(`conduit-fill-${inputs.conduitType}-${inputs.tradeSize.replace('/', '-')}-${inputs.wireCount}x${inputs.wireSize}`)}
+              disabled={isGenerating || !shareCardData}
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
+            >
+              <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
+            </button>
+          </div>
           <AttachToJob note={jobNote} />
         </div>
       )}

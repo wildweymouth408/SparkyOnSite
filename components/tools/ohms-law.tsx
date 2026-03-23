@@ -5,13 +5,18 @@ import { calculateOhmsLaw } from '@/lib/calculations'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
 import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
+import { ShareCard } from '@/components/share-card'
+import { useShareCard } from '@/hooks/useShareCard'
 import { toast } from 'sonner'
-import { Save } from 'lucide-react'
+import { Save, Share2 } from 'lucide-react'
 
 export function OhmsLawCalculator() {
   const [voltage, setVoltage] = useState<string>('')
   const [current, setCurrent] = useState<string>('')
   const [resistance, setResistance] = useState<string>('')
+
+  // Share card functionality
+  const { cardRef, shareCard, isGenerating } = useShareCard()
 
   const inputs = {
     voltage: voltage !== '' ? Number(voltage) : null,
@@ -52,11 +57,41 @@ export function OhmsLawCalculator() {
 
   const jobNote = result ? `[Ohm's Law] V=${result.voltage}V, I=${result.current}A, R=${result.resistance}\u03A9, P=${result.power}W` : ''
 
+  // Prepare data for ShareCard
+  const shareCardData = result ? {
+    calculatorName: "Ohm's Law",
+    inputs: [
+      { label: 'Voltage', value: voltage !== '' ? `${voltage}V` : 'Solved' },
+      { label: 'Current', value: current !== '' ? `${current}A` : 'Solved' },
+      { label: 'Resistance', value: resistance !== '' ? `${resistance}Ω` : 'Solved' },
+    ],
+    results: [
+      { label: 'Voltage', value: `${result.voltage}V`, highlight: result.solvedFor === 'voltage' },
+      { label: 'Current', value: `${result.current}A`, highlight: result.solvedFor === 'current' },
+      { label: 'Resistance', value: `${result.resistance}Ω`, highlight: result.solvedFor === 'resistance' },
+      { label: 'Power', value: `${result.power}W` },
+    ],
+    passFailBadge: null,
+  } : null
+
   // Triangle SVG
   const triangleHighlight = result?.solvedFor || ''
 
   return (
     <div className="flex flex-col gap-5">
+      {/* Hidden ShareCard for PNG generation */}
+      <div className="fixed left-[-9999px] top-[-9999px] overflow-hidden" style={{ width: 540 }}>
+        {shareCardData && (
+          <ShareCard
+            ref={cardRef}
+            calculatorName={shareCardData.calculatorName}
+            inputs={shareCardData.inputs}
+            results={shareCardData.results}
+            passFailBadge={shareCardData.passFailBadge}
+          />
+        )}
+      </div>
+
       {/* Ohm's Law Triangle */}
       <div className="flex justify-center py-2">
         <svg viewBox="0 0 200 180" className="h-36 w-36">
@@ -173,9 +208,18 @@ export function OhmsLawCalculator() {
             Clear
           </button>
           {result && (
-            <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
-              <Save className="h-4 w-4" /> Save
-            </button>
+            <>
+              <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
+                <Save className="h-4 w-4" /> Save
+              </button>
+              <button
+                onClick={() => shareCard(`ohms-law-v${result.voltage}-i${result.current}-r${result.resistance}`)}
+                disabled={isGenerating || !shareCardData}
+                className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
+              >
+                <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
+              </button>
+            </>
           )}
         </div>
         {result && <AttachToJob note={jobNote} />}

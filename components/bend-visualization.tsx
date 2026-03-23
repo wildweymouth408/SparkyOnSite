@@ -12,6 +12,8 @@ export type BendVizType =
   | 'back2back'
   | 'rollingOffset'
   | 'kickWith90'
+  | 'parallel'
+  | 'corner'
 
 export interface BendVisualizationProps {
   type: BendVizType
@@ -607,6 +609,147 @@ export function BendVisualization({
         <line x1={wallX} y1={tipY - 11} x2={wallX} y2={tipY - 1} stroke={C.dim} strokeWidth="0.8" />
         <text x={(tipX + wallX) / 2} y={tipY - 13} fill={C.dimTxt} fontSize="9" textAnchor="middle" fontFamily="ui-monospace, monospace">
           kick: {kickOffset}&quot;
+        </text>
+      </svg>
+    )
+  }
+
+  // ── Parallel Bends ───────────────────────────────────────────────────────────
+  if (type === 'parallel') {
+    const vw = 380, vh = 220
+    const yRun = 160
+    const startX = 60
+    const spacing = Number(calcValues.parallelSpacing ?? 6)
+    const count = Number(calcValues.parallelCount ?? 2)
+    const stub = Number(calcValues.stub ?? 12)
+    const takeup = Number(calcValues.takeup ?? 6)
+    const mark = Number((calcValues.mark ?? Math.max(0, stub - takeup)).toString())
+
+    return (
+      <svg viewBox={`0 0 ${vw} ${vh}`} className="w-full" style={{ maxHeight: '210px', display: 'block', borderRadius: '8px' }}>
+        <GridBG w={vw} h={vh} />
+
+        <line x1={0} y1={yRun + 15} x2={vw} y2={yRun + 15} stroke={C.grid} strokeWidth="1" />
+
+        {/* Draw parallel conduits */}
+        {Array.from({ length: count }).map((_, i) => {
+          const x = startX + i * spacing
+          const d = `M ${x},${yRun} L ${x},${yRun - stub}`
+          return <Pipe key={i} d={d} />
+        })}
+
+        {/* Mark positions */}
+        {Array.from({ length: count }).map((_, i) => {
+          const x = startX + i * spacing
+          const markY = yRun - mark
+          return (
+            <g key={i}>
+              <line x1={x} y1={markY - 10} x2={x} y2={markY + 10} stroke={C.mark} strokeWidth={1.5} />
+              <text x={x} y={markY + 22} fill={C.mark} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+                {frontMark}
+              </text>
+              <text x={x} y={markY - 15} fill={C.dimTxt} fontSize="7" textAnchor="middle" fontFamily="ui-monospace, monospace">
+                #{i + 1}
+              </text>
+            </g>
+          )
+        })}
+
+        {/* Spacing dimensions */}
+        {count > 1 && Array.from({ length: count - 1 }).map((_, i) => {
+          const x1 = startX + i * spacing
+          const x2 = startX + (i + 1) * spacing
+          return (
+            <Dim key={i} x1={x1} y1={yRun - 30} x2={x2} y2={yRun - 30} 
+              label={`${spacing}"`} offset={12} side={1} fontSize={8} />
+          )
+        })}
+
+        {/* Stub height dimension */}
+        <Dim x1={startX - 20} y1={yRun} x2={startX - 20} y2={yRun - stub} 
+          label={`${stub}"`} offset={14} side={-1} />
+
+        <text x={vw / 2} y={vh - 10} fill={C.dimTxt} fontSize="9" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {count} parallel conduits · {spacing}" spacing
+        </text>
+      </svg>
+    )
+  }
+
+  // ── Corner Bend ──────────────────────────────────────────────────────────────
+  if (type === 'corner') {
+    const vw = 320, vh = 220
+    const cornerX = 160, cornerY = 140
+    const angle = Number(calcValues.cornerAngle ?? 90)
+    const radius = Number(calcValues.cornerRadius ?? 0)
+    const bendAngle = angle / 2
+    const angleRad = (angle * Math.PI) / 180
+    const bendRad = (bendAngle * Math.PI) / 180
+    
+    // Calculate points for the corner
+    const legLength = 80
+    const startX = cornerX - legLength * Math.cos(bendRad)
+    const startY = cornerY + legLength * Math.sin(bendRad)
+    const endX = cornerX + legLength * Math.cos(bendRad)
+    const endY = cornerY + legLength * Math.sin(bendRad)
+
+    let d = ''
+    if (radius > 0) {
+      // Arc for radiused corner
+      const arcStartX = cornerX - radius * Math.cos(bendRad)
+      const arcStartY = cornerY + radius * Math.sin(bendRad)
+      const arcEndX = cornerX + radius * Math.cos(bendRad)
+      const arcEndY = cornerY + radius * Math.sin(bendRad)
+      
+      d = `M ${startX},${startY} L ${arcStartX},${arcStartY} A ${radius},${radius} 0 0 1 ${arcEndX},${arcEndY} L ${endX},${endY}`
+    } else {
+      // Sharp corner with two straight segments
+      d = `M ${startX},${startY} L ${cornerX},${cornerY} L ${endX},${endY}`
+    }
+
+    return (
+      <svg viewBox={`0 0 ${vw} ${vh}`} className="w-full" style={{ maxHeight: '210px', display: 'block', borderRadius: '8px' }}>
+        <GridBG w={vw} h={vh} />
+
+        {/* Wall lines */}
+        <line x1={cornerX - 100} y1={cornerY} x2={cornerX} y2={cornerY} stroke={C.grid} strokeWidth="1" strokeDasharray="4,3" />
+        <line x1={cornerX} y1={cornerY} x2={cornerX} y2={cornerY - 100} stroke={C.grid} strokeWidth="1" strokeDasharray="4,3" />
+
+        <Pipe d={d} />
+
+        {/* Bend marks for sharp corner */}
+        {radius === 0 && (
+          <>
+            <Tick x={cornerX} y={cornerY} vertical={false} size={12} color={C.tick} />
+            <text x={cornerX} y={cornerY - 15} fill={C.tick} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+              {frontMark}
+            </text>
+          </>
+        )}
+
+        {/* Angle arc */}
+        <path d={`M ${cornerX - 30},${cornerY} A 30,30 0 0 1 ${cornerX},${cornerY - 30}`} 
+          fill="none" stroke={C.dim} strokeWidth="0.8" strokeDasharray="2,2" />
+        <text x={cornerX - 20} y={cornerY - 20} fill={C.dimTxt} fontSize="9" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {angle}°
+        </text>
+
+        {/* Radius dimension if applicable */}
+        {radius > 0 && (
+          <Dim x1={cornerX} y1={cornerY} x2={cornerX + radius * Math.cos(bendRad)} y2={cornerY - radius * Math.sin(bendRad)}
+            label={`R${radius}"`} offset={8} side={1} fontSize={8} />
+        )}
+
+        {/* Bend angle labels */}
+        <text x={cornerX - 40} y={cornerY + 40} fill={C.dimTxt} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {bendAngle}° bend
+        </text>
+        <text x={cornerX + 40} y={cornerY + 40} fill={C.dimTxt} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {bendAngle}° bend
+        </text>
+
+        <text x={vw / 2} y={vh - 10} fill={C.dimTxt} fontSize="9" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {radius > 0 ? `${radius}" radius corner` : 'sharp corner'} · {angle}° total
         </text>
       </svg>
     )

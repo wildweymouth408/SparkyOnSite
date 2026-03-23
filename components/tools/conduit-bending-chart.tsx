@@ -7,7 +7,7 @@ import { BendVisualization } from '../bend-visualization'
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type Brand = 'klein' | 'ideal' | 'greenlee' | 'milwaukee'
-type BendType = '90' | 'offset' | 'saddle3' | 'saddle4' | 'back2back' | 'rollingOffset' | 'kickWith90'
+type BendType = '90' | 'offset' | 'saddle3' | 'saddle4' | 'back2back' | 'rollingOffset' | 'kickWith90' | 'parallel' | 'corner'
 type ConduitSize = '1/2"' | '3/4"' | '1"' | '1-1/4"' | '1-1/2"' | '2"'
 
 // ── Reference Data ────────────────────────────────────────────────────────────
@@ -184,9 +184,34 @@ const INSTRUCTIONS: Record<Brand, Record<BendType, { steps: string[]; pro?: stri
 
 // ── Realistic Bend Diagrams ──────────────────────────────────────────────────
 
+// ── NEC 358.24 Minimum Bending Radius ───────────────────────────────────────
+
+/**
+ * Returns the minimum bending radius for EMT per NEC 358.24
+ * - 4× conduit diameter for ½″–1¼″ EMT
+ * - 5× conduit diameter for 1½″–2″ EMT
+ */
+function getNECMinimumRadius(conduitSize: ConduitSize): number {
+  const conduitDiameterMap: Record<ConduitSize, number> = {
+    '1/2"': 0.5,
+    '3/4"': 0.75,
+    '1"': 1.0,
+    '1-1/4"': 1.25,
+    '1-1/2"': 1.5,
+    '2"': 2.0
+  }
+  
+  const diameter = conduitDiameterMap[conduitSize]
+  if (diameter <= 1.25) {
+    return 4 * diameter  // 4× for ½″–1¼″ EMT
+  } else {
+    return 5 * diameter  // 5× for 1½″–2″ EMT
+  }
+}
+
 // ── Impossible Bend Detection ────────────────────────────────────────────────
 
-function getBendWarning(type: BendType, values: Record<string, number>): string | null {
+function getBendWarning(type: BendType, values: Record<string, number>, conduitSize?: ConduitSize): string | null {
   if (type === '90') {
     if (values.stub && values.takeup && values.stub <= values.takeup) {
       return `Stub length (${values.stub}") must be greater than take-up (${values.takeup}"). Your mark would be at 0" or negative.`
@@ -203,6 +228,40 @@ function getBendWarning(type: BendType, values: Record<string, number>): string 
   if (type === 'saddle3') {
     if (values.height && values.height > 6) {
       return `3-point saddle over 6" height is very difficult. Consider a 4-point saddle instead.`
+    }
+  }
+  if (type === 'kickWith90') {
+    if (values.kickOffset && values.kickOffset > 6) {
+      return `Kick offset over 6" may require multiple bends or a different approach.`
+    }
+    if (values.kickAngle && (values.kickAngle < 5 || values.kickAngle > 20)) {
+      return `Kick angle should be between 5° and 20° for best results.`
+    }
+  }
+  if (type === 'parallel') {
+    if (values.parallelCount && values.parallelCount > 6) {
+      return `More than 6 parallel conduits may require special bender setups.`
+    }
+    if (values.parallelSpacing && values.parallelSpacing < 2) {
+      return `Spacing under 2" may not leave enough room for couplings and fittings.`
+    }
+  }
+  if (type === 'corner') {
+    if (values.cornerAngle && (values.cornerAngle < 45 || values.cornerAngle > 135)) {
+      return `Corner angles outside 45°-135° range are uncommon and may require special techniques.`
+    }
+    if (values.cornerRadius && values.cornerRadius > 24) {
+      return `Radius over 24" may require segmented bends or factory elbows.`
+    }
+    // NEC 358.24 radius validation
+    if (conduitSize && values.cornerRadius !== undefined) {
+      const minRadius = getNECMinimumRadius(conduitSize)
+      if (values.cornerRadius === 0) {
+        return `Radius must be at least ${minRadius.toFixed(1)}" for ${conduitSize} EMT per NEC 358.24. Sharp corners (radius=0) are not permitted.`
+      }
+      if (values.cornerRadius < minRadius) {
+        return `Radius (${values.cornerRadius}") is below NEC 358.24 minimum of ${minRadius.toFixed(1)}" for ${conduitSize} EMT.`
+      }
     }
   }
   return null
@@ -222,6 +281,12 @@ export function ConduitBendingChart() {
   const [rollingAngle, setRollingAngle] = useState<number>(30)
   const [saddleHeight, setSaddleHeight] = useState<number>(2)
   const [b2bDistance, setB2bDistance] = useState<number>(24)
+  const [kickOffset, setKickOffset] = useState<number>(2)
+  const [kickAngle, setKickAngle] = useState<number>(10)
+  const [parallelCount, setParallelCount] = useState<number>(2)
+  const [parallelSpacing, setParallelSpacing] = useState<number>(6)
+  const [cornerAngle, setCornerAngle] = useState<number>(90)
+  const [cornerRadius, setCornerRadius] = useState<number>(getNECMinimumRadius('3/4"'))
 
   const b = BRANDS[brand]
   const instructions = INSTRUCTIONS[brand][bendType]
@@ -259,12 +324,56 @@ export function ConduitBendingChart() {
     } : null
   }, [saddleHeight])
 
+  // Kick with 90° calculations
+  const kickCalc = useMemo(() => {
+    const kickMult = MULTIPLIERS.find(m => m.angle === kickAngle)
+    return kickMult ? {
+      kickDistance: (kickOffset * kickMult.mult).toFixed(2),
+      kickShrinkage: (kickOffset * kickMult.shrinkDec).toFixed(3),
+    } : null
+  }, [kickOffset, kickAngle])
+
+  // Parallel bends calculations
+  const parallelCalc = useMemo(() => {
+    const marks = []
+    for (let i = 0; i < parallelCount; i++) {
+      const offset = i * parallelSpacing
+      marks.push({
+        conduit: i + 1,
+        offset: offset.toFixed(1),
+        markPosition: (stubLength - TAKEUP[conduitSize] + offset).toFixed(1)
+      })
+    }
+    return { marks }
+  }, [parallelCount, parallelSpacing, stubLength, conduitSize])
+
+  // Corner bend calculations
+  const cornerCalc = useMemo(() => {
+    const angleRad = (cornerAngle * Math.PI) / 180
+    const halfAngleRad = angleRad / 2
+    
+    // For radiused corners: shrinkage = R × (θ - 2 sin(θ/2))
+    // For sharp corners: use take-up based formula (approximation for hand bender)
+    const shrinkage = cornerRadius > 0 
+      ? cornerRadius * (angleRad - 2 * Math.sin(halfAngleRad))
+      : 0.5 * (1 - Math.cos(halfAngleRad)) / Math.sin(halfAngleRad) * TAKEUP[conduitSize]
+    
+    return {
+      shrinkage: shrinkage.toFixed(3),
+      arcLength: cornerRadius > 0 ? (cornerRadius * angleRad).toFixed(2) : '0',
+      bendAngle: (cornerAngle / 2).toFixed(1)
+    }
+  }, [cornerAngle, cornerRadius, conduitSize])
+
   // ── Bend Warning ──
   const warningValues: Record<string, number> = {}
   if (bendType === '90') { warningValues.stub = stubLength; warningValues.takeup = TAKEUP[conduitSize] }
   if (bendType === 'offset') { warningValues.height = offsetHeight }
   if (bendType === 'saddle3') { warningValues.height = saddleHeight }
-  const warning = getBendWarning(bendType, warningValues)
+  if (bendType === 'kickWith90') { warningValues.kickOffset = kickOffset; warningValues.kickAngle = kickAngle }
+  if (bendType === 'parallel') { warningValues.parallelCount = parallelCount; warningValues.parallelSpacing = parallelSpacing }
+  if (bendType === 'corner') { warningValues.cornerAngle = cornerAngle; warningValues.cornerRadius = cornerRadius }
+  const warning = getBendWarning(bendType, warningValues, bendType === 'corner' ? conduitSize : undefined)
 
   // ── Calc values for diagram ──
   const calcValues: Record<string, string | number> = {}
@@ -291,6 +400,26 @@ export function ConduitBendingChart() {
     calcValues.run    = rollingRun
     calcValues.travel = rollingCalc?.travel || '?'
   }
+  if (bendType === 'kickWith90') {
+    calcValues.kickOffset = kickOffset
+    calcValues.kickAngle = kickAngle
+    calcValues.kickDistance = kickCalc?.kickDistance || '?'
+    calcValues.kickShrinkage = kickCalc?.kickShrinkage || '?'
+  }
+  if (bendType === 'parallel') {
+    calcValues.parallelCount = parallelCount
+    calcValues.parallelSpacing = parallelSpacing
+    calcValues.stub = stubLength
+    calcValues.takeup = TAKEUP[conduitSize]
+    calcValues.mark = stubCalc.mark
+  }
+  if (bendType === 'corner') {
+    calcValues.cornerAngle = cornerAngle
+    calcValues.cornerRadius = cornerRadius
+    calcValues.shrinkage = cornerCalc?.shrinkage || '?'
+    calcValues.arcLength = cornerCalc?.arcLength || '?'
+    calcValues.bendAngle = cornerCalc?.bendAngle || '?'
+  }
 
   const BEND_TYPES: { id: BendType; label: string }[] = [
     { id: '90',            label: '90°' },
@@ -300,6 +429,8 @@ export function ConduitBendingChart() {
     { id: 'back2back',     label: 'Back-to-Back' },
     { id: 'rollingOffset', label: 'Rolling Offset' },
     { id: 'kickWith90',    label: 'Kick w/ 90°' },
+    { id: 'parallel',      label: 'Parallel Bends' },
+    { id: 'corner',        label: 'Corner Bends' },
   ]
 
   const inputCls = 'h-11 w-full rounded-lg border border-[#374151] bg-[#18181b827] px-3 font-mono text-sm text-[#F9FAFB] focus:border-[#F97316] focus:outline-none transition-colors'
@@ -606,12 +737,142 @@ export function ConduitBendingChart() {
 
       {bendType === 'kickWith90' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#a1a1aa] mb-3">Kick with 90° — method</p>
-          <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
-            <p className="text-xs text-[#9CA3AF] leading-relaxed">
-              Make the 90° first using standard stub-up method. Then add a small kick (10-15°) at the top to offset the stub from the wall/surface. Adjust by eye and check with a tape measure.
-            </p>
+          <p className="text-xs text-[#a1a1aa] mb-3">Kick with 90° calculator</p>
+          <div className="flex gap-3 mb-3">
+            <div className="flex-1">
+              <label className={labelCls}>Kick offset from wall (in)</label>
+              <input type="number" value={kickOffset} onChange={e => setKickOffset(Number(e.target.value))} className={inputCls} step={0.25} min={0.5} max={12} />
+            </div>
+            <div className="flex-1">
+              <label className={labelCls}>Kick angle</label>
+              <select value={kickAngle} onChange={e => setKickAngle(Number(e.target.value))} className={inputCls}>
+                <option value={5}>5°</option>
+                <option value={10}>10°</option>
+                <option value={15}>15°</option>
+                <option value={20}>20°</option>
+              </select>
+            </div>
           </div>
+          {kickCalc && (
+            <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-[#a1a1aa]">Distance from 90° to kick</span>
+                <span className="font-mono font-bold text-[#F9FAFB] text-lg">{kickCalc.kickDistance}"</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-[#a1a1aa]">Shrinkage (deduct from run)</span>
+                <span className="font-mono text-[#F97316]">{kickCalc.kickShrinkage}"</span>
+              </div>
+              <p className="text-[10px] text-[#4B5563]">
+                Make 90° first using standard stub-up method. Then measure {kickCalc.kickDistance}" from back of 90°, place {b.marks.front} at mark, bend {kickAngle}° kick.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {bendType === 'parallel' && (
+        <div className={cardCls}>
+          <p className="text-xs text-[#a1a1aa] mb-3">Parallel bends calculator</p>
+          <div className="flex gap-3 mb-3">
+            <div className="flex-1">
+              <label className={labelCls}>Number of conduits</label>
+              <input type="number" value={parallelCount} onChange={e => setParallelCount(Number(e.target.value))} className={inputCls} step={1} min={2} max={10} />
+            </div>
+            <div className="flex-1">
+              <label className={labelCls}>Spacing between centers (in)</label>
+              <input type="number" value={parallelSpacing} onChange={e => setParallelSpacing(Number(e.target.value))} className={inputCls} step={0.5} min={2} max={24} />
+            </div>
+          </div>
+          <div className="mb-3">
+            <label className={labelCls}>Stub length (in)</label>
+            <input type="number" value={stubLength} onChange={e => setStubLength(Number(e.target.value))} className={inputCls} step={0.5} />
+          </div>
+          <div className="mb-3">
+            <label className={labelCls}>Conduit size</label>
+            <select value={conduitSize} onChange={e => setConduitSize(e.target.value as ConduitSize)} className={inputCls}>
+              {CONDUIT_SIZES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+          {parallelCalc && (
+            <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-[#a1a1aa]">Take-up for {conduitSize}</span>
+                <span className="font-mono text-[#9CA3AF]">{TAKEUP[conduitSize]}"</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-[#a1a1aa]">Base mark position</span>
+                <span className="font-mono font-bold text-[#F9FAFB] text-lg">{stubCalc.mark}"</span>
+              </div>
+              <div className="mt-2 pt-2 border-t border-[#1F2937]">
+                <p className="text-xs text-[#a1a1aa] mb-2">Individual conduit marks:</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {parallelCalc.marks.map(mark => (
+                    <div key={mark.conduit} className="flex justify-between text-xs">
+                      <span className="text-[#9CA3AF]">Conduit #{mark.conduit}</span>
+                      <span className="font-mono text-[#F9FAFB]">{mark.markPosition}"</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p className="text-[10px] text-[#4B5563] mt-2">
+                Place {b.marks.front} at calculated mark for each conduit. All bends at same angle ({offsetAngle}° recommended).
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {bendType === 'corner' && (
+        <div className={cardCls}>
+          <p className="text-xs text-[#a1a1aa] mb-3">Corner bend calculator</p>
+          <div className="flex gap-3 mb-3">
+            <div className="flex-1">
+              <label className={labelCls}>Corner angle</label>
+              <input type="number" value={cornerAngle} onChange={e => setCornerAngle(Number(e.target.value))} className={inputCls} step={5} min={45} max={135} />
+            </div>
+            <div className="flex-1">
+              <label className={labelCls}>Radius (in)</label>
+              <input 
+                type="number" 
+                value={cornerRadius} 
+                onChange={e => setCornerRadius(Number(e.target.value))} 
+                className={inputCls} 
+                step={0.5} 
+                min={getNECMinimumRadius(conduitSize)} 
+                max={24} 
+              />
+            </div>
+          </div>
+          <div className="mb-3">
+            <label className={labelCls}>Conduit size</label>
+            <select value={conduitSize} onChange={e => setConduitSize(e.target.value as ConduitSize)} className={inputCls}>
+              {CONDUIT_SIZES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+          {cornerCalc && (
+            <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-[#a1a1aa]">Each bend angle</span>
+                <span className="font-mono font-bold text-[#F9FAFB] text-lg">{cornerCalc.bendAngle}°</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-[#a1a1aa]">Total shrinkage</span>
+                <span className="font-mono text-[#F97316]">{cornerCalc.shrinkage}"</span>
+              </div>
+              {cornerRadius > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-[#a1a1aa]">Arc length</span>
+                  <span className="font-mono text-[#9CA3AF]">{cornerCalc.arcLength}"</span>
+                </div>
+              )}
+              <p className="text-[10px] text-[#4B5563]">
+                {cornerRadius > 0 
+                  ? `Use segmented bends or factory elbow for ${cornerRadius}" radius.`
+                  : `Make two ${cornerCalc.bendAngle}° bends with ${b.marks.front} alignment.`}
+              </p>
+            </div>
+          )}
         </div>
       )}
 

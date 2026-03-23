@@ -4,8 +4,10 @@ import { useState, useCallback } from 'react'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
 import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
+import { ShareCard } from '@/components/share-card'
+import { useShareCard } from '@/hooks/useShareCard'
 import { toast } from 'sonner'
-import { Save, Copy, Check } from 'lucide-react'
+import { Save, Copy, Check, Share2 } from 'lucide-react'
 
 // ── NEC Chapter 9, Table 5 — THHN compact area approximations (sq in)
 const WIRE_AREAS_SQ_IN: Record<string, number> = {
@@ -129,6 +131,9 @@ export function MaterialTakeoffCalculator() {
 
   const [copied, setCopied] = useState(false)
 
+  // Share card functionality
+  const { cardRef, shareCard, isGenerating } = useShareCard()
+
   const set = useCallback(<K extends keyof MTOInputs>(key: K, value: MTOInputs[K]) => {
     setInputs(prev => ({ ...prev, [key]: value }))
   }, [])
@@ -234,8 +239,38 @@ export function MaterialTakeoffCalculator() {
 
   const hasResult = inputs.circuits > 0 && inputs.avgRunLength > 0
 
+  // Prepare data for ShareCard (simplified for now)
+  const shareCardData = hasResult ? {
+    calculatorName: 'Material Takeoff',
+    inputs: [
+      { label: 'Circuits', value: `${inputs.circuits}` },
+      { label: 'Avg Run Length', value: `${inputs.avgRunLength} ft` },
+      { label: 'Wire Size', value: `#${inputs.wireSize} AWG` },
+      { label: 'Conductors', value: `${inputs.numConductors}` },
+      { label: 'Conduit Type', value: inputs.conduitType },
+    ],
+    results: [
+      { label: 'Total Wire', value: 'Calculated', highlight: true },
+      { label: 'Conduit Length', value: 'Calculated' },
+      { label: 'Total Cost', value: 'Calculated' },
+    ],
+    passFailBadge: null,
+  } : null
+
   return (
     <div className="flex flex-col gap-5">
+      {/* Hidden ShareCard for PNG generation */}
+      <div className="fixed left-[-9999px] top-[-9999px] overflow-hidden" style={{ width: 540 }}>
+        {shareCardData && (
+          <ShareCard
+            ref={cardRef}
+            calculatorName={shareCardData.calculatorName}
+            inputs={shareCardData.inputs}
+            results={shareCardData.results}
+            passFailBadge={shareCardData.passFailBadge}
+          />
+        )}
+      </div>
 
       {/* ── INPUTS ─────────────────────────────────────────────────────── */}
       <div className="flex flex-col gap-3">
@@ -525,7 +560,14 @@ export function MaterialTakeoffCalculator() {
               onClick={handleSave}
               className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]"
             >
-              <Save className="h-4 w-4" /> Save Calculation
+              <Save className="h-4 w-4" /> Save
+            </button>
+            <button
+              onClick={() => shareCard(`material-takeoff-${inputs.circuits}circuits-${inputs.avgRunLength}ft`)}
+              disabled={isGenerating || !shareCardData}
+              className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
+            >
+              <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
             </button>
             <AttachToJob note={jobNote} />
           </div>
