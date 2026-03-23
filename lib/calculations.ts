@@ -235,6 +235,7 @@ if (bendType === '3-point-saddle') {
 const centerBendAngle = bendAngle
 const outerAngle = centerBendAngle / 2
 const outerMult = BEND_MULTIPLIERS[outerAngle] || mult // fallback to center multiplier if outer not defined
+// Note: Ugly's recommends 2.5× multiplier for 22.5° outer bends (no explicit shrinkage).
 const distanceBetweenBends = offsetHeight * outerMult.multiplier
 const shrinkageInches = offsetHeight * outerMult.shrinkage // shrinkage per inch already decimal inches
 
@@ -471,28 +472,22 @@ export function calculateAmpacity(inputs: AmpacityInputs): AmpacityResult | null
   // Temperature correction (NEC Table 310.15(B)(1))
   let tempCorr = 1.0
   const ambient = Math.floor(inputs.ambientTemp)
-  if (ambient <= 25) {
-    tempCorr = tempRating === 60 ? 1.08 : tempRating === 75 ? 1.05 : 1.04
-  } else if (ambient <= 30) {
-    tempCorr = 1.0
-  } else if (ambient <= 35) {
-    tempCorr = tempRating === 60 ? 0.91 : tempRating === 75 ? 0.94 : 0.96
-  } else if (ambient <= 40) {
-    tempCorr = tempRating === 60 ? 0.82 : tempRating === 75 ? 0.88 : 0.91
-  } else if (ambient <= 45) {
-    tempCorr = tempRating === 60 ? 0.71 : tempRating === 75 ? 0.82 : 0.87
-  } else if (ambient <= 50) {
-    tempCorr = tempRating === 60 ? 0.58 : tempRating === 75 ? 0.75 : 0.82
-  } else if (ambient <= 55) {
-    tempCorr = tempRating === 60 ? 0.41 : tempRating === 75 ? 0.67 : 0.76
-  } else if (ambient <= 60) {
-    tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.58 : 0.71
-  } else if (ambient <= 70) {
-    tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.47 : 0.58
-  } else if (ambient <= 80) {
-    tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.35 : 0.41
-  } else {
-    tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.00 : 0.00
+  
+  // Find the appropriate temperature range
+  const tempRanges = [25, 30, 35, 40, 45, 50, 55, 60, 70, 80]
+  let selectedRange = 30 // Default to 30°C (1.0 factor)
+  
+  for (const range of tempRanges) {
+    if (ambient <= range) {
+      selectedRange = range
+      break
+    }
+  }
+  
+  // Get correction factor based on insulation temperature rating
+  const correction = TEMP_CORRECTION[selectedRange]
+  if (correction) {
+    tempCorr = tempRating === 60 ? correction.f60 : tempRating === 75 ? correction.f75 : correction.f90
   }
 
   // Conduit derating (NEC Table 310.15(C)(1))

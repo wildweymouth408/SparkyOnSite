@@ -110,7 +110,7 @@ const INSTRUCTIONS: Record<Brand, Record<BendType, { steps: string[]; pro?: stri
         'Center bend first: Align ARROW to center mark. Bend to 45°.',
         'Outer bends: Flip conduit. Align ARROW to each outer mark. Bend to 22.5° each.',
       ],
-      pro: 'Obstacle height 2": Center mark at obstacle center, bend 45°. Outer marks 2 × 2.6 = 5.2" from center each side, bend 22.5° each.',
+      pro: 'Obstacle height 2": Center mark at obstacle center, bend 45°. Outer marks 2 × 2.6 = 5.2" from center each side (Ugly\'s uses 2.5× multiplier, no explicit shrinkage).',
     },
     'saddle4': {
       steps: [
@@ -632,6 +632,9 @@ export function ConduitBendingChart() {
               </div>
               <p className="text-[10px] text-[#4B5563]">
                 Center bend: 45° · Outer bends: 22.5° each · {b.marks.front} for alignment
+              </p>
+              <p className="text-[9px] text-[#3f3f46] mt-1">
+                Note: Ugly's recommends 2.5× multiplier (no explicit shrinkage).
               </p>
             </div>
           )}
