@@ -1,0 +1,45 @@
+name: Post to Twitter
+
+on:
+  workflow_dispatch:
+    inputs:
+      tweet:
+        description: 'Tweet text (max 280 characters)'
+        required: true
+        default: 'Testing Sparky social automation! 🦞 #Sparky #ElectricianTools'
+  schedule:
+    # Daily at 8am UTC (1am PDT)
+    - cron: '0 8 * * *'
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install --no-frozen-lockfile
+
+      - name: Post tweet
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # For scheduled runs, we need to generate tweet content.
+            # For now, we'll post a default tweet; later Spark agent will create content.
+            echo "Daily Sparky tip: Use the Wire Sizing calculator to get NEC‑compliant AWG in seconds! Try it free at sparkyonsite.com #Electrician #NEC2023" | node scripts/post-to-twitter.js
+          else
+            # For manual dispatch, use the input tweet
+            echo "${{ github.event.inputs.tweet }}" | node scripts/post-to-twitter.js
+          fi
