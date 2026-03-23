@@ -317,12 +317,11 @@ export function JobDetailView({ jobId, userId, onBack, onDeleted }: JobDetailVie
             </button>
           </div>
 
-          {/* Hidden file input — capture="environment" opens camera on phones */}
+          {/* Hidden file input — opens camera/gallery picker on phones */}
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            capture="environment"
             className="hidden"
             onChange={e => {
               const f = e.target.files?.[0]

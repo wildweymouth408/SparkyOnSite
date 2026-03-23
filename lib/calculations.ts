@@ -471,22 +471,28 @@ export function calculateAmpacity(inputs: AmpacityInputs): AmpacityResult | null
   // Temperature correction (NEC Table 310.15(B)(1))
   let tempCorr = 1.0
   const ambient = Math.floor(inputs.ambientTemp)
-  if (ambient <= 30) {
+  if (ambient <= 25) {
+    tempCorr = tempRating === 60 ? 1.08 : tempRating === 75 ? 1.05 : 1.04
+  } else if (ambient <= 30) {
     tempCorr = 1.0
   } else if (ambient <= 35) {
     tempCorr = tempRating === 60 ? 0.91 : tempRating === 75 ? 0.94 : 0.96
   } else if (ambient <= 40) {
-    tempCorr = tempRating === 60 ? 0.91 : tempRating === 75 ? 0.94 : 0.96
-  } else if (ambient <= 45) {
     tempCorr = tempRating === 60 ? 0.82 : tempRating === 75 ? 0.88 : 0.91
-  } else if (ambient <= 50) {
+  } else if (ambient <= 45) {
     tempCorr = tempRating === 60 ? 0.71 : tempRating === 75 ? 0.82 : 0.87
-  } else if (ambient <= 55) {
+  } else if (ambient <= 50) {
     tempCorr = tempRating === 60 ? 0.58 : tempRating === 75 ? 0.75 : 0.82
-  } else if (ambient <= 60) {
+  } else if (ambient <= 55) {
     tempCorr = tempRating === 60 ? 0.41 : tempRating === 75 ? 0.67 : 0.76
-  } else {
+  } else if (ambient <= 60) {
     tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.58 : 0.71
+  } else if (ambient <= 70) {
+    tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.47 : 0.58
+  } else if (ambient <= 80) {
+    tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.35 : 0.41
+  } else {
+    tempCorr = tempRating === 60 ? 0.00 : tempRating === 75 ? 0.00 : 0.00
   }
 
   // Conduit derating (NEC Table 310.15(C)(1))
