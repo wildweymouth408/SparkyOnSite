@@ -1,15 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { calculateAmpacity, type AmpacityInputs } from '@/lib/calculations'
-import { COMMON_WIRE_SIZES, INSULATION_TYPES } from '@/lib/calculator-data'
+import { COMMON_WIRE_SIZES, INSULATION_TYPES, AMPACITY_TABLE, INSULATION_TEMP } from '@/lib/calculator-data'
 import { saveCalculation, generateId, type SavedCalculation } from '@/lib/storage'
 import { AttachToJob } from '@/components/tools/attach-to-job'
 import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
 import { ShareCard } from '@/components/share-card'
 import { useShareCard } from '@/hooks/useShareCard'
 import { toast } from 'sonner'
-import { Save, Share2 } from 'lucide-react'
+import { Save, Share2, BarChart3, TrendingUp, Info } from 'lucide-react'
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+} from 'recharts'
 
 export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
   const [inputs, setInputs] = useState<AmpacityInputs>({
@@ -20,10 +31,71 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
     conductorsInRaceway: 3,
   })
 
+  const [showChart, setShowChart] = useState(!compact)
+  const [chartType, setChartType] = useState<'wireSize' | 'temperature' | 'conductors'>('wireSize')
+
   // Share card functionality
   const { cardRef, shareCard, isGenerating } = useShareCard()
 
   const result = calculateAmpacity(inputs)
+
+  // Generate chart data based on current inputs
+  const chartData = useMemo(() => {
+    if (chartType === 'wireSize') {
+      // Show ampacity across different wire sizes
+      return COMMON_WIRE_SIZES.map(size => {
+        const tempRating = INSULATION_TEMP[inputs.insulationType] || 75
+        const ampKey = inputs.material === 'copper'
+          ? (tempRating === 60 ? 'cu60' : tempRating === 90 ? 'cu90' : 'cu75')
+          : (tempRating === 60 ? 'al60' : tempRating === 90 ? 'al90' : 'al75')
+        
+        const baseAmp = AMPACITY_TABLE[size]?.[ampKey as keyof typeof AMPACITY_TABLE[string]] || 0
+        
+        // Calculate corrected ampacity for this wire size
+        const correctedResult = calculateAmpacity({
+          ...inputs,
+          wireSize: size,
+        })
+        
+        return {
+          name: `#${size}`,
+          base: baseAmp,
+          corrected: correctedResult?.correctedAmpacity || 0,
+          isSelected: size === inputs.wireSize,
+        }
+      })
+    } else if (chartType === 'temperature') {
+      // Show ampacity across different ambient temperatures
+      return [10, 20, 30, 40, 50, 60, 70].map(temp => {
+        const correctedResult = calculateAmpacity({
+          ...inputs,
+          ambientTemp: temp,
+        })
+        
+        return {
+          name: `${temp}°C`,
+          base: result?.baseAmpacity || 0,
+          corrected: correctedResult?.correctedAmpacity || 0,
+          isSelected: temp === inputs.ambientTemp,
+        }
+      })
+    } else {
+      // Show ampacity across different number of conductors
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(count => {
+        const correctedResult = calculateAmpacity({
+          ...inputs,
+          conductorsInRaceway: count,
+        })
+        
+        return {
+          name: `${count}`,
+          base: result?.baseAmpacity || 0,
+          corrected: correctedResult?.correctedAmpacity || 0,
+          isSelected: count === inputs.conductorsInRaceway,
+        }
+      })
+    }
+  }, [inputs, chartType, result])
 
   function handleSave() {
     if (!result) return
@@ -53,7 +125,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
       { label: 'Corrected Ampacity', value: `${result.correctedAmpacity}A`, highlight: true },
       { label: 'Base Ampacity', value: `${result.baseAmpacity}A` },
       { label: 'Temp Correction', value: `${result.tempCorrectionFactor}` },
-      { label: 'Conduit Derating', value: `${result.conduitDeratingFactor}` },
+      { label: 'Conduit Derating', value: `${result.conduitDerating}` },
     ],
     passFailBadge: null,
   } : null
@@ -115,6 +187,8 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
               type="number"
               value={inputs.ambientTemp || ''}
               onChange={e => setInputs(p => ({ ...p, ambientTemp: Number(e.target.value) }))}
+              min={-50}
+              max={150}
               className="h-12 rounded-lg border border-input bg-card px-4 font-mono text-sm text-card-foreground transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 hover:border-primary/50"
             />
           </label>
@@ -127,6 +201,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
             value={inputs.conductorsInRaceway || ''}
             onChange={e => setInputs(p => ({ ...p, conductorsInRaceway: Number(e.target.value) }))}
             min={1}
+            max={100}
             className="h-12 rounded-lg border border-input bg-card px-4 font-mono text-sm text-card-foreground transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 hover:border-primary/50"
           />
         </label>
@@ -149,7 +224,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
             </div>
             <div className="flex justify-between rounded-lg bg-muted/30 p-3">
               <span className="text-muted-foreground">Temp correction</span>
-              <span className="font-mono font-medium text-card-foreground">×{result.tempCorrectionFactor}</span>
+              <span className="font-mono font-medium text-card-foreground">×{result.tempCorrectionFactor.toFixed(3)}</span>
             </div>
             <div className="flex justify-between rounded-lg bg-muted/30 p-3">
               <span className="text-muted-foreground">Conduit derating</span>
@@ -159,6 +234,129 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
           <div className="mt-4 pt-4 border-t border-border">
             <CalculatorDisclaimer />
           </div>
+        </div>
+      )}
+
+      {/* Chart Visualization */}
+      {result && !compact && (
+        <div className="rounded-xl border border-border bg-card p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              <span className="text-sm font-medium">Ampacity Visualization</span>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowChart(!showChart)}
+                className="text-xs px-3 py-1.5 rounded-lg border border-input hover:bg-accent"
+              >
+                {showChart ? 'Hide Chart' : 'Show Chart'}
+              </button>
+            </div>
+          </div>
+
+          {showChart && (
+            <>
+              <div className="flex gap-2 mb-4">
+                <button
+                  onClick={() => setChartType('wireSize')}
+                  className={`text-xs px-3 py-1.5 rounded-lg border ${chartType === 'wireSize' ? 'bg-primary text-primary-foreground border-primary' : 'border-input hover:bg-accent'}`}
+                >
+                  By Wire Size
+                </button>
+                <button
+                  onClick={() => setChartType('temperature')}
+                  className={`text-xs px-3 py-1.5 rounded-lg border ${chartType === 'temperature' ? 'bg-primary text-primary-foreground border-primary' : 'border-input hover:bg-accent'}`}
+                >
+                  By Temperature
+                </button>
+                <button
+                  onClick={() => setChartType('conductors')}
+                  className={`text-xs px-3 py-1.5 rounded-lg border ${chartType === 'conductors' ? 'bg-primary text-primary-foreground border-primary' : 'border-input hover:bg-accent'}`}
+                >
+                  By Conductors
+                </button>
+              </div>
+
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={chartData}
+                    margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis
+                      dataKey="name"
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      label={{
+                        value: chartType === 'wireSize' ? 'Wire Size (AWG)' : 
+                               chartType === 'temperature' ? 'Ambient Temperature (°C)' : 
+                               'Number of Conductors',
+                        position: 'insideBottom',
+                        offset: -5,
+                        style: { textAnchor: 'middle', fontSize: 11 }
+                      }}
+                    />
+                    <YAxis
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      label={{
+                        value: 'Amperes (A)',
+                        angle: -90,
+                        position: 'insideLeft',
+                        offset: 10,
+                        style: { textAnchor: 'middle', fontSize: 12 }
+                      }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--background))',
+                        borderColor: 'hsl(var(--border))',
+                        borderRadius: '0.5rem',
+                        fontSize: '12px',
+                      }}
+                      formatter={(value) => [`${value}A`, '']}
+                      labelFormatter={(label) => {
+                        if (chartType === 'wireSize') return `Wire Size: #${label}`
+                        if (chartType === 'temperature') return `Temperature: ${label}`
+                        return `Conductors: ${label}`
+                      }}
+                    />
+                    <Bar
+                      dataKey="base"
+                      name="Base Ampacity"
+                      fill="hsl(var(--primary))"
+                      radius={[2, 2, 0, 0]}
+                      opacity={0.7}
+                    />
+                    <Bar
+                      dataKey="corrected"
+                      name="Corrected Ampacity"
+                      fill="hsl(var(--primary))"
+                      radius={[2, 2, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="mt-4 p-3 rounded-lg bg-muted/30">
+                <div className="flex items-start gap-2">
+                  <Info className="h-4 w-4 text-muted-foreground mt-0.5" />
+                  <div className="text-xs text-muted-foreground">
+                    <p className="font-medium mb-1">Chart Explanation:</p>
+                    <p>
+                      {chartType === 'wireSize' 
+                        ? 'Shows how ampacity increases with larger wire sizes. Base ampacity (lighter) is from NEC Table 310.16. Corrected ampacity (darker) includes temperature and conduit derating.'
+                        : chartType === 'temperature'
+                        ? 'Shows how ampacity decreases as ambient temperature increases. Higher temperatures reduce conductor cooling, requiring derating.'
+                        : 'Shows how ampacity decreases with more conductors in the raceway due to reduced heat dissipation (conduit derating).'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
 
