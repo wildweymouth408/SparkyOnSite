@@ -3,127 +3,182 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Zap, Menu, X, Home, Calculator, BookOpen, MessageSquare, Shield, Settings, LogOut } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Home,
+  CalculatorIcon,
+  BookOpen,
+  MessageCircle,
+  Lock,
+  BarChart3,
+  LogOut
+} from 'lucide-react';
 
-export default function AppLayout({ children }) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/', label: 'Home', icon: Home },
-    { href: '/calculators', label: 'Calculators', icon: Calculator },
-    { href: '/nec-reference', label: 'NEC Reference', icon: BookOpen },
-    { href: '/ask-sparky', label: 'Ask Sparky', icon: MessageSquare },
-    { href: '/credentials', label: 'Credentials Wallet', icon: Shield },
+    { name: 'Home', href: '/', icon: Home },
+    { name: 'Calculators', href: '/calculators', icon: CalculatorIcon },
+    { name: 'NEC Reference', href: '/nec-reference', icon: BookOpen },
+    { name: 'Ask Sparky', href: '/ask-sparky', icon: MessageCircle },
+    { name: 'Credentials', href: '/credentials', icon: Lock },
+    { name: 'Mission Control', href: '/mission-control', icon: BarChart3 },
   ];
 
-  const isActive = (href) => pathname === href;
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950">
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#0f172a' }}>
       {/* SIDEBAR */}
-      <aside
-        className={`fixed md:relative left-0 top-0 z-40 w-64 h-screen bg-slate-900 border-r border-slate-700 transition-all duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* LOGO */}
-          <Link href="/" className="flex items-center gap-3 p-6 border-b border-slate-700 hover:bg-slate-800 transition-colors">
-            <div className="p-2 bg-gradient-to-br from-cyan-500 to-orange-500 rounded-lg">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-white">Sparky</h1>
-              <p className="text-xs text-slate-400">Electrical Calculator</p>
-            </div>
-          </Link>
-
-          {/* NAV ITEMS */}
-          <nav className="flex-1 p-4 space-y-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
-                    active
-                      ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                  }`}
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* FOOTER */}
-          <div className="border-t border-slate-700 p-4 space-y-2">
-            <Link
-              href="/mission-control"
-              className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 font-medium transition-all"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <Settings className="w-5 h-5" />
-              <span>Mission Control</span>
-            </Link>
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 font-medium transition-all text-left">
-              <LogOut className="w-5 h-5" />
-              <span>Logout</span>
-            </button>
+      <aside style={{
+        position: sidebarOpen ? 'fixed' : 'sticky',
+        top: 0,
+        left: 0,
+        width: '256px',
+        height: '100vh',
+        background: '#1e293b',
+        borderRight: '1px solid #334155',
+        padding: '2rem 1rem',
+        overflowY: 'auto',
+        zIndex: 40,
+        display: ['none', 'flex'].includes('flex') ? 'flex' : 'none',
+        flexDirection: 'column'
+      }}>
+        <Link href="/" style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '0.75rem',
+          color: 'white',
+          textDecoration: 'none',
+          marginBottom: '2rem',
+          fontWeight: '600'
+        }}>
+          <div style={{ 
+            padding: '0.5rem',
+            background: 'linear-gradient(to bottom right, #06b6d4, #f97316)',
+            borderRadius: '0.375rem'
+          }}>
+            <CalculatorIcon style={{ width: '20px', height: '20px' }} />
           </div>
-        </div>
+          Sparky
+        </Link>
+
+        <nav style={{ flex: 1 }}>
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.75rem 1rem',
+                  color: active ? '#06b6d4' : '#cbd5e1',
+                  textDecoration: 'none',
+                  borderRadius: '0.5rem',
+                  marginBottom: '0.5rem',
+                  background: active ? '#334155' : 'transparent',
+                  transition: 'all 0.2s'
+                }}
+              >
+                <Icon style={{ width: '20px', height: '20px' }} />
+                <span>{item.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <button style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          padding: '0.75rem 1rem',
+          color: '#cbd5e1',
+          background: 'transparent',
+          border: 'none',
+          borderRadius: '0.5rem',
+          cursor: 'pointer',
+          width: '100%'
+        }}>
+          <LogOut style={{ width: '20px', height: '20px' }} />
+          <span>Logout</span>
+        </button>
       </aside>
 
-      {/* MOBILE OVERLAY */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
       {/* MAIN CONTENT */}
-      <div className="flex flex-col md:flex-1">
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* HEADER */}
-        <header className="sticky top-0 z-20 bg-slate-900/80 backdrop-blur border-b border-slate-700 px-4 md:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              className="md:hidden p-2 hover:bg-slate-800 rounded-lg transition-colors"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              {sidebarOpen ? (
-                <X className="w-6 h-6 text-slate-300" />
-              ) : (
-                <Menu className="w-6 h-6 text-slate-300" />
-              )}
-            </button>
+        <header style={{
+          position: 'sticky',
+          top: 0,
+          background: '#1e293b',
+          borderBottom: '1px solid #334155',
+          padding: '1rem 1.5rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          zIndex: 30
+        }}>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#cbd5e1',
+              cursor: 'pointer',
+              display: ['flex', 'none'].includes('flex') ? 'flex' : 'none',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}
+          >
+            {sidebarOpen ? (
+              <X style={{ width: '24px', height: '24px' }} />
+            ) : (
+              <Menu style={{ width: '24px', height: '24px' }} />
+            )}
+          </button>
 
-            <div className="flex-1 md:flex-none text-center md:text-left">
-              <h2 className="text-lg font-semibold text-white">
-                {navItems.find((item) => isActive(item.href))?.label || 'Dashboard'}
-              </h2>
-            </div>
+          <h1 style={{ color: 'white', fontSize: '1.25rem', margin: 0 }}>Sparky</h1>
 
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <span className="text-sm text-slate-300">Online</span>
-              </div>
-            </div>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            background: '#334155',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#06b6d4',
+            fontWeight: '600'
+          }}>
+            U
           </div>
         </header>
 
         {/* PAGE CONTENT */}
-        <main className="flex-1 overflow-auto">
+        <div style={{ flex: 1, overflowY: 'auto', background: '#0f172a' }}>
           {children}
-        </main>
-      </div>
+        </div>
+      </main>
+
+      {/* MOBILE OVERLAY */}
+      {sidebarOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            zIndex: 20
+          }}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }
