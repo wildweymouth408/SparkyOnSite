@@ -5,7 +5,6 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { env } from './env';
-import { getSubscriptionStatus } from './stripe';
 
 const supabase = createClient(env.supabaseUrl, env.supabaseServiceRoleKey);
 
@@ -45,7 +44,6 @@ export async function getUserLimits(userId: string): Promise<{
   limits: UsageLimits;
   isPro: boolean;
 }> {
-  const subscription = await getSubscriptionStatus(userId);
   const isPro = subscription !== null;
   return {
     limits: isPro ? PRO_TIER_LIMITS : FREE_TIER_LIMITS,

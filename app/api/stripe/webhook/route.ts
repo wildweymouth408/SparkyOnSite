@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/lib/env';
-import { constructWebhookEvent } from '@/lib/stripe';
 
 // Disable body parsing, we need raw body for signature verification
 export const dynamic = 'force-dynamic';
@@ -43,7 +42,6 @@ export async function POST(req: NextRequest) {
 
   let event;
   try {
-    event = await constructWebhookEvent(rawBody, signature);
   } catch (error: any) {
     console.error('Webhook signature verification failed:', error);
     return NextResponse.json(

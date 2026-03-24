@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/lib/env';
-import { createCheckoutSession } from '@/lib/stripe';
 
 // Helper to get authenticated user
 async function getAuthenticatedUser(authHeader: string | null) {
@@ -57,7 +56,6 @@ export async function POST(req: NextRequest) {
       validatedPromoCode = promoCode;
     }
 
-    const { url } = await createCheckoutSession(user.id, priceId, validatedPromoCode, user.email);
     return NextResponse.json({ url });
   } catch (error: any) {
     console.error('Checkout error:', error);
