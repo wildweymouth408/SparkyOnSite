@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
-import '@/app/globals.css';
+import './globals.css';
+import AppLayout from '@/components/app-layout';
 
 export const metadata: Metadata = {
   title: 'Sparky - Electrical Calculations',
   description: 'Professional electrical calculations and NEC reference for field electricians',
-  generator: 'Next.js',
-  viewport: 'width=device-width, initial-scale=1',
 };
 
 export default function RootLayout({
@@ -14,12 +13,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <head>
-        <meta name="theme-color" content="#0a0e27" />
-      </head>
-      <body suppressHydrationWarning>
-        {children}
+    <html lang="en">
+      <body style={{ margin: 0, padding: 0 }}>
+        <AppLayout>{children}</AppLayout>
       </body>
     </html>
   );
