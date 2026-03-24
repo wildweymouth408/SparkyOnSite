@@ -155,4 +155,5 @@ export async function getSubscriptionStatus(userId: string): Promise<{
     currentPeriodEnd: new Date(subscription.current_period_end).getTime(),
     priceId: subscription.price_id,
   };
+}
 */
