@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/lib/env';
-import { getSubscriptionStatus } from '@/lib/stripe';
 
 async function getAuthenticatedUser(authHeader: string | null) {
   const supabase = createClient(
@@ -21,7 +20,6 @@ export async function GET(req: NextRequest) {
     const authHeader = req.headers.get('Authorization');
     const user = await getAuthenticatedUser(authHeader);
 
-    const subscription = await getSubscriptionStatus(user.id);
 
     // Get current month usage
     const supabase = createClient(env.supabaseUrl, env.supabaseServiceRoleKey);
