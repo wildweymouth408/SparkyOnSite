@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/lib/env';
-import { createPortalSession } from '@/lib/stripe';
 
 async function getAuthenticatedUser(authHeader: string | null) {
   const supabase = createClient(
@@ -36,8 +35,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { url } = await createPortalSession(profile.stripe_customer_id);
-    return NextResponse.json({ url });
   } catch (error: any) {
     console.error('Portal session error:', error);
     if (error.message === 'Unauthorized') {
