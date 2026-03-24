@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
+import { env } from '@/lib/env'
+import { canUseAskSparky } from '@/lib/usage-server'
 
 const client = new Anthropic()
 
@@ -194,12 +196,12 @@ export async function POST(req: NextRequest) {
 
     // Anon-key client to verify the JWT; service-role client for profile/conversation writes
     const anonSupabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      env.supabaseUrl,
+      env.supabaseAnonKey
     )
     const serviceSupabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      env.supabaseUrl,
+      env.supabaseServiceRoleKey
     )
 
     // Derive verifiedUserId exclusively from the cryptographically-verified session
@@ -218,6 +220,17 @@ export async function POST(req: NextRequest) {
         .eq('id', verifiedUserId)
         .single()
       profile = data
+    }
+
+    // Check usage limit for Ask Sparky
+    if (verifiedUserId) {
+      const { allowed, remaining } = await canUseAskSparky(verifiedUserId, true);
+      if (!allowed) {
+        return NextResponse.json(
+          { error: 'Free tier limit exceeded. Upgrade to Pro for unlimited Ask Sparky queries.' },
+          { status: 402 }
+        );
+      }
     }
 
     // Build role-aware system prompt

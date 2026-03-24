@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "pnpm install --no-frozen-lockfile && next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "video:preview": "remotion preview video/src/Root.tsx",
+    "video": "remotion render video/src/Root.tsx WireSizingVideo video/out/wire-sizing-video.mp4"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3",

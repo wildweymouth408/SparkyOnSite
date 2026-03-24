@@ -13,14 +13,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { encryptField, decryptField } from '@/lib/crypto'
+import { env } from '@/lib/env'
 
 // ── Supabase server client (service role for RLS bypass on trusted server ops) ──
 function getSupabase(authHeader: string | null) {
   // We create a client scoped to the user's JWT so RLS applies correctly.
   // Service role is only used for the auth.getUser() verification step.
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    env.supabaseUrl,
+    env.supabaseAnonKey,
     authHeader
       ? { global: { headers: { Authorization: authHeader } } }
       : {}
@@ -29,8 +30,8 @@ function getSupabase(authHeader: string | null) {
 
 function getServiceClient() {
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    env.supabaseUrl,
+    env.supabaseServiceRoleKey
   )
 }
 

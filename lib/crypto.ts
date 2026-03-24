@@ -6,7 +6,9 @@
  * Never expose the key or call these from client components.
  */
 
-const KEY_HEX = process.env.CREDENTIAL_ENCRYPTION_KEY!
+import { serverEnv } from './env'
+
+const KEY_HEX = serverEnv.credentialEncryptionKey
 
 async function getKey(): Promise<CryptoKey> {
   if (!KEY_HEX || KEY_HEX.length !== 64) {
