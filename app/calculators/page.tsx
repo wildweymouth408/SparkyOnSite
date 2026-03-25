@@ -1,5 +1,10 @@
 import { ToolsTab } from '@/components/tools-tab';
 
-export default function CalculatorsPage() {
-  return <ToolsTab />;
+interface Props {
+  searchParams: Promise<{ tool?: string }>;
+}
+
+export default async function CalculatorsPage({ searchParams }: Props) {
+  const { tool } = await searchParams;
+  return <ToolsTab initialToolId={tool ?? null} />;
 }

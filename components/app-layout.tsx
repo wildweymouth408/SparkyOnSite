@@ -15,6 +15,20 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+const CALC_SUB_ITEMS = [
+  { label: 'Voltage Drop',    tool: 'voltage-drop' },
+  { label: 'Conduit Fill',    tool: 'conduit-fill' },
+  { label: "Ohm's Law",       tool: 'ohms-law' },
+  { label: 'Conduit Bending', tool: 'pipe-bending' },
+  { label: 'Wire Sizing',     tool: 'wire-sizing' },
+  { label: 'Ampacity',        tool: 'ampacity' },
+  { label: 'Box Fill',        tool: 'box-fill' },
+  { label: 'Motor FLA',       tool: 'motor-fla' },
+  { label: 'Construction',    tool: 'construction' },
+  { label: 'Material Takeoff', tool: 'material-takeoff' },
+  { label: 'Panel Schedule',  tool: 'panel-schedule' },
+];
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
@@ -70,21 +84,38 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             const Icon = item.icon;
             const active = isActive(item.href);
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setSidebarOpen(false)}
-                className={cn(
-                  'flex items-center gap-3 pl-[14px] pr-4 py-2.5 rounded-lg text-sm',
-                  'transition-all duration-150 min-h-[44px] border-l-2',
-                  active
-                    ? 'border-cyan-400 text-cyan-400 bg-cyan-500/5'
-                    : 'border-transparent text-slate-400 hover:text-white hover:bg-slate-800/60 hover:border-slate-700',
+              <React.Fragment key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={() => setSidebarOpen(false)}
+                  className={cn(
+                    'flex items-center gap-3 pl-[14px] pr-4 py-2.5 rounded-lg text-sm',
+                    'transition-all duration-150 min-h-[44px] border-l-2',
+                    active
+                      ? 'border-cyan-400 text-cyan-400 bg-cyan-500/5'
+                      : 'border-transparent text-slate-400 hover:text-white hover:bg-slate-800/60 hover:border-slate-700',
+                  )}
+                >
+                  <Icon className="w-[18px] h-[18px] shrink-0" />
+                  <span>{item.name}</span>
+                </Link>
+
+                {/* Calculator submenu — visible when Calculators is active */}
+                {item.href === '/calculators' && active && (
+                  <div className="flex flex-col gap-0.5 mb-1">
+                    {CALC_SUB_ITEMS.map((sub) => (
+                      <Link
+                        key={sub.tool}
+                        href={`/calculators?tool=${sub.tool}`}
+                        onClick={() => setSidebarOpen(false)}
+                        className="flex items-center pl-10 pr-4 py-1.5 rounded-md text-xs text-slate-500 hover:text-white hover:bg-slate-800/40 transition-colors duration-150"
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
                 )}
-              >
-                <Icon className="w-[18px] h-[18px] shrink-0" />
-                <span>{item.name}</span>
-              </Link>
+              </React.Fragment>
             );
           })}
         </nav>
