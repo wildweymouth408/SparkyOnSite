@@ -38,7 +38,7 @@ export default function Home() {
           Sparky
         </h1>
 
-        <div style({
+        <div style{{
           display: 'inline-block',
           background: '#06b6d4',
           color: '#0f172a',
