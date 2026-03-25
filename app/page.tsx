@@ -1,74 +1,79 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import { Zap, CalculatorIcon, BookOpen, MessageCircle, Lock } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e293b)', color: 'white' }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+
       {/* HERO SECTION */}
-      <section style={{ padding: 'clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 1.5rem)', textAlign: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-          <div style={{ padding: '0.75rem', background: 'linear-gradient(to bottom right, #06b6d4, #f97316)', borderRadius: '0.5rem' }}>
-            <Zap style={{ width: '32px', height: '32px', color: 'white' }} />
+      <section className="px-[clamp(1rem,4vw,1.5rem)] py-[clamp(2rem,5vw,4rem)] text-center">
+        <div className="flex items-center justify-center gap-3 mb-6">
+          <div className="p-3 bg-gradient-to-br from-cyan-500 to-orange-500 rounded-lg">
+            <Zap className="w-8 h-8 text-white" />
           </div>
         </div>
 
-        <h1 style={{ fontSize: 'clamp(2rem, 6vw, 2.5rem)', fontWeight: '700', marginBottom: '1rem', lineHeight: '1.2' }}>
+        <h1 className="text-[clamp(2rem,6vw,2.5rem)] leading-tight mb-4">
           Sparky
         </h1>
 
-        <div style={{ display: 'inline-block', background: '#06b6d4', color: '#0f172a', padding: '0.5rem 1rem', borderRadius: '0.375rem', fontSize: '0.875rem', fontWeight: '700', marginBottom: '1.5rem', letterSpacing: '0.05em' }}>
+        <div className="inline-block bg-[var(--color-primary)] text-slate-900 px-4 py-2 rounded text-sm font-bold mb-6 tracking-wide">
           🚀 NOW IN BETA
         </div>
 
-        <p style={{ fontSize: 'clamp(1rem, 4vw, 1.25rem)', color: '#cbd5e1', marginBottom: '2rem', lineHeight: '1.6', maxWidth: '500px', margin: '0 auto 2rem' }}>
+        <p className="text-[clamp(1rem,4vw,1.25rem)] text-[var(--color-text-secondary)] leading-relaxed max-w-[500px] mx-auto mb-8">
           Professional electrical calculations and NEC reference designed for electricians in the field
         </p>
 
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginBottom: '3rem', flexWrap: 'wrap' }}>
-          <Link href="/calculators" style={{ display: 'inline-block', padding: '0.875rem 2rem', background: '#06b6d4', color: '#0f172a', borderRadius: '0.5rem', fontWeight: '700', textDecoration: 'none', fontSize: '1rem', transition: 'all 0.2s', border: 'none', cursor: 'pointer' }}>
+        <div className="flex gap-4 justify-center mb-12 flex-wrap">
+          <Link
+            href="/calculators"
+            className="inline-block px-8 py-3.5 bg-[var(--color-primary)] text-slate-900 rounded-lg font-bold text-base transition-all duration-200 hover:opacity-90"
+          >
             Get Started
           </Link>
-          <Link href="/nec-reference" style={{ display: 'inline-block', padding: '0.875rem 2rem', background: 'transparent', color: '#06b6d4', border: '1.5px solid #06b6d4', borderRadius: '0.5rem', fontWeight: '700', textDecoration: 'none', fontSize: '1rem', transition: 'all 0.2s', cursor: 'pointer' }}>
+          <Link
+            href="/nec-reference"
+            className="inline-block px-8 py-3.5 bg-transparent text-[var(--color-primary)] border border-[var(--color-primary)] rounded-lg font-bold text-base transition-all duration-200 hover:bg-[var(--color-primary)] hover:text-slate-900"
+          >
             NEC Reference
           </Link>
         </div>
       </section>
 
       {/* BETA ACCESS SECTION */}
-      <section style={{ padding: 'clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 1.5rem)', maxWidth: '100%' }}>
-        <div style={{ background: 'linear-gradient(135deg, #1a3a4a 0%, #1e293b 100%)', border: '2px solid #06b6d4', borderRadius: '0.75rem', padding: 'clamp(1.5rem, 4vw, 3rem)', textAlign: 'center', color: 'white' }}>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: '700', marginBottom: '1rem', lineHeight: '1.2' }}>
+      <section className="px-[clamp(1rem,4vw,1.5rem)] py-[clamp(2rem,5vw,3rem)]">
+        <div className="bg-[linear-gradient(135deg,#1a3a4a_0%,#1e293b_100%)] border-2 border-[var(--color-primary)] rounded-xl p-[clamp(1.5rem,4vw,3rem)] text-center text-white">
+          <h2 className="text-[clamp(1.5rem,5vw,2rem)] leading-tight mb-4">
             All Features Free
           </h2>
 
-          <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.125rem)', color: '#cbd5e1', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
+          <p className="text-[clamp(0.95rem,3vw,1.125rem)] text-[var(--color-text-secondary)] max-w-[600px] mx-auto mb-8">
             Everything is available right now. Completely free during beta. Payment plans start in April.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4 mb-8">
             {['✅ All 9 calculators', '✅ Full NEC reference', '✅ Unlimited AI chats', '✅ Credentials wallet', '✅ Achievements', '✅ Field mode'].map((feature, idx) => (
-              <div key={idx} style={{ fontSize: 'clamp(0.9rem, 2vw, 1rem)', color: '#cbd5e1' }}>
+              <div key={idx} className="text-[clamp(0.9rem,2vw,1rem)] text-[var(--color-text-secondary)]">
                 {feature}
               </div>
             ))}
           </div>
 
-          <p style={{ fontSize: 'clamp(0.85rem, 2vw, 0.875rem)', color: '#94a3b8', marginTop: '1.5rem' }}>
+          <p className="text-[clamp(0.85rem,2vw,0.875rem)] text-[var(--color-text-tertiary)] mt-6">
             Payment plans coming soon
           </p>
         </div>
       </section>
 
       {/* FEATURES SECTION */}
-      <section style={{ padding: 'clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 1.5rem)', maxWidth: '100%' }}>
-        <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 1.75rem)', fontWeight: '700', marginBottom: '2rem', textAlign: 'center' }}>
+      <section className="px-[clamp(1rem,4vw,1.5rem)] py-[clamp(2rem,5vw,3rem)]">
+        <h2 className="text-[clamp(1.5rem,5vw,1.75rem)] text-center mb-8">
           Features
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-8">
           {[
             { icon: CalculatorIcon, title: 'Voltage Drop Calculator', description: 'Precise calculations per NEC Article 210', link: '/calculators/voltage-drop' },
             { icon: CalculatorIcon, title: 'Wire Sizing', description: 'Ampacity and sizing for any circuit', link: '/calculators/wire-sizing' },
@@ -79,16 +84,13 @@ export default function Home() {
           ].map((feature, idx) => {
             const Icon = feature.icon;
             return (
-              <Link href={feature.link} key={idx} style={{ textDecoration: 'none' }}>
-                <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '0.75rem', padding: '1.5rem', transition: 'all 0.3s', cursor: 'pointer', color: 'white', height: '100%', display: 'flex', flexDirection: 'column', minHeight: '220px' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#06b6d4'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#334155'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                >
-                  <Icon style={{ width: '32px', height: '32px', marginBottom: '1rem', color: '#06b6d4', flexShrink: 0 }} />
-                  <h3 style={{ fontSize: 'clamp(1rem, 2vw, 1.125rem)', fontWeight: '700', marginBottom: '0.75rem', margin: '0 0 0.75rem 0' }}>
+              <Link href={feature.link} key={idx} className="group">
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6 transition-all duration-300 cursor-pointer text-white h-full flex flex-col min-h-[220px] hover:border-[var(--color-primary)] hover:-translate-y-0.5">
+                  <Icon className="w-8 h-8 mb-4 text-[var(--color-primary)] shrink-0" />
+                  <h3 className="text-[clamp(1rem,2vw,1.125rem)] mt-0 mb-3">
                     {feature.title}
                   </h3>
-                  <p style={{ fontSize: 'clamp(0.9rem, 2vw, 0.95rem)', color: '#cbd5e1', margin: 0, flex: 1 }}>
+                  <p className="text-[clamp(0.9rem,2vw,0.95rem)] text-[var(--color-text-secondary)] m-0 flex-1">
                     {feature.description}
                   </p>
                 </div>
@@ -99,16 +101,16 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ padding: 'clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 1.5rem)', borderTop: '1px solid #334155', color: '#94a3b8', fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', textAlign: 'center' }}>
-        <p style={{ margin: '0 0 1rem 0' }}>
+      <footer className="px-[clamp(1rem,4vw,1.5rem)] py-[clamp(2rem,5vw,3rem)] border-t border-[var(--color-border)] text-[var(--color-text-tertiary)] text-[clamp(0.85rem,2vw,0.95rem)] text-center">
+        <p className="mb-4">
           &copy; {new Date().getFullYear()} SparkyOnsite. All rights reserved.
         </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', fontSize: 'clamp(0.8rem, 2vw, 0.9rem)' }}>
-          <Link href="/privacy" style={{ color: '#94a3b8', textDecoration: 'none' }}>Privacy</Link>
+        <div className="flex gap-4 justify-center flex-wrap text-[clamp(0.8rem,2vw,0.9rem)]">
+          <Link href="/privacy" className="text-[var(--color-text-tertiary)]">Privacy</Link>
           <span>•</span>
-          <Link href="/terms" style={{ color: '#94a3b8', textDecoration: 'none' }}>Terms</Link>
+          <Link href="/terms" className="text-[var(--color-text-tertiary)]">Terms</Link>
           <span>•</span>
-          <a href="#" style={{ color: '#94a3b8', textDecoration: 'none' }}>Contact</a>
+          <a href="#" className="text-[var(--color-text-tertiary)]">Contact</a>
         </div>
       </footer>
     </div>
