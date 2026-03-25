@@ -7,7 +7,7 @@ import { AbsoluteFill, Sequence, Audio, staticFile, interpolate, useCurrentFrame
 // loadFont(Inter, { weights: ['400', '600', '700'] });
 // loadFont(JetBrains_Mono, { weights: ['400'] });
 
-export const WireSizingVideo: React.FC = () => {
+export const ConduitBendingVideo: React.FC = () => {
   const frame = useCurrentFrame();
   const fps = 30;
 
@@ -59,31 +59,31 @@ export const WireSizingVideo: React.FC = () => {
       {/* Narration audio */}
       <Sequence from={SCENE.HOOK} durationInFrames={5 * fps}>
         <Audio
-          src={staticFile('narration/hook.mp3')}
+          src={staticFile('narration/conduit-hook.mp3')}
           volume={1}
         />
       </Sequence>
       <Sequence from={SCENE.PROBLEM} durationInFrames={7 * fps}>
         <Audio
-          src={staticFile('narration/problem.mp3')}
+          src={staticFile('narration/conduit-problem.mp3')}
           volume={1}
         />
       </Sequence>
       <Sequence from={SCENE.SOLUTION} durationInFrames={8 * fps}>
         <Audio
-          src={staticFile('narration/solution.mp3')}
+          src={staticFile('narration/conduit-solution.mp3')}
           volume={1}
         />
       </Sequence>
       <Sequence from={SCENE.RESULT} durationInFrames={8 * fps}>
         <Audio
-          src={staticFile('narration/result.mp3')}
+          src={staticFile('narration/conduit-result.mp3')}
           volume={1}
         />
       </Sequence>
       <Sequence from={SCENE.CTA} durationInFrames={2 * fps}>
         <Audio
-          src={staticFile('narration/cta.mp3')}
+          src={staticFile('narration/conduit-cta.mp3')}
           volume={1}
         />
       </Sequence>
@@ -121,7 +121,7 @@ export const WireSizingVideo: React.FC = () => {
               lineHeight: 1.2,
               marginBottom: 40,
             }}>
-              Tired of wire‑size guesswork?
+              Bending conduit by hand is error‑prone.
             </h1>
             <div style={{
               width: '60%',
@@ -152,7 +152,7 @@ export const WireSizingVideo: React.FC = () => {
               lineHeight: 1.4,
               marginBottom: 30,
             }}>
-              Manual calculations waste time
+              One wrong bend can waste hours
             </p>
             <p style={{
               fontFamily: 'sans-serif',
@@ -161,7 +161,7 @@ export const WireSizingVideo: React.FC = () => {
               lineHeight: 1.4,
               marginBottom: 30,
             }}>
-              and risk <span style={{ color: '#ef4444', fontWeight: 600 }}>NEC violations</span>.
+              and violate <span style={{ color: '#ef4444', fontWeight: 600 }}>NEC 358.24</span>.
             </p>
           </div>
         </AbsoluteFill>
@@ -190,16 +190,16 @@ export const WireSizingVideo: React.FC = () => {
                 color: '#fafafa',
                 marginBottom: 20,
               }}>
-                Wire Sizing Calculator
+                Conduit Bending Calculator
               </h2>
             </div>
 
             {/* Input rows */}
             {[
-              { label: 'Amps', value: '20', startFrame: SCENE.SOLUTION + 10 },
-              { label: 'Distance (feet)', value: '100', startFrame: SCENE.SOLUTION + 25 },
-              { label: 'Voltage', value: '120', startFrame: SCENE.SOLUTION + 40 },
-              { label: 'Conductor', value: 'Copper', startFrame: SCENE.SOLUTION + 55 },
+              { label: 'Conduit Type', value: 'EMT', startFrame: SCENE.SOLUTION + 10 },
+              { label: 'Bend Angle (°)', value: '90', startFrame: SCENE.SOLUTION + 25 },
+              { label: 'Offset (inches)', value: '12', startFrame: SCENE.SOLUTION + 40 },
+              { label: 'Conduit Size', value: '1/2"', startFrame: SCENE.SOLUTION + 55 },
             ].map((input, i) => (
               <div key={i} style={{
                 marginBottom: 20,
@@ -276,7 +276,7 @@ export const WireSizingVideo: React.FC = () => {
               fontSize: 36,
               color: '#a1a1aa',
             }}>
-              Sparky gives you the right answer every time.
+              Sparky gives you precise bend measurements every time.
             </p>
           </div>
         </AbsoluteFill>
@@ -301,7 +301,7 @@ export const WireSizingVideo: React.FC = () => {
               textShadow: '0 10px 30px rgba(249, 115, 22, 0.4)',
               transform: `scale(${spring({ frame: frame - SCENE.RESULT, fps, config: { damping: 20 } })})`,
             }}>
-              #12 AWG
+              10.5″
             </div>
             <div style={{
               fontSize: 36,
@@ -310,7 +310,7 @@ export const WireSizingVideo: React.FC = () => {
               marginBottom: 40,
               opacity: fadeIn(SCENE.RESULT + 10),
             }}>
-              NEC 310.12 – Dwelling unit branch circuits
+              NEC 358.24 – Minimum bend radius
             </div>
             <div style={{
               display: 'flex',

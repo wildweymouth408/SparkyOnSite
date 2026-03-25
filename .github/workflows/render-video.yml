@@ -1,0 +1,65 @@
+name: Render Sparky Video
+
+on:
+  workflow_dispatch: # manual trigger
+    inputs:
+      calculator:
+        description: 'Calculator video to render'
+        required: true
+        default: 'wire-sizing'
+        type: choice
+        options:
+        - wire-sizing
+        - conduit-bending
+        - voltage-drop
+      duration:
+        description: 'Duration in seconds (default 30)'
+        required: false
+        default: '30'
+        type: string
+  push:
+    branches:
+      - video/**  # when pushing to video/* branches, auto‑render
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Remotion dependencies
+        run: pnpm add @remotion/fonts @remotion/google-fonts zod@4.3.6
+
+      - name: Render video
+        env:
+          REMOTION_SKIP_BROWSER_DOWNLOAD: false
+        run: |
+          npx remotion render video/src/index.tsx WireSizingVideo video/out/wire-sizing-video.mp4
+          ls -la video/out/
+
+      - name: Upload video artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sparky-video
+          path: video/out/*.mp4
+          retention-days: 7
+
+      - name: Notify Discord (optional)
+        if: success()
+        run: |
+          echo "Video rendered successfully" # Replace with Discord webhook call later

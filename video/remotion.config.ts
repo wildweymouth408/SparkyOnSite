@@ -5,5 +5,6 @@ Config.setOverwriteOutput(true);
 Config.setCodec('h264');
 Config.setVideoBitrate('10M');
 Config.setAudioBitrate('128k');
-Config.setConcurrency(4);
+Config.setConcurrency(1);
 Config.setLogLevel('info');
+Config.setChromiumOptions({ args: ['--no-sandbox', '--disable-gpu'] });
