@@ -85,7 +85,7 @@ export default function Home() {
             const Icon = feature.icon;
             return (
               <Link href={feature.link} key={idx} className="group">
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6 transition-all duration-300 cursor-pointer text-white h-full flex flex-col min-h-[220px] hover:border-[var(--color-primary)] hover:-translate-y-0.5">
+                <div className="card cursor-pointer text-white h-full flex flex-col min-h-[220px]">
                   <Icon className="w-8 h-8 mb-4 text-[var(--color-primary)] shrink-0" />
                   <h3 className="text-[clamp(1rem,2vw,1.125rem)] mt-0 mb-3">
                     {feature.title}

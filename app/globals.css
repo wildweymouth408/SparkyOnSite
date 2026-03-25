@@ -30,6 +30,22 @@ h1, h2, h3 {
   font-weight: 700;
 }
 
+/* CARD */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-out;
+}
+
+.card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
 /* FORM ELEMENTS */
 input[type="text"],
 input[type="email"],
