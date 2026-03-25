@@ -45,7 +45,7 @@ export default function Home() {
           </h2>
 
           <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.125rem)', color: '#cbd5e1', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-            Everything is available right now. Completely free during beta. Payment plans start June 15.
+            Everything is available right now. Completely free during beta. Payment plans start in April.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
@@ -57,7 +57,7 @@ export default function Home() {
           </div>
 
           <p style={{ fontSize: 'clamp(0.85rem, 2vw, 0.875rem)', color: '#94a3b8', marginTop: '1.5rem' }}>
-            Payment plans coming June 15, 2026
+            Payment plans coming in April, 2026
           </p>
         </div>
       </section>
