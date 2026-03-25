@@ -174,18 +174,30 @@ export default function Home() {
               features: ['5 calculators', '5 AI chats/day', 'Basic NEC reference', 'Field mode']
             },
             {
-              name: 'Pro',
-              price: '$4.99',
-              period: '/month',
-              popular: true,
-              features: ['All calculators', 'Unlimited AI chats', 'Full NEC reference', 'Credentials wallet', 'Achievements']
-            },
-            {
-              name: 'Team',
-              price: '$12.99',
-              period: '/month',
-              features: ['Everything in Pro', 'Team management', 'Shared calculations', 'Admin dashboard']
-            }
+             name: 'Pro',
+            price: '$9.99',
+            period: '/month',
+            popular: true,
+            features: ['All calculators', 'Unlimited AI chats', 'Full NEC reference', 'Credentials wallet', 'Achievements']
+          },
+          {
+            name: 'Team - 3 Users',
+            price: '$24.99',
+            period: '/month',
+            features: ['Everything in Pro', '3 team members', 'Shared calculations', 'Basic admin']
+          },
+          {
+            name: 'Team - 10 Users',
+            price: '$59.99',
+            period: '/month',
+            features: ['Everything in Pro', '10 team members', 'Shared calculations', 'Full admin dashboard']
+          },
+          {
+            name: 'Team - 25+ Users',
+            price: 'Custom',
+            period: 'pricing',
+            features: ['Everything in Pro', '25+ team members', 'Shared calculations', 'Full admin', 'Priority support']
+          }
           ].map((plan, idx) => (
             <div
               key={idx}
