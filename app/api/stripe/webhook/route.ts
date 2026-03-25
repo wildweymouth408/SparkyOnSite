@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/lib/env';
+
+const stripe = new Stripe(env.stripeSecretKey);
 
 // Disable body parsing, we need raw body for signature verification
 export const dynamic = 'force-dynamic';
@@ -40,8 +43,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let event;
+  let event: Stripe.Event;
   try {
+    event = stripe.webhooks.constructEvent(rawBody, signature, env.stripeWebhookSecret);
   } catch (error: any) {
     console.error('Webhook signature verification failed:', error);
     return NextResponse.json(
@@ -55,7 +59,7 @@ export async function POST(req: NextRequest) {
   try {
     switch (event.type) {
       case 'customer.created': {
-        const customer = event.data.object as any;
+        const customer = event.data.object as Stripe.Customer;
         const userId = customer.metadata?.userId;
         if (userId) {
           // Update profile with stripe_customer_id
@@ -68,7 +72,7 @@ export async function POST(req: NextRequest) {
       }
       case 'customer.subscription.created':
       case 'customer.subscription.updated': {
-        const subscription = event.data.object as any;
+        const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer;
         // Fetch user profile via stripe_customer_id
         const { data: profile } = await supabase
@@ -94,7 +98,7 @@ export async function POST(req: NextRequest) {
         break;
       }
       case 'customer.subscription.deleted': {
-        const subscription = event.data.object as any;
+        const subscription = event.data.object as Stripe.Subscription;
         await supabase
           .from('subscriptions')
           .update({ status: 'canceled', updated_at: new Date().toISOString() })

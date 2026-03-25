@@ -44,6 +44,7 @@ export async function getUserLimits(userId: string): Promise<{
   limits: UsageLimits;
   isPro: boolean;
 }> {
+  const { data: subscription } = await supabase.from('subscriptions').select('id, status').eq('user_id', userId).in('status', ['active', 'trialing']).single();
   const isPro = subscription !== null;
   return {
     limits: isPro ? PRO_TIER_LIMITS : FREE_TIER_LIMITS,

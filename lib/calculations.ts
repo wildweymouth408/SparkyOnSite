@@ -562,10 +562,10 @@ export function calculateBoxFill(inputs: BoxFillInputs): BoxFillResult {
     ? inputs.conductors.reduce((max, c) => BOX_FILL_ALLOWANCE[c.size] > (BOX_FILL_ALLOWANCE[max] || 0) ? c.size : max, inputs.conductors[0].size)
     : '14'
   const clampAllowance = BOX_FILL_ALLOWANCE[largestConductorSize] || 2.0
-  const clampVolume = clampAllowance * inputs.clamps
+  const clampVolume = inputs.clamps > 0 ? clampAllowance : 0
 
   // Support fittings: same as clamps
-  const supportVolume = clampAllowance * inputs.supportFittings
+  const supportVolume = inputs.supportFittings > 0 ? clampAllowance : 0
 
   // Device volume: each device counts as two conductors of the largest size (NEC 314.16(B)(4))
   const deviceVolume = clampAllowance * 2 * inputs.devices

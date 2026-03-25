@@ -211,6 +211,10 @@ export async function POST(req: NextRequest) {
       verifiedUserId = user?.id ?? null
     }
 
+    if (!verifiedUserId) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+    }
+
     // Fetch user profile for dynamic system prompt (only if session is authenticated)
     let profile = null
     if (verifiedUserId) {
