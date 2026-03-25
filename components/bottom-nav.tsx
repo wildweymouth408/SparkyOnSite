@@ -20,7 +20,7 @@ const tabs: { id: TabId; label: string; icon: typeof Home }[] = [
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-t border-slate-800"
+      className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       role="tablist"
       aria-label="Main navigation"
@@ -38,12 +38,12 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
               onClick={() => onTabChange(tab.id)}
               className={cn(
                 'relative flex flex-1 flex-col items-center justify-center gap-1 py-2.5 transition-all duration-200',
-                isActive ? 'text-cyan-400' : 'text-slate-600'
+                isActive ? 'text-orange-400' : 'text-zinc-600'
               )}
             >
               <div className={cn(
                 'flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200',
-                isActive ? 'bg-cyan-500/10' : 'bg-transparent'
+                isActive ? 'bg-orange-500/10' : 'bg-transparent'
               )}>
                 <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.8} />
               </div>
