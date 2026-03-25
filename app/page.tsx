@@ -155,122 +155,101 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRICING */}
+      {/* BETA ACCESS */}
       <section style={{ padding: '3rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'white', marginBottom: '3rem', textAlign: 'center' }}>
-          Simple Pricing
-        </h2>
-
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '2rem'
+          background: 'linear-gradient(135deg, #1a3a4a 0%, #1e293b 100%)',
+          border: '2px solid #06b6d4',
+          borderRadius: '0.75rem',
+          padding: '3rem 2rem',
+          textAlign: 'center',
+          color: 'white'
         }}>
-          {[
-            {
-              name: 'Free',
-              price: '$0',
-              period: 'forever',
-              features: ['5 calculators', '5 AI chats/day', 'Basic NEC reference', 'Field mode']
-            },
-            {
-             name: 'Pro',
-            price: '$9.99',
-            period: '/month',
-            popular: true,
-            features: ['All calculators', 'Unlimited AI chats', 'Full NEC reference', 'Credentials wallet', 'Achievements']
-          },
-          {
-            name: 'Team - 3 Users',
-            price: '$24.99',
-            period: '/month',
-            features: ['Everything in Pro', '3 team members', 'Shared calculations', 'Basic admin']
-          },
-          {
-            name: 'Team - 10 Users',
-            price: '$59.99',
-            period: '/month',
-            features: ['Everything in Pro', '10 team members', 'Shared calculations', 'Full admin dashboard']
-          },
-          {
-            name: 'Team - 25+ Users',
-            price: 'Custom',
-            period: 'pricing',
-            features: ['Everything in Pro', '25+ team members', 'Shared calculations', 'Full admin', 'Priority support']
-          }
-          ].map((plan, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: plan.popular ? '#1a3a4a' : '#1e293b',
-                border: plan.popular ? '2px solid #06b6d4' : '1px solid #334155',
-                borderRadius: '0.75rem',
-                padding: '2rem',
-                position: 'relative'
+          <div style={{
+            display: 'inline-block',
+            background: '#06b6d4',
+            color: '#0f172a',
+            padding: '0.5rem 1rem',
+            borderRadius: '0.375rem',
+            fontSize: '0.875rem',
+            fontWeight: '700',
+            marginBottom: '1.5rem',
+            letterSpacing: '0.05em'
+          }}>
+            🚀 NOW IN BETA
+          </div>
+
+          <h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '1rem' }}>
+            All Features Free
+          </h2>
+
+          <p style={{ fontSize: '1.125rem', color: '#cbd5e1', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
+            Everything is available right now. Completely free during beta. We'll activate payment plans on June 15.
+          </p>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '1.5rem',
+            marginBottom: '2rem',
+            maxWidth: '800px',
+            margin: '0 auto 2rem'
+          }}>
+            {[
+              '✅ All 9 calculators',
+              '✅ Full NEC reference',
+              '✅ Unlimited AI chats',
+              '✅ Credentials wallet',
+              '✅ Achievements & streaks',
+              '✅ Field mode'
+            ].map((feature, idx) => (
+              <div key={idx} style={{
+                fontSize: '1rem',
+                color: '#cbd5e1',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                {feature}
+              </div>
+            ))}
+          </div>
+
+          <div style={{
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'center',
+            flexWrap: 'wrap'
+          }}>
+            <button style={{
+              padding: '1rem 2rem',
+              background: '#06b6d4',
+              color: '#0f172a',
+              border: 'none',
+              borderRadius: '0.5rem',
+              fontWeight: '700',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget;
+                el.style.opacity = '0.9';
+                el.style.transform = 'scale(1.02)';
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                el.style.opacity = '1';
+                el.style.transform = 'scale(1)';
               }}
             >
-              {plan.popular && (
-                <div style={{
-                  position: 'absolute',
-                  top: '-12px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: '#06b6d4',
-                  color: '#0f172a',
-                  padding: '0.25rem 0.75rem',
-                  borderRadius: '0.375rem',
-                  fontSize: '0.75rem',
-                  fontWeight: '600'
-                }}>
-                  POPULAR
-                </div>
-              )}
-              
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'white', marginBottom: '0.5rem' }}>
-                {plan.name}
-              </h3>
-              <div style={{ marginBottom: '1.5rem' }}>
-                <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#06b6d4' }}>
-                  {plan.price}
-                </span>
-                <span style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
-                  {plan.period}
-                </span>
-              </div>
+              Start Using Sparky
+            </button>
+          </div>
 
-              <ul style={{ listStyle: 'none', margin: '0 0 1.5rem', padding: 0 }}>
-                {plan.features.map((feature, fidx) => (
-                  <li key={fidx} style={{ 
-                    color: '#cbd5e1', 
-                    fontSize: '0.95rem',
-                    marginBottom: '0.75rem',
-                    paddingLeft: '1.5rem',
-                    position: 'relative'
-                  }}>
-                    <span style={{ 
-                      position: 'absolute',
-                      left: 0,
-                      color: '#06b6d4'
-                    }}>✓</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <button style={{
-                width: '100%',
-                padding: '0.75rem',
-                background: plan.popular ? '#06b6d4' : 'transparent',
-                color: plan.popular ? '#0f172a' : '#06b6d4',
-                border: plan.popular ? 'none' : '1px solid #06b6d4',
-                borderRadius: '0.5rem',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}>
-                Get Started
-              </button>
-            </div>
-          ))}
+          <p style={{ fontSize: '0.875rem', color: '#94a3b8', marginTop: '2rem' }}>
+            Payment plans coming June 15, 2026
+          </p>
         </div>
       </section>
 
