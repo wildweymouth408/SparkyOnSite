@@ -20,11 +20,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Home', href: '/', icon: Home },
-    { name: 'Calculators', href: '/calculators', icon: CalculatorIcon },
+    { name: 'Home',          href: '/',             icon: Home },
+    { name: 'Calculators',   href: '/calculators',  icon: CalculatorIcon },
     { name: 'NEC Reference', href: '/nec-reference', icon: BookOpen },
-    { name: 'Ask Sparky', href: '/ask-sparky', icon: MessageCircle },
-    { name: 'Credentials', href: '/credentials', icon: Lock },
+    { name: 'Ask Sparky',    href: '/ask-sparky',   icon: MessageCircle },
+    { name: 'Credentials',   href: '/credentials',  icon: Lock },
   ];
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
@@ -34,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* SIDEBAR — fixed overlay on mobile, sticky on desktop */}
       <aside className={cn(
-        'fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-slate-800 border-r border-slate-700 px-4 py-8 overflow-y-auto',
+        'fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-slate-900 border-r border-slate-800 px-3 py-8 overflow-y-auto',
         'transition-transform duration-200',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         'md:sticky md:h-screen md:top-0 md:translate-x-0'
@@ -44,16 +44,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Link
           href="/"
           onClick={() => setSidebarOpen(false)}
-          className="flex items-center gap-3 text-white no-underline mb-8 font-semibold min-h-[44px]"
+          className="flex items-center gap-3 text-white mb-8 font-semibold min-h-[44px] px-3"
         >
-          <div className="p-2 bg-gradient-to-br from-cyan-500 to-orange-500 rounded-md shrink-0">
+          <div className="p-2 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-lg shrink-0 shadow-[0_0_16px_rgba(6,182,212,0.3)]">
             <CalculatorIcon className="w-5 h-5 text-white" />
           </div>
-          Sparky
+          <span className="bg-gradient-to-r from-cyan-400 to-cyan-200 bg-clip-text text-transparent font-bold">
+            Sparky
+          </span>
         </Link>
 
         {/* Nav */}
-        <nav className="flex-1 flex flex-col gap-1">
+        <nav className="flex-1 flex flex-col gap-0.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -63,13 +65,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors min-h-[44px]',
+                  'flex items-center gap-3 py-2.5 pr-4 rounded-lg text-sm transition-all duration-150 min-h-[44px] border-l-2',
+                  'pl-[14px]',
                   active
-                    ? 'bg-slate-700 text-cyan-400'
-                    : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+                    ? 'border-cyan-400 text-cyan-400 bg-cyan-500/5'
+                    : 'border-transparent text-slate-400 hover:text-white hover:bg-slate-800/60 hover:border-slate-700'
                 )}
               >
-                <Icon className="w-5 h-5 shrink-0" />
+                <Icon className="w-[18px] h-[18px] shrink-0" />
                 <span>{item.name}</span>
               </Link>
             );
@@ -77,8 +80,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </nav>
 
         {/* Logout */}
-        <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700/50 hover:text-white transition-colors w-full text-sm min-h-[44px]">
-          <LogOut className="w-5 h-5 shrink-0" />
+        <button className="flex items-center gap-3 pl-[14px] pr-4 py-2.5 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-slate-800/60 transition-all duration-150 w-full text-sm min-h-[44px] border-l-2 border-transparent mt-2">
+          <LogOut className="w-[18px] h-[18px] shrink-0" />
           <span>Logout</span>
         </button>
       </aside>
@@ -87,24 +90,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 flex flex-col min-w-0">
 
         {/* HEADER */}
-        <header className="sticky top-0 z-30 bg-slate-800 border-b border-slate-700 px-6 flex justify-between items-center h-[60px]">
+        <header className="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-6 flex justify-between items-center h-[60px]">
 
           {/* Hamburger — mobile only */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="flex md:hidden items-center justify-center min-h-[44px] min-w-[44px] text-slate-300 hover:text-white transition-colors"
+            className="flex md:hidden items-center justify-center min-h-[44px] min-w-[44px] text-slate-400 hover:text-white transition-colors"
             aria-label="Toggle menu"
           >
-            {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          <h1 className="text-white text-xl font-semibold m-0 md:hidden">Sparky</h1>
+          <span className="text-white font-semibold md:hidden bg-gradient-to-r from-cyan-400 to-cyan-200 bg-clip-text text-transparent">
+            Sparky
+          </span>
 
-          {/* Spacer so avatar stays right on desktop */}
+          {/* Spacer on desktop */}
           <div className="hidden md:block" />
 
           {/* User avatar */}
-          <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-cyan-400 font-semibold shrink-0">
+          <div className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-cyan-400 text-sm font-semibold shrink-0">
             U
           </div>
         </header>
@@ -118,7 +123,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* MOBILE OVERLAY BACKDROP */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
