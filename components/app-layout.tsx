@@ -11,7 +11,6 @@ import {
   BookOpen,
   MessageCircle,
   Lock,
-  BarChart3,
   LogOut
 } from 'lucide-react';
 
@@ -25,7 +24,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { name: 'NEC Reference', href: '/nec-reference', icon: BookOpen },
     { name: 'Ask Sparky', href: '/ask-sparky', icon: MessageCircle },
     { name: 'Credentials', href: '/credentials', icon: Lock },
-    { name: 'Mission Control', href: '/mission-control', icon: BarChart3 },
   ];
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
