@@ -57,7 +57,7 @@ export default function Home() {
           </div>
 
           <p style={{ fontSize: 'clamp(0.85rem, 2vw, 0.875rem)', color: '#94a3b8', marginTop: '1.5rem' }}>
-            Payment plans coming in April, 2026
+            Payment plans coming soon
           </p>
         </div>
       </section>
@@ -101,7 +101,7 @@ export default function Home() {
       {/* FOOTER */}
       <footer style={{ padding: 'clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 1.5rem)', borderTop: '1px solid #334155', color: '#94a3b8', fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', textAlign: 'center' }}>
         <p style={{ margin: '0 0 1rem 0' }}>
-          &copy; 2024 Sparky. All rights reserved.
+          &copy; {new Date().getFullYear()} SparkyOnsite. All rights reserved.
         </p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', fontSize: 'clamp(0.8rem, 2vw, 0.9rem)' }}>
           <Link href="/privacy" style={{ color: '#94a3b8', textDecoration: 'none' }}>Privacy</Link>
