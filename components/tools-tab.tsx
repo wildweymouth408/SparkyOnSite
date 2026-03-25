@@ -45,17 +45,17 @@ type CalculatorId =
   | null
 
 const CALCULATORS = [
-  { id: 'voltage-drop' as const,  label: 'Voltage Drop',  desc: 'V, A, length, wire',       icon: Zap,      color: '#f97216' },
-  { id: 'conduit-fill' as const,  label: 'Conduit Fill',  desc: 'Type, size, wire count',    icon: Cylinder, color: '#f97216' },
-  { id: 'ohms-law' as const,      label: "Ohm's Law",     desc: 'V, I, R triangle',          icon: Triangle, color: '#f97216' },
-  { id: 'pipe-bending' as const,  label: 'Conduit Bending', desc: 'Chart, brands, step-by-step', icon: Ruler, color: '#f97216' },
-  { id: 'wire-sizing' as const,   label: 'Wire Sizing',   desc: 'Load, distance, NEC',       icon: Cable,    color: '#f97216' },
-  { id: 'ampacity' as const,      label: 'Ampacity',      desc: 'Derating & correction',     icon: Gauge,    color: '#f97216' },
-  { id: 'box-fill' as const,      label: 'Box Fill',      desc: 'NEC 314.16 volumes',        icon: Box,      color: '#f97216' },
-  { id: 'motor-fla' as const,     label: 'Motor FLA',     desc: '430.248/250 tables',        icon: Settings, color: '#f97216' },
-  { id: 'construction' as const,  label: 'Construction',  desc: 'Fractions, feet & inches',  icon: HardHat,  color: '#f97216' },
-  { id: 'material-takeoff' as const,  label: 'Material Takeoff',  desc: 'Wire, conduit & labor est.',  icon: ClipboardList, color: '#f97316' },
-  { id: 'panel-schedule' as const,    label: 'Panel Schedule',    desc: 'Load center builder',         icon: LayoutGrid,    color: '#f97316' },
+  { id: 'voltage-drop' as const,  label: 'Voltage Drop',  desc: 'V, A, length, wire',       icon: Zap,      color: 'var(--color-accent)' },
+  { id: 'conduit-fill' as const,  label: 'Conduit Fill',  desc: 'Type, size, wire count',    icon: Cylinder, color: 'var(--color-accent)' },
+  { id: 'ohms-law' as const,      label: "Ohm's Law",     desc: 'V, I, R triangle',          icon: Triangle, color: 'var(--color-accent)' },
+  { id: 'pipe-bending' as const,  label: 'Conduit Bending', desc: 'Chart, brands, step-by-step', icon: Ruler, color: 'var(--color-accent)' },
+  { id: 'wire-sizing' as const,   label: 'Wire Sizing',   desc: 'Load, distance, NEC',       icon: Cable,    color: 'var(--color-accent)' },
+  { id: 'ampacity' as const,      label: 'Ampacity',      desc: 'Derating & correction',     icon: Gauge,    color: 'var(--color-accent)' },
+  { id: 'box-fill' as const,      label: 'Box Fill',      desc: 'NEC 314.16 volumes',        icon: Box,      color: 'var(--color-accent)' },
+  { id: 'motor-fla' as const,     label: 'Motor FLA',     desc: '430.248/250 tables',        icon: Settings, color: 'var(--color-accent)' },
+  { id: 'construction' as const,  label: 'Construction',  desc: 'Fractions, feet & inches',  icon: HardHat,  color: 'var(--color-accent)' },
+  { id: 'material-takeoff' as const,  label: 'Material Takeoff',  desc: 'Wire, conduit & labor est.',  icon: ClipboardList, color: 'var(--color-accent)' },
+  { id: 'panel-schedule' as const,    label: 'Panel Schedule',    desc: 'Load center builder',         icon: LayoutGrid,    color: 'var(--color-accent)' },
 ] as const
 
 // ── Inline Motor FLA Calculator ───────────────────────────────────────────────
@@ -106,7 +106,7 @@ function MotorFLACalculator() {
   const safeVoltage = voltageOptions.includes(voltage) ? voltage : voltageOptions[voltageOptions.length - 2]
   const fla = table[hp]?.[parseInt(safeVoltage)] || 0
 
-  const sel = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none appearance-none'
+  const sel = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[var(--color-accent)] focus:outline-none appearance-none'
   const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
 
   return (
@@ -134,10 +134,10 @@ function MotorFLACalculator() {
       </div>
 
       {fla > 0 ? (
-        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[#f97316] p-4 space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Full Load Amps</span><span className="font-bold text-[#f97316] font-mono">{fla} A</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Wire (125% FLA)</span><span className="font-bold text-[#f97316] font-mono">{(fla * 1.25).toFixed(1)} A min</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Breaker (250% FLA)</span><span className="font-bold text-[#f97316] font-mono">{(fla * 2.5).toFixed(1)} A max</span></div>
+        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[var(--color-accent)] p-4 space-y-2">
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Full Load Amps</span><span className="font-bold text-[var(--color-accent)] font-mono">{fla} A</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Wire (125% FLA)</span><span className="font-bold text-[var(--color-accent)] font-mono">{(fla * 1.25).toFixed(1)} A min</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Breaker (250% FLA)</span><span className="font-bold text-[var(--color-accent)] font-mono">{(fla * 2.5).toFixed(1)} A max</span></div>
           <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Overload (115%)</span><span className="font-mono text-[#fafafa]">{(fla * 1.15).toFixed(2)} A</span></div>
           <div className="text-[10px] text-[#71717a] pt-1">NEC 430.22 (wire) · 430.52 (breaker) · 430.32 (overload)</div>
         </div>
@@ -156,7 +156,7 @@ function ConstructionCalculator() {
   const [num, setNum] = useState('')
   const [den, setDen] = useState('')
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none font-mono'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[var(--color-accent)] focus:outline-none font-mono'
   const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
 
   const result = (() => {
@@ -186,9 +186,9 @@ function ConstructionCalculator() {
       </div>
 
       {result && (
-        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[#f97316] p-4 space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Decimal Inches</span><span className="font-bold text-[#f97316] font-mono">{result.totalInches}"</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Decimal Feet</span><span className="font-bold text-[#f97316] font-mono">{result.totalFeet}'</span></div>
+        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[var(--color-accent)] p-4 space-y-2">
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Decimal Inches</span><span className="font-bold text-[var(--color-accent)] font-mono">{result.totalInches}"</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Decimal Feet</span><span className="font-bold text-[var(--color-accent)] font-mono">{result.totalFeet}'</span></div>
           <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Millimeters</span><span className="font-mono text-[#fafafa]">{result.mm} mm</span></div>
         </div>
       )}
@@ -268,13 +268,14 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
     <div className="flex flex-col gap-5">
       {/* Primary calculators grid */}
       <div>
- <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#a1a1aa] field-mode:text-yellow-300">Calculators</h2>       <div className="grid grid-cols-2 gap-2">
+        <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#a1a1aa] field-mode:text-yellow-300">Calculators</h2>
+        <div className="grid grid-cols-2 gap-4">
           {CALCULATORS.slice(0, 4).map(calc => {
             const Icon = calc.icon
             return (
               <button key={calc.id} onClick={() => openCalc(calc.id)}
-                className="group flex flex-col gap-2 border border-border bg-card rounded-lg shadow-md p-4 text-left transition-all duration-200 hover:shadow-lg active:scale-[0.98]">
-                <Icon className="h-5 w-5" style={{ color: calc.color }} />
+                className="card flex flex-col gap-2 text-left active:scale-[0.98]">
+                <Icon className="h-5 w-5 text-[var(--color-primary)]" />
                 <div>
                   <div className="text-xs font-bold text-[#fafafa]">{calc.label}</div>
                   <div className="text-[10px] text-[#71717a]">{calc.desc}</div>
@@ -293,8 +294,8 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
             const Icon = calc.icon
             return (
               <button key={calc.id} onClick={() => openCalc(calc.id)}
-                className="flex items-center gap-3 border border-border bg-card rounded-lg shadow-md p-3 text-left transition-all duration-200 hover:shadow-lg active:scale-[0.99] field-mode:bg-black field-mode:border-yellow-400/30 field-mode:min-h-[56px]">
-                <Icon className="h-4 w-4 shrink-0" style={{ color: calc.color }} />
+                className="card flex items-center gap-3 text-left active:scale-[0.99] field-mode:bg-black field-mode:border-yellow-400/30 field-mode:min-h-[56px]">
+                <Icon className="h-4 w-4 shrink-0 text-[var(--color-primary)]" />
                 <div className="flex-1">
                   <div className="text-xs font-medium text-[#fafafa] field-mode:text-yellow-100">{calc.label}</div>
                   <div className="text-[10px] text-[#71717a] field-mode:text-yellow-400/60">{calc.desc}</div>
@@ -319,12 +320,12 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
                 onSwipeLeft={() => handleDuplicateCalculation(calc)}
                 onSwipeRight={() => handleDeleteCalculation(calc.id)}
               >
-                <div className="flex items-center justify-between border border-border bg-card rounded-lg shadow-sm px-3 py-2 field-mode:bg-black field-mode:border-yellow-400/20">
+                <div className="card flex items-center justify-between field-mode:bg-black field-mode:border-yellow-400/20">
                   <div className="flex-1">
                     <div className="text-[10px] font-medium uppercase tracking-wider text-[#a1a1aa] field-mode:text-yellow-400/60">{calc.type}</div>
                     <div className="text-xs text-[#ccc] field-mode:text-yellow-100">{calc.label}</div>
                   </div>
-                  <div className="text-right font-mono text-xs text-[#f97316] field-mode:text-yellow-300">{calc.result}</div>
+                  <div className="text-right font-mono text-xs text-[var(--color-accent)] field-mode:text-yellow-300">{calc.result}</div>
                 </div>
               </Swipeable>
             ))}
