@@ -26,8 +26,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
-import { FriendProfileCard } from './friend-profile-card'
-import { AddFriendModal } from './add-friend-modal'
+import { FriendProfileCard } from './FriendProfileCard'
+import { AddFriendModal } from './AddFriendModal'
 import type { Friend, PendingRequest } from './types'
 import { MOCK_FRIENDS, MOCK_PENDING_REQUESTS } from './types'
 

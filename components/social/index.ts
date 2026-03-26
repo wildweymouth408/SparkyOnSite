@@ -1,8 +1,8 @@
 // Social Components - Week 1
-export { FriendProfileCard } from './friend-profile-card'
-export { FriendListView } from './friend-list-view'
-export { AddFriendModal } from './add-friend-modal'
-export { PersonalLeaderboard } from './personal-leaderboard'
+export { FriendProfileCard } from './FriendProfileCard'
+export { FriendListView } from './FriendList'
+export { AddFriendModal } from './AddFriendModal'
+export { PersonalLeaderboard } from './PersonalLeaderboard'
 
 // Types
 export type {
