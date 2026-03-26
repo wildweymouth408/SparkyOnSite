@@ -45,7 +45,7 @@ export function AttachToJob({ note }: AttachToJobProps) {
     <div className="relative">
       <button
         onClick={handleOpen}
-        className="flex w-full items-center justify-center gap-2 bg-[#00d4ff] py-3 text-xs font-bold uppercase tracking-wider text-[#0f1115] transition-colors hover:bg-[#33ddff] active:scale-[0.99]"
+        className="flex w-full items-center justify-center gap-2 bg-[#f97316] py-3 text-xs font-bold uppercase tracking-wider text-[#09090b] transition-colors hover:bg-[#fb923c] active:scale-[0.99]"
       >
         <Briefcase className="h-3.5 w-3.5" />
         Attach to Job

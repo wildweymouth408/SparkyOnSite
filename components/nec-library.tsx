@@ -86,7 +86,7 @@ export default function NECLibrary() {
             placeholder="Search NEC articles by number, title, or content..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 pl-9 pr-20 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#71717a] focus:border-[#22c55e] focus:outline-none"
+            className="w-full bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 pl-9 pr-20 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#71717a] focus:border-[#f97316] focus:outline-none"
           />
           {searchQuery && (
             <button
@@ -98,7 +98,7 @@ export default function NECLibrary() {
           )}
           <button
             onClick={startVoiceSearch}
-            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-[#22c55e]'}`}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-[#f97316]'}`}
           >
             <Mic className="h-4 w-4" />
           </button>
@@ -113,7 +113,7 @@ export default function NECLibrary() {
           <button
             key="all"
             onClick={() => setSelectedChapter('')}
-            className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${!selectedChapter ? 'bg-[#22c55e] text-[#0f1115] border-[#22c55e]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
+            className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${!selectedChapter ? 'bg-[#f97316] text-[#09090b] border-[#f97316]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
           >
             All Chapters
           </button>
@@ -121,7 +121,7 @@ export default function NECLibrary() {
             <button
               key={chapter}
               onClick={() => setSelectedChapter(chapter)}
-              className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${selectedChapter === chapter ? 'bg-[#22c55e] text-[#0f1115] border-[#22c55e]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
+              className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${selectedChapter === chapter ? 'bg-[#f97316] text-[#09090b] border-[#f97316]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
             >
               {chapter}
             </button>
@@ -132,7 +132,7 @@ export default function NECLibrary() {
           <Bookmark className="h-4 w-4 text-[#71717a]" />
           <button
             onClick={() => setShowBookmarkedOnly(!showBookmarkedOnly)}
-            className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${showBookmarkedOnly ? 'bg-[#22c55e] text-[#0f1115] border-[#22c55e]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
+            className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${showBookmarkedOnly ? 'bg-[#f97316] text-[#09090b] border-[#f97316]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
           >
             Show bookmarked only
           </button>
@@ -184,13 +184,13 @@ interface ArticleCardProps {
 function ArticleCard({ article, isBookmarked, onBookmark, onClick }: ArticleCardProps) {
   return (
     <div
-      className="bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 overflow-hidden cursor-pointer hover:border-[#22c55e] transition-colors"
+      className="bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 overflow-hidden cursor-pointer hover:border-[#f97316] transition-colors"
       onClick={onClick}
     >
       <div className="bg-[#161b24] field-mode:bg-black p-3 border-b border-[#27272a] field-mode:border-yellow-400/20 flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-[#22c55e] field-mode:text-yellow-300 font-bold text-sm font-mono">{article.articleNumber}</span>
+            <span className="text-[#f97316] field-mode:text-yellow-300 font-bold text-sm font-mono">{article.articleNumber}</span>
             <span className="text-xs text-[#71717a]">{article.chapter}</span>
           </div>
           <h3 className="text-white field-mode:text-yellow-100 font-semibold text-sm mt-1">{article.title}</h3>
@@ -200,7 +200,7 @@ function ArticleCard({ article, isBookmarked, onBookmark, onClick }: ArticleCard
           onClick={(e) => { e.stopPropagation(); onBookmark(); }}
           className="ml-2"
         >
-          <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-[#22c55e] text-[#22c55e]' : 'text-[#71717a]'}`} />
+          <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-[#f97316] text-[#f97316]' : 'text-[#71717a]'}`} />
         </button>
       </div>
       <div className="p-3">
@@ -222,7 +222,7 @@ function ArticleCard({ article, isBookmarked, onBookmark, onClick }: ArticleCard
           </div>
         ))}
         {article.content.length > 2 && (
-          <div className="text-xs text-[#22c55e] field-mode:text-yellow-300 mt-2">
+          <div className="text-xs text-[#f97316] field-mode:text-yellow-300 mt-2">
             + {article.content.length - 2} more sections
           </div>
         )}
@@ -242,13 +242,13 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
       <div className="sticky top-0 bg-[#0f1115] field-mode:bg-black z-10 p-3 border-b border-[#18181b] field-mode:border-yellow-400/20 flex items-center gap-3">
         <button
           onClick={onBack}
-          className="text-[#22c55e] field-mode:text-yellow-300 p-1"
+          className="text-[#f97316] field-mode:text-yellow-300 p-1"
         >
           <ChevronRight className="h-5 w-5 rotate-180" />
         </button>
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[#22c55e] field-mode:text-yellow-300 font-bold text-lg font-mono">{article.articleNumber}</span>
+            <span className="text-[#f97316] field-mode:text-yellow-300 font-bold text-lg font-mono">{article.articleNumber}</span>
             <span className="text-xs text-[#71717a]">{article.chapter}</span>
           </div>
           <h1 className="text-white field-mode:text-yellow-100 font-bold text-lg">{article.title}</h1>
@@ -276,7 +276,7 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
               {article.relatedArticles.map(art => (
                 <button
                   key={art}
-                  className="px-3 py-1.5 bg-[#18181b] field-mode:bg-black text-[#00d4ff] field-mode:text-yellow-300 text-xs border border-[#27272a] field-mode:border-yellow-400/30 hover:border-[#00d4ff]"
+                  className="px-3 py-1.5 bg-[#18181b] field-mode:bg-black text-[#f97316] field-mode:text-yellow-300 text-xs border border-[#27272a] field-mode:border-yellow-400/30 hover:border-[#f97316]"
                 >
                   {art}
                 </button>
@@ -290,8 +290,8 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
             <h2 className="text-sm uppercase tracking-wider text-[#a1a1aa] mb-2">NEC 2023 Changes</h2>
             <div className="space-y-2">
               {article.changes.map((change, idx) => (
-                <div key={idx} className={`p-3 border-l-4 ${change.type === 'new' ? 'border-[#22c55e] bg-green-900/20' : 'border-[#ffaa00] bg-yellow-900/20'}`}>
-                  <span className={`text-xs font-bold uppercase ${change.type === 'new' ? 'text-[#22c55e]' : 'text-[#ffaa00]'}`}>
+                <div key={idx} className={`p-3 border-l-4 ${change.type === 'new' ? 'border-[#f97316] bg-orange-900/20' : 'border-[#ffaa00] bg-yellow-900/20'}`}>
+                  <span className={`text-xs font-bold uppercase ${change.type === 'new' ? 'text-[#f97316]' : 'text-[#ffaa00]'}`}>
                     {change.type === 'new' ? 'New' : 'Revised'}
                   </span>
                   <p className="text-white field-mode:text-yellow-100 mt-1">{change.text}</p>
@@ -309,22 +309,22 @@ function SectionRenderer({ section }: { section: any }) {
   switch (section.type) {
     case 'paragraph':
       return (
-        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border-l-2 border-[#22c55e] field-mode:border-yellow-400">
+        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border-l-2 border-[#f97316] field-mode:border-yellow-400">
           {section.id && (
-            <span className="text-[#22c55e] field-mode:text-yellow-300 text-xs font-mono font-bold">{section.id}</span>
+            <span className="text-[#f97316] field-mode:text-yellow-300 text-xs font-mono font-bold">{section.id}</span>
           )}
           <p className="text-white field-mode:text-yellow-100 text-sm mt-1">{section.text}</p>
           {section.plainEnglish && (
             <p className="text-[#71717a] field-mode:text-yellow-400/40 text-xs italic mt-1">Plain English: {section.plainEnglish}</p>
           )}
           {section.application && (
-            <p className="text-[#00d4ff] field-mode:text-yellow-300/80 text-xs mt-1">Application: {section.application}</p>
+            <p className="text-[#f97316] field-mode:text-yellow-300/80 text-xs mt-1">Application: {section.application}</p>
           )}
         </div>
       )
     case 'list':
       return (
-        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border-l-2 border-[#00d4ff]">
+        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border-l-2 border-[#f97316]">
           <ul className="list-disc pl-4 space-y-1">
             {section.items.map((item: string, idx: number) => (
               <li key={idx} className="text-white field-mode:text-yellow-100 text-sm">{item}</li>
@@ -341,8 +341,8 @@ function SectionRenderer({ section }: { section: any }) {
               <p className="text-red-300 text-sm font-semibold">{section.scenario}</p>
               <p className="text-red-400/80 text-xs mt-1">Consequence: {section.consequence}</p>
               <div className="flex items-start gap-1.5 mt-2">
-                <Check className="h-4 w-4 text-[#22c55e] mt-0.5 shrink-0" />
-                <p className="text-[#22c55e] field-mode:text-yellow-300 text-xs">{section.fix}</p>
+                <Check className="h-4 w-4 text-[#f97316] mt-0.5 shrink-0" />
+                <p className="text-[#f97316] field-mode:text-yellow-300 text-xs">{section.fix}</p>
               </div>
             </div>
           </div>

@@ -15,7 +15,7 @@ export function Swipeable({
   children,
   onSwipeLeft,
   onSwipeRight,
-  leftAction = { icon: <Copy className="h-4 w-4" />, text: 'Duplicate', color: 'bg-blue-500' },
+  leftAction = { icon: <Copy className="h-4 w-4" />, text: 'Duplicate', color: 'bg-[#f97316]' },
   rightAction = { icon: <Trash2 className="h-4 w-4" />, text: 'Delete', color: 'bg-red-500' },
 }: SwipeableProps) {
   const [touchStart, setTouchStart] = useState<number | null>(null)

@@ -42,7 +42,7 @@ export function CredentialsTab() {
   useEffect(() => {
     async function load() {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      if (!user) { setLoading(false); return }
       setUserId(user.id)
       const { data, error } = await supabase
         .from('credentials')
