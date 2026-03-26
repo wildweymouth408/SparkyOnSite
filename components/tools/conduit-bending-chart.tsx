@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
-import { BendVisualization } from '../bend-visualization'
+import { BendDiagram } from './bend-diagram'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -333,19 +333,19 @@ export function ConduitBendingChart() {
     } : null
   }, [kickOffset, kickAngle])
 
-  // Parallel bends calculations
+  // Parallel offset bends calculations
+  // Each successive conduit shifts its pair of marks by spacing × shrink-per-inch
   const parallelCalc = useMemo(() => {
-    const marks = []
-    for (let i = 0; i < parallelCount; i++) {
-      const offset = i * parallelSpacing
-      marks.push({
-        conduit: i + 1,
-        offset: offset.toFixed(1),
-        markPosition: (stubLength - TAKEUP[conduitSize] + offset).toFixed(1)
-      })
-    }
-    return { marks }
-  }, [parallelCount, parallelSpacing, stubLength, conduitSize])
+    if (!mult) return null
+    const baseDist = offsetHeight * mult.mult
+    const adj = parallelSpacing * mult.shrinkDec
+    const marks = Array.from({ length: parallelCount }, (_, i) => ({
+      conduit: i + 1,
+      markA: (i * adj).toFixed(2),
+      markB: (baseDist + i * adj).toFixed(2),
+    }))
+    return { marks, distance: baseDist.toFixed(2), adjustment: adj.toFixed(3) }
+  }, [parallelCount, parallelSpacing, offsetHeight, mult])
 
   // Corner bend calculations
   const cornerCalc = useMemo(() => {
@@ -407,11 +407,13 @@ export function ConduitBendingChart() {
     calcValues.kickShrinkage = kickCalc?.kickShrinkage || '?'
   }
   if (bendType === 'parallel') {
-    calcValues.parallelCount = parallelCount
+    calcValues.parallelCount  = parallelCount
     calcValues.parallelSpacing = parallelSpacing
-    calcValues.stub = stubLength
-    calcValues.takeup = TAKEUP[conduitSize]
-    calcValues.mark = stubCalc.mark
+    calcValues.height         = offsetHeight
+    calcValues.angle          = offsetAngle
+    calcValues.distance       = parallelCalc?.distance  ?? '?'
+    calcValues.shrinkage      = offsetCalc?.shrinkage   ?? '?'
+    calcValues.adjustment     = parallelCalc?.adjustment ?? '?'
   }
   if (bendType === 'corner') {
     calcValues.cornerAngle = cornerAngle
@@ -531,12 +533,12 @@ export function ConduitBendingChart() {
       </div>
 
       {/* ── Diagram ── */}
-            <div className={`${cardCls} !p-0 overflow-hidden`}>
-        <BendVisualization
+      <div className={`${cardCls} !p-0 overflow-hidden rounded-xl`}>
+        <BendDiagram
           type={bendType}
+          calcValues={calcValues}
           frontMark={b.marks.front}
           backMark={b.marks.back}
-          calcValues={calcValues}
         />
       </div>
 
@@ -776,50 +778,52 @@ export function ConduitBendingChart() {
 
       {bendType === 'parallel' && (
         <div className={cardCls}>
-          <p className="text-xs text-[#a1a1aa] mb-3">Parallel bends calculator</p>
+          <p className="text-xs text-[#a1a1aa] mb-3">Parallel offset bends calculator</p>
+          <div className="flex gap-3 mb-3">
+            <div className="flex-1">
+              <label className={labelCls}>Offset height (in)</label>
+              <input type="number" value={offsetHeight} onChange={e => setOffsetHeight(Number(e.target.value))} className={inputCls} step={0.25} />
+            </div>
+            <div className="flex-1">
+              <label className={labelCls}>Angle</label>
+              <select value={offsetAngle} onChange={e => setOffsetAngle(Number(e.target.value))} className={inputCls}>
+                {MULTIPLIERS.map(m => <option key={m.angle} value={m.angle}>{m.angle}°</option>)}
+              </select>
+            </div>
+          </div>
           <div className="flex gap-3 mb-3">
             <div className="flex-1">
               <label className={labelCls}>Number of conduits</label>
               <input type="number" value={parallelCount} onChange={e => setParallelCount(Number(e.target.value))} className={inputCls} step={1} min={2} max={10} />
             </div>
             <div className="flex-1">
-              <label className={labelCls}>Spacing between centers (in)</label>
+              <label className={labelCls}>Center-to-center spacing (in)</label>
               <input type="number" value={parallelSpacing} onChange={e => setParallelSpacing(Number(e.target.value))} className={inputCls} step={0.5} min={2} max={24} />
             </div>
-          </div>
-          <div className="mb-3">
-            <label className={labelCls}>Stub length (in)</label>
-            <input type="number" value={stubLength} onChange={e => setStubLength(Number(e.target.value))} className={inputCls} step={0.5} />
-          </div>
-          <div className="mb-3">
-            <label className={labelCls}>Conduit size</label>
-            <select value={conduitSize} onChange={e => setConduitSize(e.target.value as ConduitSize)} className={inputCls}>
-              {CONDUIT_SIZES.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
           </div>
           {parallelCalc && (
             <div className="rounded-lg bg-[#0D1117] p-3 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-[#a1a1aa]">Take-up for {conduitSize}</span>
-                <span className="font-mono text-[#9CA3AF]">{TAKEUP[conduitSize]}"</span>
+                <span className="text-[#a1a1aa]">Distance between marks</span>
+                <span className="font-mono font-bold text-[#F9FAFB] text-lg">{parallelCalc.distance}"</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[#a1a1aa]">Base mark position</span>
-                <span className="font-mono font-bold text-[#F9FAFB] text-lg">{stubCalc.mark}"</span>
+                <span className="text-[#a1a1aa]">Adjustment per conduit</span>
+                <span className="font-mono text-[#F97316]">{parallelCalc.adjustment}"</span>
               </div>
               <div className="mt-2 pt-2 border-t border-[#1F2937]">
-                <p className="text-xs text-[#a1a1aa] mb-2">Individual conduit marks:</p>
-                <div className="grid grid-cols-2 gap-2">
+                <p className="text-xs text-[#a1a1aa] mb-2">Mark A position (from reference end):</p>
+                <div className="space-y-1">
                   {parallelCalc.marks.map(mark => (
                     <div key={mark.conduit} className="flex justify-between text-xs">
-                      <span className="text-[#9CA3AF]">Conduit #{mark.conduit}</span>
-                      <span className="font-mono text-[#F9FAFB]">{mark.markPosition}"</span>
+                      <span className="text-[#9CA3AF]">Conduit #{mark.conduit} — Mark A</span>
+                      <span className="font-mono text-[#F9FAFB]">{mark.markA}"</span>
                     </div>
                   ))}
                 </div>
               </div>
               <p className="text-[10px] text-[#4B5563] mt-2">
-                Place {b.marks.front} at calculated mark for each conduit. All bends at same angle ({offsetAngle}° recommended).
+                Mark B = Mark A + {parallelCalc.distance}" for each conduit · {b.marks.front} alignment · {offsetAngle}° bends
               </p>
             </div>
           )}
