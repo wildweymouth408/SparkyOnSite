@@ -103,7 +103,7 @@ export const WireSizingVideo: React.FC = () => {
             border: '3px solid #f97316',
             boxShadow: '0 5px 20px rgba(249, 115, 22, 0.5)',
           }}>
-            <div style={{ width: '100%', height: '100%', backgroundColor: '#f97316', borderRadius: '50%' }} />
+            <Img src={staticFile('avatars/avatar-electrician.png')} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
           </div>
           <div style={{
             position: 'absolute',
