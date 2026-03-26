@@ -19,7 +19,7 @@ export default function MissionControlPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
             <div style={{ 
               padding: '0.5rem', 
-              background: 'linear-gradient(to bottom right, #06b6d4, #f97316)',
+              background: 'linear-gradient(to bottom right, #f97316, #fbbf24)',
               borderRadius: '0.5rem'
             }}>
               <Zap style={{ width: '24px', height: '24px', color: 'white' }} />
@@ -44,7 +44,7 @@ export default function MissionControlPage() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: activeTab === tab ? '#06b6d4' : '#94a3b8',
+                color: activeTab === tab ? '#f97316' : '#94a3b8',
                 fontSize: '1rem',
                 fontWeight: '600',
                 cursor: 'pointer',
@@ -86,7 +86,7 @@ export default function MissionControlPage() {
                     <div style={{ color: '#94a3b8', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                       {metric.label}
                     </div>
-                    <div style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#06b6d4' }}>
+                    <div style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#f97316' }}>
                       {metric.value}
                     </div>
                     <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '0.5rem' }}>

@@ -89,14 +89,14 @@ export default function VoltageDropPage() {
         </div>
       </div>
 
-      <div style={{ 
-        background: 'linear-gradient(to right, #1a3a4a, #1e293b)',
+      <div style={{
+        background: 'linear-gradient(to right, #1c1a18, #1e1b18)',
         borderRadius: '0.75rem',
         padding: '2rem',
-        borderLeft: '4px solid #06b6d4'
+        borderLeft: '4px solid #f97316'
       }}>
         <p style={{ color: '#94a3b8', marginBottom: '0.5rem' }}>Voltage Drop</p>
-        <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#06b6d4', marginBottom: '1rem' }}>
+        <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f97316', marginBottom: '1rem' }}>
           {voltageDrop.toFixed(2)}V
         </p>
 

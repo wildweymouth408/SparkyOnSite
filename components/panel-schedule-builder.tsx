@@ -146,7 +146,7 @@ function CircuitSlot({ slot, circuit, isBlocked, voltageSystem, onClick }: Circu
     over: 'bg-red-500', warn: 'bg-yellow-500', ok: 'bg-emerald-500', empty: 'bg-[#27272a]',
   }
   const phaseColor: Record<Phase, string> = {
-    A: 'text-blue-400', B: 'text-red-400', C: 'text-yellow-400',
+    A: 'text-amber-400', B: 'text-red-400', C: 'text-yellow-400',
   }
 
   const maxW = circuit ? ampsToWatts(circuit.breakerSize, circuit.poles, voltageSystem) : 1
@@ -224,7 +224,7 @@ function CircuitEditor({ circuit, voltageSystem, onSave, onDelete, onClose }: Ci
   const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
   const phase = getPhaseForSlot(circuit.circuitNumber, voltageSystem)
   const phaseColor: Record<Phase, string> = {
-    A: 'text-blue-400', B: 'text-red-400', C: 'text-yellow-400',
+    A: 'text-amber-400', B: 'text-red-400', C: 'text-yellow-400',
   }
 
   function handleSave() {
@@ -736,7 +736,7 @@ export function PanelScheduleBuilder() {
         <div className={`grid gap-2 mt-2 ${is3Phase ? 'grid-cols-3' : 'grid-cols-2'}`}>
           {activePhases.map((ph) => {
             const phaseColor: Record<Phase, string> = {
-              A: 'border-blue-800 text-blue-400',
+              A: 'border-amber-800 text-amber-400',
               B: 'border-red-800 text-red-400',
               C: 'border-yellow-800 text-yellow-400',
             }
@@ -771,7 +771,7 @@ export function PanelScheduleBuilder() {
     const loadColor =
       loadPct > 100 ? 'text-red-400 bg-red-950' : loadPct > 80 ? 'text-yellow-400 bg-yellow-950' : 'text-emerald-400 bg-emerald-950'
     const phaseColor: Record<Phase, string> = {
-      A: 'bg-blue-500', B: 'bg-red-500', C: 'bg-yellow-500',
+      A: 'bg-amber-500', B: 'bg-red-500', C: 'bg-yellow-500',
     }
 
     return (
