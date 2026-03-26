@@ -245,8 +245,8 @@ export function BendDiagram({
     const b1 = cx - 102, b3 = cx + 102
     const cL = (cx - b1) * 0.5, cR = (b3 - cx) * 0.5
     const d = `M 12,${yR} L ${b1},${yR} `
-      + `C ${b1+cL},${yR} ${cx-cL*0.28},${topY} ${cx},${topY} `
-      + `C ${cx+cR*0.28},${topY} ${b3-cR},${yR} ${b3},${yR} `
+      + `C ${b1+cL},${yR} ${cx-cL*0.62},${topY} ${cx},${topY} `
+      + `C ${cx+cR*0.62},${topY} ${b3-cR},${yR} ${b3},${yR} `
       + `L 388,${yR}`
 
     const sH   = calcValues.height        ?? calcValues.saddleHeight ?? 2
@@ -255,10 +255,10 @@ export function BendDiagram({
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
         <rect width={W} height={H} fill={C.bg} />
-        {/* Obstacle rectangle */}
-        <rect x={b1 + 8} y={topY + 20} width={b3 - b1 - 16} height={yR - topY - 12}
-          fill="#16161c" stroke="#2a2a36" strokeWidth="1" rx="3" />
-        <text x={cx} y={(topY + yR) / 2 + 8} fill={C.dim} fontSize="8"
+        {/* Obstacle: dashed rect the conduit saddles over */}
+        <rect x={cx - 42} y={yR - 6} width={84} height={26}
+          fill="#0c0c11" stroke={C.dim} strokeWidth="1.2" strokeDasharray="5,3" rx="3" />
+        <text x={cx} y={yR + 10} fill={C.dim} fontSize="7"
           textAnchor="middle" fontFamily="ui-monospace,monospace">obstacle</text>
         <Ground x1={0} y={yR + 12} x2={W} uid="gS3" />
         <Pipe d={d} />
@@ -362,31 +362,41 @@ export function BendDiagram({
     )
   }
 
-  // ── Rolling Offset ────────────────────────────────────────────────────────────
+  // ── Rolling Offset ─────────────────────────────────────────────────────────────
   if (type === 'rollingOffset') {
-    const W = 320, H = 195
-    const xs = 46, ys = 158, xe = 260, ye = 55
-    const rise   = Number(calcValues.rise   ?? 6)
-    const run    = Number(calcValues.run    ?? 8)
+    const W = 400, H = 205
+    const yLow = 158, yHigh = 62
+    const xMarkA = 82, xMarkB = 292
+
+    const rise   = Number(calcValues.rise ?? 6)
+    const run    = Number(calcValues.run  ?? 8)
     const travel = calcValues.travel ?? Math.sqrt(rise * rise + run * run).toFixed(2)
-    const tAngle = Math.atan2(ye - ys, xe - xs) * 180 / Math.PI
-    const mx = (xs + xe) / 2, my = (ys + ye) / 2
+
+    const tAngle = Math.atan2(yHigh - yLow, xMarkB - xMarkA) * 180 / Math.PI
+    const mx = (xMarkA + xMarkB) / 2
+    const my = (yLow + yHigh) / 2
 
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
         <rect width={W} height={H} fill={C.bg} />
-        {/* Right-triangle helper lines */}
-        <line x1={xs} y1={ys} x2={xe} y2={ys} stroke={C.dim} strokeWidth={0.8} strokeDasharray="4,3" />
-        <line x1={xe} y1={ys} x2={xe} y2={ye} stroke={C.dim} strokeWidth={0.8} strokeDasharray="4,3" />
-        <path d={`M ${xe-10},${ys} L ${xe-10},${ys-10} L ${xe},${ys-10}`}
+        {/* Dashed right-triangle: roll (horiz), rise (vert) */}
+        <line x1={xMarkA} y1={yLow} x2={xMarkB} y2={yLow}
+          stroke={C.dim} strokeWidth={0.8} strokeDasharray="4,3" />
+        <line x1={xMarkB} y1={yLow} x2={xMarkB} y2={yHigh}
+          stroke={C.dim} strokeWidth={0.8} strokeDasharray="4,3" />
+        <path d={`M ${xMarkB-10},${yLow} L ${xMarkB-10},${yLow-10} L ${xMarkB},${yLow-10}`}
           fill="none" stroke={C.dim} strokeWidth={0.8} />
-        <Pipe d={`M ${xs},${ys} L ${xe},${ye}`} />
-        <Mark x={xs} y={ys} label="A" above={false} onHoriz />
-        <Mark x={xe} y={ye} label="B" above={true}  onHoriz />
-        {/* Dimension text labels */}
-        <text x={(xs+xe)/2} y={ys + 16} fill={C.ora} fontSize="10" textAnchor="middle"
-          fontFamily="ui-monospace,monospace">run: {run}"</text>
-        <text x={xe + 18} y={(ys+ye)/2} fill={C.ora} fontSize="10"
+        <Ground x1={0} y={yLow + 12} x2={xMarkA + 24} uid="gRoll" />
+        {/* Entry run → diagonal travel → exit run */}
+        <Pipe d={`M 14,${yLow} L ${xMarkA},${yLow}`} />
+        <Pipe d={`M ${xMarkA},${yLow} L ${xMarkB},${yHigh}`} />
+        <Pipe d={`M ${xMarkB},${yHigh} L ${W - 14},${yHigh}`} />
+        <Mark x={xMarkA} y={yLow} label="A" above={false} onHoriz />
+        <Mark x={xMarkB} y={yHigh} label="B" above={true}  onHoriz />
+        {/* Labels */}
+        <text x={(xMarkA + xMarkB) / 2} y={yLow + 17} fill={C.ora} fontSize="10"
+          textAnchor="middle" fontFamily="ui-monospace,monospace">roll: {run}"</text>
+        <text x={xMarkB + 22} y={(yLow + yHigh) / 2} fill={C.ora} fontSize="10"
           fontFamily="ui-monospace,monospace" dominantBaseline="middle">rise: {rise}"</text>
         {/* Travel label along hypotenuse */}
         <text x={mx} y={my - 14} fill={C.wht} fontSize="10" textAnchor="middle"
@@ -396,50 +406,82 @@ export function BendDiagram({
     )
   }
 
-  // ── Kick with 90° ─────────────────────────────────────────────────────────────
+  // ── Kick with 90° (horizontal → kick bend → 90° stub-up) ─────────────────────
   if (type === 'kickWith90') {
-    const W = 312, H = 220
-    const R = 36, tailY = 168, bendX = 76, tailStartX = 14, stubTopY = 20
-    const ex = bendX + R, ey = tailY - R
-    const kickDeg = Number(calcValues.kickAngle ?? 10)
+    const W = 360, H = 244
+    const tailY = 186
+    const kickDeg = Number(calcValues.kickAngle ?? 12)
     const kickRad = kickDeg * Math.PI / 180
-    const kdx = Math.sin(kickRad), kdy = -Math.cos(kickRad)
-    const kaR = 20, kaStartY = ey - 28
-    const kaEndX = ex + kaR * kdx, kaEndY = kaStartY + kaR * kdy
-    const kickLen = 76
-    const tipX = kaEndX + kdx * kickLen, tipY = kaEndY + kdy * kickLen
-    const wallX = W - 18
+    const cos_k = Math.cos(kickRad), sin_k = Math.sin(kickRad)
 
-    const d = `M ${tailStartX},${tailY} L ${bendX},${tailY} `
-      + `C ${bendX+K*R},${tailY} ${ex},${tailY-K*R} ${ex},${ey} `
-      + `L ${ex},${kaStartY} `
-      + `C ${ex},${kaStartY-K*kaR} ${kaEndX-K*kaR*kdx},${kaEndY-K*kaR*kdy} ${kaEndX},${kaEndY} `
-      + `L ${tipX},${tipY}`
+    // Mark A: kick bend starts on horizontal run
+    const markAx = 70
+    const kR = 16  // kick arc visual radius
 
-    const kOff  = calcValues.kickOffset  ?? '—'
-    const kDist = calcValues.kickDistance ?? '—'
+    // End of kick arc (pipe now traveling at kickDeg above horizontal)
+    const kEx = markAx + kR * cos_k
+    const kEy = tailY  - kR * sin_k
+
+    // Diagonal section after kick
+    const diagLen = 54
+    const markBx = Math.round(kEx + diagLen * cos_k)  // Mark B: 90° bend starts
+    const markBy = Math.round(kEy - diagLen * sin_k)
+
+    // 90° arc properties
+    const R90 = 40
+    const stubX    = markBx + R90
+    const arc90EndY = markBy - R90
+    const stubTopY = 28
+
+    // Kick arc bezier control points (horizontal → kickDeg direction)
+    const kCp1x = markAx + kR * K
+    const kCp1y = tailY
+    const kCp2x = kEx - kR * K * cos_k
+    const kCp2y = kEy + kR * K * sin_k
+
+    // 90° arc bezier (approximately horizontal → vertical)
+    const a90Cp1x = markBx + K * R90
+    const a90Cp1y = markBy
+    const a90Cp2x = stubX
+    const a90Cp2y = markBy - K * R90
+
+    const d = `M 14,${tailY} L ${markAx},${tailY} `
+      + `C ${kCp1x.toFixed(1)},${kCp1y} ${kCp2x.toFixed(1)},${kCp2y.toFixed(1)} ${kEx.toFixed(1)},${kEy.toFixed(1)} `
+      + `L ${markBx},${markBy} `
+      + `C ${a90Cp1x.toFixed(1)},${a90Cp1y} ${a90Cp2x},${a90Cp2y.toFixed(1)} ${stubX},${arc90EndY} `
+      + `L ${stubX},${stubTopY}`
+
+    const kOff  = calcValues.kickOffset    ?? '—'
+    const kDist = calcValues.kickDistance  ?? '—'
+    const shk   = calcValues.kickShrinkage ?? '—'
 
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
         <rect width={W} height={H} fill={C.bg} />
-        <rect x={wallX} y={0} width={18} height={H} fill="#0d0f12" />
-        <text x={wallX + 9} y={H / 2} fill={C.dim} fontSize="8" textAnchor="middle"
-          fontFamily="ui-monospace,monospace"
-          transform={`rotate(90,${wallX+9},${H/2})`}>WALL</text>
-        <Ground x1={0} y={tailY + 12} x2={wallX} uid="gKick" />
+        <Ground x1={0} y={tailY + 12} x2={W} uid="gKick" />
         <Pipe d={d} />
-        <Mark x={bendX} y={tailY} label="A" above={false} onHoriz />
-        {/* Kick offset dimension to wall */}
-        <line x1={tipX}  y1={tipY - 8} x2={wallX} y2={tipY - 8}
-          stroke={C.dim} strokeWidth={0.8} strokeDasharray="3,2" />
-        <line x1={tipX}  y1={tipY - 13} x2={tipX}  y2={tipY - 3} stroke={C.dim} strokeWidth={0.8} />
-        <line x1={wallX} y1={tipY - 13} x2={wallX} y2={tipY - 3} stroke={C.dim} strokeWidth={0.8} />
-        <text x={(tipX + wallX) / 2} y={tipY - 16} fill={C.ora} fontSize="9"
-          textAnchor="middle" fontFamily="ui-monospace,monospace">kick: {kOff}"</text>
-        <ArcLabel cx={bendX} cy={tailY} r={26} a1={270} a2={360} label="90°" />
-        {/* Kick distance annotation */}
-        <text x={bendX + 20} y={ey - 10} fill={C.ora} fontSize="8"
-          fontFamily="ui-monospace,monospace">{kDist}" to kick</text>
+        {/* Mark A: kick bend */}
+        <Mark x={markAx} y={tailY} label="A" above={false} onHoriz />
+        {/* Mark B: 90° bend */}
+        <Mark x={markBx} y={markBy} label="B" above={true} onHoriz />
+        {/* Kick angle arc at A */}
+        <ArcLabel cx={markAx} cy={tailY} r={24} a1={-kickDeg} a2={0} label={`${kickDeg}°`} />
+        {/* 90° arc at B */}
+        <ArcLabel cx={markBx} cy={markBy} r={26} a1={180} a2={270} label="90°" />
+        {/* Stub height dimension */}
+        <Dim x1={stubX} y1={stubTopY} x2={stubX} y2={arc90EndY}
+          label="stub" off={36} side={-1} fs={8} />
+        {/* Circle end cap at stub top */}
+        <circle cx={stubX} cy={stubTopY} r={7} fill="none" stroke={C.pH} strokeWidth={1.5} />
+        {/* Footer */}
+        <text x={W / 2} y={H - 16} fill={C.ora} fontSize="9" textAnchor="middle"
+          fontFamily="ui-monospace,monospace">
+          mark A: {kDist}" from end · {kickDeg}° kick
+        </text>
+        <text x={W / 2} y={H - 4} fill={C.ora} fontSize="8" textAnchor="middle"
+          fontFamily="ui-monospace,monospace" opacity="0.7">
+          kick offset: {kOff}" · shrinkage: {shk}"
+        </text>
       </svg>
     )
   }
@@ -522,7 +564,7 @@ export function BendDiagram({
 
   // ── Corner Bend ───────────────────────────────────────────────────────────────
   if (type === 'corner') {
-    const W = 320, H = 222
+    const W = 340, H = 238
     // L-shaped corner: horizontal run from left, turns upward at corner
     const cX = 155, cY = 148  // theoretical sharp corner
     const legH = 118           // horizontal leg length
@@ -535,7 +577,7 @@ export function BendDiagram({
     const bendAng = calcValues.bendAngle ?? (ang / 2).toFixed(1)
 
     // Visual radius: scale to pixels, clamped to reasonable display size
-    const Rpx = Math.min(Math.max(R * 8, 18), 55)
+    const Rpx = Math.min(Math.max(R * 8, 52), 70)
 
     let d: string
     if (ang === 90) {
