@@ -11,7 +11,10 @@ import {
   BookOpen,
   MessageCircle,
   Lock,
-  LogOut
+  LogOut,
+  Briefcase,
+  Users,
+  Trophy,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -70,6 +73,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { name: 'Calculators',   href: '/calculators',   icon: CalculatorIcon },
     { name: 'NEC Reference', href: '/nec-reference', icon: BookOpen },
     { name: 'Ask Sparky',    href: '/ask-sparky',    icon: MessageCircle },
+    { name: 'Jobs',          href: '/jobs',          icon: Briefcase },
+    { name: 'Friends',       href: '/friends',       icon: Users },
+    { name: 'Leaderboard',   href: '/leaderboard',   icon: Trophy },
     { name: 'Credentials',   href: '/credentials',   icon: Lock },
   ];
 
