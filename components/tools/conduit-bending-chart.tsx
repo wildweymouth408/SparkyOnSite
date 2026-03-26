@@ -280,6 +280,7 @@ export function ConduitBendingChart() {
   const [rollingRun, setRollingRun] = useState<number>(8)
   const [rollingAngle, setRollingAngle] = useState<number>(30)
   const [saddleHeight, setSaddleHeight] = useState<number>(2)
+  const [saddleWidth, setSaddleWidth] = useState<number>(6)
   const [b2bDistance, setB2bDistance] = useState<number>(24)
   const [kickOffset, setKickOffset] = useState<number>(2)
   const [kickAngle, setKickAngle] = useState<number>(10)
@@ -962,6 +963,89 @@ export function ConduitBendingChart() {
           </tbody>
         </table>
       </div>
+
+      {/* ── 3-Point Saddle Quick Calc ── */}
+      {bendType === 'saddle3' && (
+        <div>
+          <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888]">Quick Calc</h2>
+          <div className="border border-[#1e1e1e] bg-[#0a0a0a] p-4 space-y-3">
+            <div>
+              <label className={labelCls}>Obstacle Height (in)</label>
+              <input
+                type="number"
+                value={saddleHeight}
+                onChange={e => setSaddleHeight(Number(e.target.value))}
+                className={inputCls}
+                step={0.25}
+                min={0}
+              />
+            </div>
+            <div className="border border-[#1a1a2a] bg-[#0a0a12] p-3 space-y-1.5">
+              <div className="flex justify-between text-sm">
+                <span className="text-[#888]">Outer Mark Distance (each side)</span>
+                <span className="font-mono font-bold text-[#00d4ff] text-base">{(saddleHeight * 2.5).toFixed(2)}"</span>
+              </div>
+              <p className="text-[10px] text-[#444] pt-1">
+                Center mark = center 45° · Outer marks = {(saddleHeight * 2.5).toFixed(2)}" each side · Outer bends = 22.5°
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 4-Point Saddle Quick Calc ── */}
+      {bendType === 'saddle4' && (
+        <div>
+          <h2 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#888]">Quick Calc</h2>
+          <div className="border border-[#1e1e1e] bg-[#0a0a0a] p-4 space-y-3">
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className={labelCls}>Obstacle Height (in)</label>
+                <input
+                  type="number"
+                  value={saddleHeight}
+                  onChange={e => setSaddleHeight(Number(e.target.value))}
+                  className={inputCls}
+                  step={0.25}
+                  min={0}
+                />
+              </div>
+              <div className="flex-1">
+                <label className={labelCls}>Obstacle Width (in)</label>
+                <input
+                  type="number"
+                  value={saddleWidth}
+                  onChange={e => setSaddleWidth(Number(e.target.value))}
+                  className={inputCls}
+                  step={0.5}
+                  min={0}
+                />
+              </div>
+            </div>
+            <div className="border border-[#1a1a2a] bg-[#0a0a12] p-3 space-y-1.5">
+              <div className="flex justify-between text-sm">
+                <span className="text-[#888]">Mark 1 → Mark 2</span>
+                <span className="font-mono font-bold text-[#00d4ff]">{saddleHeight}"</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-[#888]">Mark 2 → Mark 3</span>
+                <span className="font-mono font-bold text-[#00d4ff]">{saddleWidth}"</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-[#888]">Mark 3 → Mark 4</span>
+                <span className="font-mono font-bold text-[#00d4ff]">{saddleHeight}"</span>
+              </div>
+              <div className="flex justify-between text-sm border-t border-[#1e1e1e] pt-1.5 mt-1">
+                <span className="text-[#888]">Total Saddle Span</span>
+                <span className="font-mono font-bold text-[#ff6b00]">{2 * saddleHeight + saddleWidth}"</span>
+              </div>
+              <p className="text-[10px] text-[#444] pt-1">
+                All 4 bends = 45° · Set mark 1 at reference point · Roll 180° between bends 2 and 3
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Step-by-Step Instructions ── */}
       <div>
