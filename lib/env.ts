@@ -30,17 +30,21 @@ export const publicEnv = {
 /**
  * Server-only environment variables (not exposed to the client).
  * Use only in server-side code (API routes, server components, lib functions that run on server).
+ *
+ * Defined with lazy getters so that merely importing this module on the client
+ * does NOT throw — the error is deferred until the value is actually accessed
+ * in a code path that runs on the server.
  */
 export const serverEnv = {
-  supabaseServiceRoleKey: getRequiredEnv('SUPABASE_SERVICE_ROLE_KEY'),
-  credentialEncryptionKey: getRequiredEnv('CREDENTIAL_ENCRYPTION_KEY'),
-  stripeSecretKey: getRequiredEnv('STRIPE_SECRET_KEY'),
-  stripeWebhookSecret: getRequiredEnv('STRIPE_WEBHOOK_SECRET'),
-  stripeMonthlyPriceId: getRequiredEnv('STRIPE_MONTHLY_PRICE_ID'),
-  stripeYearlyPriceId: getRequiredEnv('STRIPE_YEARLY_PRICE_ID'),
-  stripePromoCodeSparky14: getRequiredEnv('STRIPE_PROMO_CODE_SPARKY14'),
-  stripePromoCodeBetaFriend: getRequiredEnv('STRIPE_PROMO_CODE_BETAFRIEND'),
-} as const;
+  get supabaseServiceRoleKey()   { return getRequiredEnv('SUPABASE_SERVICE_ROLE_KEY') },
+  get credentialEncryptionKey()  { return getRequiredEnv('CREDENTIAL_ENCRYPTION_KEY') },
+  get stripeSecretKey()          { return getRequiredEnv('STRIPE_SECRET_KEY') },
+  get stripeWebhookSecret()      { return getRequiredEnv('STRIPE_WEBHOOK_SECRET') },
+  get stripeMonthlyPriceId()     { return getRequiredEnv('STRIPE_MONTHLY_PRICE_ID') },
+  get stripeYearlyPriceId()      { return getRequiredEnv('STRIPE_YEARLY_PRICE_ID') },
+  get stripePromoCodeSparky14()  { return getRequiredEnv('STRIPE_PROMO_CODE_SPARKY14') },
+  get stripePromoCodeBetaFriend(){ return getRequiredEnv('STRIPE_PROMO_CODE_BETAFRIEND') },
+};
 
 /**
  * Combined environment variables (for convenience in server-side code).
@@ -48,5 +52,12 @@ export const serverEnv = {
  */
 export const env = {
   ...publicEnv,
-  ...serverEnv,
-} as const;
+  get supabaseServiceRoleKey()   { return serverEnv.supabaseServiceRoleKey },
+  get credentialEncryptionKey()  { return serverEnv.credentialEncryptionKey },
+  get stripeSecretKey()          { return serverEnv.stripeSecretKey },
+  get stripeWebhookSecret()      { return serverEnv.stripeWebhookSecret },
+  get stripeMonthlyPriceId()     { return serverEnv.stripeMonthlyPriceId },
+  get stripeYearlyPriceId()      { return serverEnv.stripeYearlyPriceId },
+  get stripePromoCodeSparky14()  { return serverEnv.stripePromoCodeSparky14 },
+  get stripePromoCodeBetaFriend(){ return serverEnv.stripePromoCodeBetaFriend },
+};

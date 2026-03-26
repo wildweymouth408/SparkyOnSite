@@ -394,6 +394,22 @@ export function AmpacityChart({ compact = false }: { compact?: boolean }) {
       {result && !compact && (
         <div className="flex flex-col gap-3">
           <div className="flex gap-2">
-            <button 
-              onClick={handleSave} 
-              className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-input bg-secondary
+            <button
+              onClick={handleSave}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-input bg-secondary py-3 text-xs font-medium uppercase tracking-wider transition-colors hover:bg-accent"
+            >
+              <Save className="h-4 w-4" /> Save
+            </button>
+            <button
+              onClick={() => shareCard(`ampacity-${inputs.wireSize}awg-${inputs.material}-${inputs.insulationType}`)}
+              disabled={isGenerating || !shareCardData}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-input bg-secondary py-3 text-xs font-medium uppercase tracking-wider transition-colors hover:bg-accent disabled:opacity-50"
+            >
+              <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

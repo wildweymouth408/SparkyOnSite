@@ -8,9 +8,8 @@
 
 import { serverEnv } from './env'
 
-const KEY_HEX = serverEnv.credentialEncryptionKey
-
 async function getKey(): Promise<CryptoKey> {
+  const KEY_HEX = serverEnv.credentialEncryptionKey
   if (!KEY_HEX || KEY_HEX.length !== 64) {
     throw new Error(
       'CREDENTIAL_ENCRYPTION_KEY must be a 64-character hex string (256-bit). ' +
