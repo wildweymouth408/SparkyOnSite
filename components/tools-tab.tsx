@@ -53,7 +53,7 @@ const CALCULATORS = [
   { id: 'ampacity' as const,      label: 'Ampacity',      desc: 'Derating & correction',     icon: Gauge,    color: 'var(--color-accent)' },
   { id: 'box-fill' as const,      label: 'Box Fill',      desc: 'NEC 314.16 volumes',        icon: Box,      color: 'var(--color-accent)' },
   { id: 'motor-fla' as const,     label: 'Motor FLA',     desc: '430.248/250 tables',        icon: Settings, color: 'var(--color-accent)' },
-  { id: 'construction' as const,  label: 'Construction',  desc: 'Fractions, feet & inches',  icon: HardHat,  color: 'var(--color-accent)' },
+  { id: 'construction' as const,  label: 'Construction',  desc: 'Material & labor estimator', icon: HardHat,  color: 'var(--color-accent)' },
   { id: 'material-takeoff' as const,  label: 'Material Takeoff',  desc: 'Wire, conduit & labor est.',  icon: ClipboardList, color: 'var(--color-accent)' },
   { id: 'panel-schedule' as const,    label: 'Panel Schedule',    desc: 'Load center builder',         icon: LayoutGrid,    color: 'var(--color-accent)' },
 ] as const
@@ -151,55 +151,107 @@ function MotorFLACalculator() {
 // ── Inline Construction Calculator ───────────────────────────────────────────
 
 function ConstructionCalculator() {
-  const [feet, setFeet] = useState('')
-  const [inches, setInches] = useState('')
-  const [num, setNum] = useState('')
-  const [den, setDen] = useState('')
+  const [materialName, setMaterialName] = useState('')
+  const [quantity, setQuantity] = useState('')
+  const [unitCost, setUnitCost] = useState('')
+  const [laborHours, setLaborHours] = useState('')
+  const [laborRate, setLaborRate] = useState('50')
+  const [taxRate, setTaxRate] = useState('8')
+  const [showResults, setShowResults] = useState(false)
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[var(--color-accent)] focus:outline-none font-mono'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[var(--color-primary)] focus:outline-none rounded'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5'
 
-  const result = (() => {
-    const d = parseInt(den)
-    if (!d) return null
-    const n = parseInt(num) || 0
-    const ft = parseInt(feet) || 0
-    const inch = parseInt(inches) || 0
-    const totalInches = ft * 12 + inch + n / d
-    return {
-      totalInches: totalInches.toFixed(4),
-      totalFeet: (totalInches / 12).toFixed(6),
-      mm: (totalInches * 25.4).toFixed(2),
-    }
-  })()
+  const materialCost = parseFloat(quantity || '0') * parseFloat(unitCost || '0')
+  const laborCost    = parseFloat(laborHours || '0') * parseFloat(laborRate || '0')
+  const subtotal     = materialCost + laborCost
+  const tax          = subtotal * (parseFloat(taxRate || '0') / 100)
+  const total        = subtotal + tax
+
+  const handleCalculate = () => {
+    if (quantity && unitCost && laborHours) setShowResults(true)
+  }
+
+  const handleClear = () => {
+    setMaterialName(''); setQuantity(''); setUnitCost('')
+    setLaborHours(''); setLaborRate('50'); setTaxRate('8')
+    setShowResults(false)
+  }
+
+  const row = 'flex justify-between text-sm py-2 border-b border-[#27272a]'
 
   return (
     <div className="flex flex-col gap-4 p-1">
-      <div>
-        <div className="text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-2">Fraction → Decimal</div>
-        <div className="grid grid-cols-4 gap-2">
-          <div><label className={lbl}>Feet</label><input type="number" className={inp} value={feet} onChange={e => setFeet(e.target.value)} placeholder="0" /></div>
-          <div><label className={lbl}>Inches</label><input type="number" className={inp} value={inches} onChange={e => setInches(e.target.value)} placeholder="0" /></div>
-          <div><label className={lbl}>Num</label><input type="number" className={inp} value={num} onChange={e => setNum(e.target.value)} placeholder="3" /></div>
-          <div><label className={lbl}>Den</label><input type="number" className={inp} value={den} onChange={e => setDen(e.target.value)} placeholder="8" /></div>
+      <div className="flex flex-col gap-3">
+        <div>
+          <label className={lbl}>Material Name</label>
+          <input type="text" className={inp} value={materialName} onChange={e => setMaterialName(e.target.value)} placeholder="e.g. Copper Wire, Conduit…" />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={lbl}>Quantity</label>
+            <input type="number" className={inp} value={quantity} onChange={e => setQuantity(e.target.value)} placeholder="10" min="0" />
+          </div>
+          <div>
+            <label className={lbl}>Unit Cost ($)</label>
+            <input type="number" className={inp} value={unitCost} onChange={e => setUnitCost(e.target.value)} placeholder="50.00" min="0" step="0.01" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={lbl}>Labor Hours</label>
+            <input type="number" className={inp} value={laborHours} onChange={e => setLaborHours(e.target.value)} placeholder="5" min="0" step="0.5" />
+          </div>
+          <div>
+            <label className={lbl}>Labor Rate ($/hr)</label>
+            <input type="number" className={inp} value={laborRate} onChange={e => setLaborRate(e.target.value)} min="0" step="1" />
+          </div>
+        </div>
+        <div>
+          <label className={lbl}>Tax Rate (%)</label>
+          <input type="number" className={inp} value={taxRate} onChange={e => setTaxRate(e.target.value)} min="0" max="30" step="0.1" />
         </div>
       </div>
 
-      {result && (
-        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[var(--color-accent)] p-4 space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Decimal Inches</span><span className="font-bold text-[var(--color-accent)] font-mono">{result.totalInches}"</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Decimal Feet</span><span className="font-bold text-[var(--color-accent)] font-mono">{result.totalFeet}'</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Millimeters</span><span className="font-mono text-[#fafafa]">{result.mm} mm</span></div>
+      <button
+        onClick={handleCalculate}
+        disabled={!quantity || !unitCost || !laborHours}
+        className="w-full py-3 bg-[var(--color-primary)] text-black font-bold text-sm rounded disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+      >
+        Calculate
+      </button>
+
+      {showResults && (
+        <div className="bg-[#0a0b0e] border-2 border-[var(--color-primary)] rounded p-4 space-y-0">
+          <div className="text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-3">Estimate</div>
+          <div className={row}>
+            <span className="text-[#a1a1aa]">{materialName || 'Material'} Cost</span>
+            <span className="font-mono text-[#fafafa]">${materialCost.toFixed(2)}</span>
+          </div>
+          <div className={row}>
+            <span className="text-[#a1a1aa]">Labor Cost</span>
+            <span className="font-mono text-[#fafafa]">${laborCost.toFixed(2)}</span>
+          </div>
+          <div className={row}>
+            <span className="text-[#a1a1aa]">Subtotal</span>
+            <span className="font-mono text-[#fafafa]">${subtotal.toFixed(2)}</span>
+          </div>
+          <div className={row}>
+            <span className="text-[#a1a1aa]">Tax ({taxRate}%)</span>
+            <span className="font-mono text-[#fafafa]">${tax.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-base font-bold pt-3">
+            <span className="text-[var(--color-primary)]">Total</span>
+            <span className="font-mono text-[var(--color-primary)]">${total.toFixed(2)}</span>
+          </div>
+          <button
+            onClick={handleClear}
+            className="w-full mt-4 py-2.5 bg-[#27272a] text-[#fafafa] text-sm font-semibold rounded hover:bg-[#3f3f46] transition-colors"
+          >
+            Clear
+          </button>
         </div>
       )}
-
-      <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-[#a1a1aa]">
-        {[['1/8','0.125'],['1/4','0.25'],['3/8','0.375'],['1/2','0.5'],['5/8','0.625'],['3/4','0.75'],['7/8','0.875']].map(([f,d]) => (
-          <div key={f} className="flex justify-between bg-[#0a0b0e] border border-[#18181b] px-2 py-1">
-            <span>{f}"</span><span className="text-[#71717a]">{d}"</span>
-          </div>
-        ))}
-      </div>
     </div>
   )
 }

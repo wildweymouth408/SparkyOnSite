@@ -312,7 +312,7 @@ export function AskSparkyTab() {
       {historyLoaded && !userId && (
         <div className="mb-3 flex items-center justify-between rounded-xl border border-orange-500/20 bg-orange-500/10 px-3 py-2 text-xs text-orange-400">
           <span>Sign in to save your conversation history</span>
-          <a href="/auth/login" className="font-bold text-orange-300 underline hover:text-white transition-colors">Sign in →</a>
+          <a href="/login" className="font-bold text-orange-300 underline hover:text-white transition-colors">Sign in →</a>
         </div>
       )}
 
