@@ -22,9 +22,9 @@ export function getRequiredEnv(key: string): string {
 export const publicEnv = {
   supabaseUrl: getRequiredEnv('NEXT_PUBLIC_SUPABASE_URL'),
   supabaseAnonKey: getRequiredEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
-  stripePublishableKey: getRequiredEnv('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'),
-  stripeMonthlyPriceId: getRequiredEnv('NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID'),
-  stripeYearlyPriceId: getRequiredEnv('NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID'),
+  stripePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '',
+  stripeMonthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID ?? '',
+  stripeYearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID ?? '',
 } as const;
 
 /**

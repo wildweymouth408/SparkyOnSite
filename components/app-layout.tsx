@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   Menu,
   Zap,
@@ -14,6 +14,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 const CALC_SUB_ITEMS = [
   { label: 'Voltage Drop',     tool: 'voltage-drop' },
@@ -29,9 +30,40 @@ const CALC_SUB_ITEMS = [
   { label: 'Panel Schedule',   tool: 'panel-schedule' },
 ];
 
+// Pages that don't require authentication
+const PUBLIC_PATHS = ['/', '/login', '/signup', '/pricing', '/privacy', '/terms'];
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, loading, signOut } = useAuth();
+
+  // Redirect to /login if not authenticated and not on a public page
+  useEffect(() => {
+    if (!loading && !user && !PUBLIC_PATHS.includes(pathname)) {
+      router.replace('/login');
+    }
+  }, [user, loading, pathname, router]);
+
+  // Show nothing while auth is loading to prevent flash of unauthenticated content
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <div className="w-5 h-5 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // On public pages, just render without the sidebar shell
+  if (!user && PUBLIC_PATHS.includes(pathname)) {
+    return <>{children}</>;
+  }
+
+  // Not logged in and not public — render nothing (redirect is in flight)
+  if (!user) {
+    return null;
+  }
 
   const navItems = [
     { name: 'Home',          href: '/',              icon: Home },
@@ -119,15 +151,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         {/* User + Logout */}
         <div className="mt-4 pt-4 border-t border-zinc-800 flex flex-col gap-1">
-          <div className="flex items-center gap-3 pl-[14px] pr-4 py-2.5 text-sm text-zinc-400">
+          <div className="flex items-center gap-3 pl-[14px] pr-4 py-2.5 text-sm text-zinc-400 min-w-0">
             <div className="w-7 h-7 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-orange-400 text-xs font-semibold shrink-0">
-              U
+              {user.email?.[0]?.toUpperCase() ?? 'U'}
             </div>
-            <span>My Account</span>
+            <span className="truncate text-xs">{user.email}</span>
           </div>
-          <button className="flex items-center gap-3 pl-[14px] pr-4 py-2.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60 transition-all duration-150 w-full text-sm min-h-[44px] border-l-2 border-transparent">
+          <button
+            onClick={signOut}
+            className="flex items-center gap-3 pl-[14px] pr-4 py-2.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60 transition-all duration-150 w-full text-sm min-h-[44px] border-l-2 border-transparent"
+          >
             <LogOut className="w-[18px] h-[18px] shrink-0" />
-            <span>Logout</span>
+            <span>Sign Out</span>
           </button>
         </div>
       </aside>
