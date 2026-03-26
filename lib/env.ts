@@ -20,8 +20,8 @@ export function getRequiredEnv(key: string): string {
  * Safe to use on both client and server.
  */
 export const publicEnv = {
-  supabaseUrl: getRequiredEnv('NEXT_PUBLIC_SUPABASE_URL'),
-  supabaseAnonKey: getRequiredEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
+  get supabaseUrl() { return getRequiredEnv('NEXT_PUBLIC_SUPABASE_URL') },
+  get supabaseAnonKey() { return getRequiredEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY') },
   stripePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '',
   stripeMonthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID ?? '',
   stripeYearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID ?? '',
