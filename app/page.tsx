@@ -73,7 +73,7 @@ export default function Home() {
 
       {/* BETA ACCESS */}
       <section className="px-6 md:px-12 py-20">
-        <div className="electric-border max-w-3xl mx-auto border border-orange-500/15 rounded-2xl p-8 md:p-12 text-center bg-[linear-gradient(135deg,rgba(249,115,22,0.06)_0%,rgba(9,9,11,0.8)_100%)]">
+        <div className="electric-card max-w-3xl mx-auto border border-orange-500/15 rounded-2xl p-8 md:p-12 text-center bg-[linear-gradient(135deg,rgba(249,115,22,0.06)_0%,rgba(9,9,11,0.8)_100%)]">
           <h2 className="text-3xl md:text-4xl leading-tight mb-4">
             All Features Free
           </h2>
@@ -110,7 +110,7 @@ export default function Home() {
               const Icon = feature.icon;
               return (
                 <Link href={feature.link} key={idx}>
-                  <div className="card p-6 cursor-pointer h-full flex flex-col min-h-[180px]">
+                  <div className="electric-card card p-6 cursor-pointer h-full flex flex-col min-h-[180px]">
                     <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4 shrink-0">
                       <Icon className="w-5 h-5 text-orange-400" />
                     </div>

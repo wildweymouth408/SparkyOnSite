@@ -214,6 +214,26 @@ export function CredentialsTab() {
     )
   }
 
+  if (!userId) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+        <Award className="h-12 w-12 text-zinc-700" />
+        <div>
+          <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-300 mb-2">Credentials Wallet</h2>
+          <p className="text-sm text-zinc-500 mb-6 max-w-xs mx-auto">
+            Sign in to store and manage your electrician licenses, certifications, and cards.
+          </p>
+          <a
+            href="/auth/login"
+            className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-bold text-black transition-all hover:bg-orange-600 active:scale-[0.98]"
+          >
+            Sign In to Continue
+          </a>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col gap-4 max-w-lg mx-auto">
       <div className="flex items-center justify-between">

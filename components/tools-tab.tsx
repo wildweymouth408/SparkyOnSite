@@ -276,7 +276,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
               <button
                 key={calc.id}
                 onClick={() => openCalc(calc.id)}
-                className="flex flex-col gap-3 p-5 bg-zinc-900/80 border border-zinc-800 rounded-xl text-left transition-all duration-300 hover:border-orange-500/50 hover:shadow-[0_0_20px_rgba(249,115,22,0.15)] active:scale-[0.97] field-mode:border-yellow-400/30 field-mode:min-h-[80px]"
+                className="electric-card flex flex-col gap-3 p-5 bg-zinc-900/80 border border-zinc-800 rounded-xl text-left transition-all duration-300 hover:border-orange-500/50 hover:shadow-[0_0_20px_rgba(249,115,22,0.15)] active:scale-[0.97] field-mode:border-yellow-400/30 field-mode:min-h-[80px]"
               >
                 <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0">
                   <Icon className="h-5 w-5 text-orange-400" />

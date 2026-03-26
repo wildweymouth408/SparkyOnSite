@@ -78,27 +78,27 @@ export default function NECLibrary() {
   return (
     <div className="flex flex-col h-full">
       {/* Search header */}
-      <div className="sticky top-0 bg-[#0f1115] field-mode:bg-black z-10 pb-3 border-b border-[#18181b] field-mode:border-yellow-400/20 mb-4">
+      <div className="sticky top-0 bg-zinc-950 field-mode:bg-black z-10 pb-3 border-b border-zinc-900 field-mode:border-yellow-400/20 mb-4">
         <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717a] field-mode:text-yellow-400/50" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 field-mode:text-yellow-400/50" />
           <input
             type="text"
             placeholder="Search NEC articles by number, title, or content..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 pl-9 pr-20 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#71717a] focus:border-[#f97316] focus:outline-none"
+            className="w-full bg-zinc-900 field-mode:bg-black border border-zinc-800 field-mode:border-yellow-400/30 rounded-xl pl-9 pr-20 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-zinc-500 focus:border-orange-500 focus:shadow-[0_0_0_3px_rgba(249,115,22,0.15)] focus:outline-none"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-10 top-1/2 -translate-y-1/2 p-1.5 text-[#a1a1aa] hover:text-white"
+              className="absolute right-10 top-1/2 -translate-y-1/2 p-1.5 text-zinc-400 hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
           )}
           <button
             onClick={startVoiceSearch}
-            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-[#f97316]'}`}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-orange-500'}`}
           >
             <Mic className="h-4 w-4" />
           </button>
@@ -106,14 +106,14 @@ export default function NECLibrary() {
 
         {/* Chapter filter */}
         <div className="flex items-center gap-2 mb-2">
-          <Filter className="h-4 w-4 text-[#71717a]" />
-          <span className="text-xs text-[#a1a1aa]">Filter by chapter:</span>
+          <Filter className="h-4 w-4 text-zinc-500" />
+          <span className="text-xs text-zinc-400">Filter by chapter:</span>
         </div>
         <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           <button
             key="all"
             onClick={() => setSelectedChapter('')}
-            className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${!selectedChapter ? 'bg-[#f97316] text-[#09090b] border-[#f97316]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${!selectedChapter ? 'bg-orange-500 text-black border-orange-500' : 'bg-zinc-900 text-zinc-400 border-zinc-800'}`}
           >
             All Chapters
           </button>
@@ -121,7 +121,7 @@ export default function NECLibrary() {
             <button
               key={chapter}
               onClick={() => setSelectedChapter(chapter)}
-              className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${selectedChapter === chapter ? 'bg-[#f97316] text-[#09090b] border-[#f97316]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${selectedChapter === chapter ? 'bg-orange-500 text-black border-orange-500' : 'bg-zinc-900 text-zinc-400 border-zinc-800'}`}
             >
               {chapter}
             </button>
@@ -129,10 +129,10 @@ export default function NECLibrary() {
         </div>
         {/* Bookmark filter */}
         <div className="flex items-center gap-2 mt-2">
-          <Bookmark className="h-4 w-4 text-[#71717a]" />
+          <Bookmark className="h-4 w-4 text-zinc-500" />
           <button
             onClick={() => setShowBookmarkedOnly(!showBookmarkedOnly)}
-            className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${showBookmarkedOnly ? 'bg-[#f97316] text-[#09090b] border-[#f97316]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors border ${showBookmarkedOnly ? 'bg-orange-500 text-black border-orange-500' : 'bg-zinc-900 text-zinc-400 border-zinc-800'}`}
           >
             Show bookmarked only
           </button>
@@ -140,7 +140,7 @@ export default function NECLibrary() {
       </div>
 
       {/* Results count */}
-      <div className="px-1 mb-3 text-xs text-[#71717a]">
+      <div className="px-1 mb-3 text-xs text-zinc-500">
         {filteredArticles.length === NEC_ARTICLES.length ? (
           <span>Showing all {NEC_ARTICLES.length} articles</span>
         ) : (
@@ -151,7 +151,7 @@ export default function NECLibrary() {
       {/* Articles list */}
       <div className="space-y-4 overflow-y-auto flex-1 pb-6">
         {filteredArticles.length === 0 ? (
-          <div className="text-center py-8 text-[#71717a] text-sm">
+          <div className="text-center py-8 text-zinc-500 text-sm">
             No articles found. Try a different search or filter.
           </div>
         ) : (
@@ -184,27 +184,27 @@ interface ArticleCardProps {
 function ArticleCard({ article, isBookmarked, onBookmark, onClick }: ArticleCardProps) {
   return (
     <div
-      className="bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 overflow-hidden cursor-pointer hover:border-[#f97316] transition-colors"
+      className="electric-card bg-zinc-900 field-mode:bg-black border border-zinc-800 field-mode:border-yellow-400/30 rounded-xl overflow-hidden cursor-pointer hover:border-orange-500 transition-colors"
       onClick={onClick}
     >
-      <div className="bg-[#161b24] field-mode:bg-black p-3 border-b border-[#27272a] field-mode:border-yellow-400/20 flex items-start justify-between">
+      <div className="bg-zinc-900/80 field-mode:bg-black p-3 border-b border-zinc-800 field-mode:border-yellow-400/20 flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <span className="text-[#f97316] field-mode:text-yellow-300 font-bold text-sm font-mono">{article.articleNumber}</span>
-            <span className="text-xs text-[#71717a]">{article.chapter}</span>
+            <span className="text-xs text-zinc-500">{article.chapter}</span>
           </div>
           <h3 className="text-white field-mode:text-yellow-100 font-semibold text-sm mt-1">{article.title}</h3>
-          <p className="text-[#71717a] field-mode:text-yellow-400/50 text-xs mt-1">{article.scope}</p>
+          <p className="text-zinc-500 field-mode:text-yellow-400/50 text-xs mt-1">{article.scope}</p>
         </div>
         <button
           onClick={(e) => { e.stopPropagation(); onBookmark(); }}
           className="ml-2"
         >
-          <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-[#f97316] text-[#f97316]' : 'text-[#71717a]'}`} />
+          <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-[#f97316] text-[#f97316]' : 'text-zinc-500'}`} />
         </button>
       </div>
       <div className="p-3">
-        <div className="flex items-center gap-1 text-xs text-[#a1a1aa] mb-2">
+        <div className="flex items-center gap-1 text-xs text-zinc-400 mb-2">
           <BookOpen className="h-3 w-3" />
           <span>{article.content.length} sections</span>
         </div>
@@ -239,7 +239,7 @@ interface ArticleDetailProps {
 function ArticleDetail({ article, onBack }: ArticleDetailProps) {
   return (
     <div className="h-full overflow-y-auto">
-      <div className="sticky top-0 bg-[#0f1115] field-mode:bg-black z-10 p-3 border-b border-[#18181b] field-mode:border-yellow-400/20 flex items-center gap-3">
+      <div className="sticky top-0 bg-zinc-950 field-mode:bg-black z-10 p-3 border-b border-zinc-900 field-mode:border-yellow-400/20 flex items-center gap-3">
         <button
           onClick={onBack}
           className="text-[#f97316] field-mode:text-yellow-300 p-1"
@@ -249,19 +249,19 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
         <div>
           <div className="flex items-center gap-2">
             <span className="text-[#f97316] field-mode:text-yellow-300 font-bold text-lg font-mono">{article.articleNumber}</span>
-            <span className="text-xs text-[#71717a]">{article.chapter}</span>
+            <span className="text-xs text-zinc-500">{article.chapter}</span>
           </div>
           <h1 className="text-white field-mode:text-yellow-100 font-bold text-lg">{article.title}</h1>
         </div>
       </div>
       <div className="p-4">
         <div className="mb-6">
-          <h2 className="text-sm uppercase tracking-wider text-[#a1a1aa] mb-2">Scope</h2>
+          <h2 className="text-sm uppercase tracking-wider text-zinc-400 mb-2">Scope</h2>
           <p className="text-white field-mode:text-yellow-100">{article.scope}</p>
         </div>
 
         <div className="mb-6">
-          <h2 className="text-sm uppercase tracking-wider text-[#a1a1aa] mb-2">Content</h2>
+          <h2 className="text-sm uppercase tracking-wider text-zinc-400 mb-2">Content</h2>
           <div className="space-y-4">
             {article.content.map((section, idx) => (
               <SectionRenderer key={idx} section={section} />
@@ -271,12 +271,12 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
 
         {article.relatedArticles && article.relatedArticles.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-sm uppercase tracking-wider text-[#a1a1aa] mb-2">Related Articles</h2>
+            <h2 className="text-sm uppercase tracking-wider text-zinc-400 mb-2">Related Articles</h2>
             <div className="flex flex-wrap gap-2">
               {article.relatedArticles.map(art => (
                 <button
                   key={art}
-                  className="px-3 py-1.5 bg-[#18181b] field-mode:bg-black text-[#f97316] field-mode:text-yellow-300 text-xs border border-[#27272a] field-mode:border-yellow-400/30 hover:border-[#f97316]"
+                  className="px-3 py-1.5 bg-zinc-900 field-mode:bg-black text-[#f97316] field-mode:text-yellow-300 text-xs border border-zinc-800 field-mode:border-yellow-400/30 hover:border-orange-500"
                 >
                   {art}
                 </button>
@@ -287,7 +287,7 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
 
         {article.changes && article.changes.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-sm uppercase tracking-wider text-[#a1a1aa] mb-2">NEC 2023 Changes</h2>
+            <h2 className="text-sm uppercase tracking-wider text-zinc-400 mb-2">NEC 2023 Changes</h2>
             <div className="space-y-2">
               {article.changes.map((change, idx) => (
                 <div key={idx} className={`p-3 border-l-4 ${change.type === 'new' ? 'border-[#f97316] bg-orange-900/20' : 'border-[#ffaa00] bg-yellow-900/20'}`}>
@@ -315,7 +315,7 @@ function SectionRenderer({ section }: { section: any }) {
           )}
           <p className="text-white field-mode:text-yellow-100 text-sm mt-1">{section.text}</p>
           {section.plainEnglish && (
-            <p className="text-[#71717a] field-mode:text-yellow-400/40 text-xs italic mt-1">Plain English: {section.plainEnglish}</p>
+            <p className="text-zinc-500 field-mode:text-yellow-400/40 text-xs italic mt-1">Plain English: {section.plainEnglish}</p>
           )}
           {section.application && (
             <p className="text-[#f97316] field-mode:text-yellow-300/80 text-xs mt-1">Application: {section.application}</p>
@@ -350,18 +350,18 @@ function SectionRenderer({ section }: { section: any }) {
       )
     case 'table':
       return (
-        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border border-[#27272a]">
-          <div className="text-xs text-[#a1a1aa] mb-2">Table: {section.caption || 'Data'}</div>
+        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border border-zinc-800">
+          <div className="text-xs text-zinc-400 mb-2">Table: {section.caption || 'Data'}</div>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-[#27272a] text-[#71717a]">
+                <tr className="border-b border-zinc-800 text-zinc-500">
                   {Object.keys(section.rows[0] || {}).map(key => (
                     <th key={key} className="text-left py-1">{key}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#18181b]">
+              <tbody className="divide-y divide-zinc-900">
                 {section.rows.map((row: Record<string, string>, idx: number) => (
                   <tr key={idx}>
                     {Object.values(row).map((val, colIdx) => (
@@ -376,7 +376,7 @@ function SectionRenderer({ section }: { section: any }) {
       )
     default:
       return (
-        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border border-[#27272a]">
+        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border border-zinc-800">
           <p className="text-white field-mode:text-yellow-100">{JSON.stringify(section)}</p>
         </div>
       )

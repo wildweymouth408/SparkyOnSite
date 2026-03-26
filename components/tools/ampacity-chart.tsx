@@ -34,7 +34,7 @@ import {
 const chartConfig = {
   base: {
     label: 'Base Ampacity',
-    color: '#3b82f6', // blue
+    color: '#f97316', // orange
   },
   corrected: {
     label: 'Corrected Ampacity',
@@ -46,7 +46,7 @@ const chartConfig = {
   },
   aluminum: {
     label: 'Aluminum',
-    color: '#8b5cf6', // violet
+    color: '#fbbf24', // amber
   },
 }
 
