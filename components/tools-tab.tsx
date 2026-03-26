@@ -268,7 +268,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
     <div className="flex flex-col gap-6">
       {/* Calculators grid — 2 col mobile, 3 tablet, 4 desktop */}
       <div>
-        <h2 className="mb-3 text-[11px] font-bold uppercase tracking-widest text-slate-500 field-mode:text-yellow-300">Calculators</h2>
+        <h2 className="mb-3 text-[11px] font-bold uppercase tracking-widest text-zinc-500 field-mode:text-yellow-300">Calculators</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {CALCULATORS.map(calc => {
             const Icon = calc.icon
@@ -276,14 +276,14 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
               <button
                 key={calc.id}
                 onClick={() => openCalc(calc.id)}
-                className="flex flex-col gap-3 p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl text-left transition-all duration-300 hover:border-cyan-500/50 hover:bg-slate-800 active:scale-[0.97] field-mode:border-yellow-400/30 field-mode:min-h-[80px]"
+                className="flex flex-col gap-3 p-5 bg-zinc-900/80 border border-zinc-800 rounded-xl text-left transition-all duration-300 hover:border-orange-500/50 hover:shadow-[0_0_20px_rgba(249,115,22,0.15)] active:scale-[0.97] field-mode:border-yellow-400/30 field-mode:min-h-[80px]"
               >
-                <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center shrink-0">
-                  <Icon className="h-5 w-5 text-cyan-400" />
+                <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0">
+                  <Icon className="h-5 w-5 text-orange-400" />
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-white leading-tight field-mode:text-yellow-100">{calc.label}</div>
-                  <div className="text-xs text-slate-500 mt-0.5 field-mode:text-yellow-400/60">{calc.desc}</div>
+                  <div className="text-xs text-zinc-500 mt-0.5 field-mode:text-yellow-400/60">{calc.desc}</div>
                 </div>
               </button>
             )
@@ -294,7 +294,7 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
       {/* Recent Calculations */}
       {recentCalcs.length > 0 && (
         <div>
-          <h2 className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-500 field-mode:text-yellow-300">
+          <h2 className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-zinc-500 field-mode:text-yellow-300">
             <Clock className="h-3.5 w-3.5" /> Recent
           </h2>
           <div className="flex flex-col gap-2">
@@ -304,12 +304,12 @@ export function ToolsTab({ initialToolId }: ToolsTabProps) {
                 onSwipeLeft={() => handleDuplicateCalculation(calc)}
                 onSwipeRight={() => handleDeleteCalculation(calc.id)}
               >
-                <div className="flex items-center justify-between px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl transition-colors hover:border-slate-600 field-mode:bg-black field-mode:border-yellow-400/20">
+                <div className="flex items-center justify-between px-4 py-3 bg-zinc-900/50 border border-zinc-800 rounded-xl transition-colors hover:border-zinc-700 field-mode:bg-black field-mode:border-yellow-400/20">
                   <div className="flex-1 min-w-0">
-                    <div className="text-[10px] font-medium uppercase tracking-widest text-slate-600 field-mode:text-yellow-400/60">{calc.type}</div>
-                    <div className="text-xs text-slate-300 truncate field-mode:text-yellow-100">{calc.label}</div>
+                    <div className="text-[10px] font-medium uppercase tracking-widest text-zinc-600 field-mode:text-yellow-400/60">{calc.type}</div>
+                    <div className="text-xs text-zinc-300 truncate field-mode:text-yellow-100">{calc.label}</div>
                   </div>
-                  <div className="text-right font-mono text-xs text-cyan-400 ml-3 field-mode:text-yellow-300">{calc.result}</div>
+                  <div className="text-right font-mono text-xs text-orange-400 ml-3 field-mode:text-yellow-300">{calc.result}</div>
                 </div>
               </Swipeable>
             ))}

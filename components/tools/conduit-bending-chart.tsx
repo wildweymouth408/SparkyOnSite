@@ -433,9 +433,9 @@ export function ConduitBendingChart() {
     { id: 'corner',        label: 'Corner Bends' },
   ]
 
-  const inputCls = 'h-11 w-full rounded-lg border border-[#374151] bg-[#18181b827] px-3 font-mono text-sm text-[#F9FAFB] focus:border-[#F97316] focus:outline-none transition-colors'
+  const inputCls = 'h-11 w-full rounded-lg border border-[#374151] bg-[#18181b] px-3 font-mono text-sm text-[#F9FAFB] focus:border-[#F97316] focus:outline-none transition-colors'
   const labelCls = 'text-xs text-[#9CA3AF] mb-1 block'
-  const cardCls = 'rounded-xl border border-[#1F2937] bg-[#18181b827] p-4'
+  const cardCls = 'rounded-xl border border-[#1F2937] bg-[#18181b] p-4'
 
   return (
     <div className="flex flex-col gap-4">
@@ -965,8 +965,8 @@ export function ConduitBendingChart() {
           {b.name} — {BEND_TYPES.find(bt => bt.id === bendType)?.label} steps
         </p>
         <div className="flex flex-col gap-2">
-          {instructions.steps.map((step, i) => (
-            <div key={i} className="flex gap-3 rounded-lg bg-[#18181b827] border border-[#1F2937] p-3">
+          {(instructions?.steps ?? []).map((step, i) => (
+            <div key={i} className="flex gap-3 rounded-lg bg-[#18181b] border border-[#1F2937] p-3">
               <span className="shrink-0 w-6 h-6 flex items-center justify-center text-[11px] font-bold font-mono rounded-md bg-[#F97316]/10 text-[#F97316]">
                 {i + 1}
               </span>
@@ -974,7 +974,7 @@ export function ConduitBendingChart() {
             </div>
           ))}
         </div>
-        {instructions.pro && (
+        {instructions?.pro && (
           <div className="mt-2 rounded-lg border-l-2 border-[#F97316] bg-[#F97316]/5 px-4 py-3">
             <p className="text-[11px] text-[#9CA3AF] leading-relaxed">
               <span className="font-bold text-[#F97316]">Example: </span>
