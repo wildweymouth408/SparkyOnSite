@@ -103,7 +103,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
           <select
             value={boxType}
             onChange={e => setBoxType(e.target.value)}
-            className="h-12 border border-[#27272a] bg-[#18181b] px-3 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+            className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
           >
             {Object.entries(STANDARD_BOXES).map(([key, box]) => (
               <option key={key} value={key}>{box.description} ({box.volume} cu.in.)</option>
@@ -119,7 +119,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               type="number"
               value={customVolume || ''}
               onChange={e => setCustomVolume(Number(e.target.value))}
-              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             />
           </label>
         )}
@@ -137,7 +137,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               <select
                 value={c.size}
                 onChange={e => updateConductor(i, 'size', e.target.value)}
-                className="h-10 flex-1 border border-[#27272a] bg-[#18181b] px-2 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+                className="h-10 flex-1 border border-[#27272a] bg-[#18181b] rounded-lg px-2 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
               >
                 {COMMON_WIRE_SIZES.slice(0, 8).map(s => <option key={s} value={s}>#{s}</option>)}
               </select>
@@ -147,7 +147,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
                 onChange={e => updateConductor(i, 'count', Number(e.target.value))}
                 min={0}
                 placeholder="Qty"
-                className="h-10 w-16 border border-[#27272a] bg-[#18181b] px-2 text-center font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+                className="h-10 w-16 border border-[#27272a] bg-[#18181b] rounded-lg px-2 text-center font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
               />
               {conductors.length > 1 && (
                 <button onClick={() => removeConductorRow(i)} className="text-[#71717a] hover:text-[#ef4444]">
@@ -167,7 +167,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               value={clamps}
               onChange={e => setClamps(Number(e.target.value))}
               min={0}
-              className="h-10 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-10 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -177,7 +177,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               value={devices}
               onChange={e => setDevices(Number(e.target.value))}
               min={0}
-              className="h-10 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-10 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -187,7 +187,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               value={supportFittings}
               onChange={e => setSupportFittings(Number(e.target.value))}
               min={0}
-              className="h-10 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-10 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -197,7 +197,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
               value={equipmentGrounds}
               onChange={e => setEquipmentGrounds(Number(e.target.value))}
               min={0}
-              className="h-10 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-10 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             />
           </label>
         </div>
@@ -207,7 +207,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
           <select
             value={largestGroundSize}
             onChange={e => setLargestGroundSize(e.target.value)}
-            className="h-10 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+            className="h-10 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
           >
             {COMMON_WIRE_SIZES.slice(0, 8).map(s => <option key={s} value={s}>#{s}</option>)}
           </select>
@@ -215,7 +215,7 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
       </div>
 
       {/* Results */}
-      <div className="border border-[#27272a] bg-[#18181b] p-4">
+      <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Box Fill Result</span>
           <span className={`flex items-center gap-1.5 border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
@@ -257,13 +257,13 @@ export function BoxFillCalculator({ compact = false }: { compact?: boolean }) {
       {!compact && (
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
-            <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
+            <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
               <Save className="h-4 w-4" /> Save
             </button>
             <button
               onClick={() => shareCard(`box-fill-${result.totalRequired}-${result.boxCapacity}-${result.pass ? 'pass' : 'fail'}`)}
               disabled={isGenerating || !shareCardData}
-              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
             >
               <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
             </button>

@@ -68,8 +68,8 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
   } : null
 
   const inp = (err: string | null) =>
-    `h-12 border bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:outline-none ${err ? 'border-[#ef4444]' : 'border-[#27272a] focus:border-[#f97316]'}`
-  const sel = 'h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none'
+    `h-12 border bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:outline-none focus:ring-1 focus:ring-orange-500/20 ${err ? 'border-[#ef4444]' : 'border-[#27272a] focus:border-[#f97316]'}`
+  const sel = 'h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20'
   const lbl = 'text-[11px] uppercase tracking-wider text-[#a1a1aa]'
 
   return (
@@ -192,7 +192,7 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
       </div>
 
       {result && (
-        <div className="border border-[#27272a] bg-[#18181b] p-4">
+        <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
           <div className="mb-4 flex items-center justify-between">
             <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Recommended Wire</span>
             <div className="flex items-center gap-2">
@@ -255,14 +255,14 @@ export function WireSizingCalculator({ compact = false }: { compact?: boolean })
           <div className="flex gap-2">
             <button
               onClick={handleSave}
-              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]"
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]"
             >
               <Save className="h-4 w-4" /> Save
             </button>
             <button
               onClick={() => shareCard(`wire-sizing-${inputs.loadAmps}a-${inputs.distance}ft-${result.recommendedSize}awg`)}
               disabled={isGenerating || !shareCardData}
-              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
             >
               <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
             </button>

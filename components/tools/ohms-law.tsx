@@ -136,7 +136,7 @@ export function OhmsLawCalculator() {
             value={voltage}
             onChange={e => setVoltage(e.target.value)}
             placeholder={result?.solvedFor === 'voltage' ? String(result.voltage) : 'Enter voltage'}
-            className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+            className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
           />
         </label>
 
@@ -149,7 +149,7 @@ export function OhmsLawCalculator() {
             value={current}
             onChange={e => setCurrent(e.target.value)}
             placeholder={result?.solvedFor === 'current' ? String(result.current) : 'Enter current'}
-            className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+            className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
           />
         </label>
 
@@ -162,14 +162,14 @@ export function OhmsLawCalculator() {
             value={resistance}
             onChange={e => setResistance(e.target.value)}
             placeholder={result?.solvedFor === 'resistance' ? String(result.resistance) : 'Enter resistance'}
-            className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+            className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
           />
         </label>
       </div>
 
       {/* Results */}
       {result && (
-        <div className="border border-[#27272a] bg-[#18181b] p-4">
+        <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
           <div className="mb-2 text-[11px] uppercase tracking-wider text-[#a1a1aa]">Result</div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -204,18 +204,18 @@ export function OhmsLawCalculator() {
       {/* Actions */}
       <div className="flex flex-col gap-2">
         <div className="flex gap-2">
-          <button onClick={handleClear} className="flex flex-1 items-center justify-center border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#a1a1aa] hover:bg-[#18181b]">
+          <button onClick={handleClear} className="flex flex-1 items-center justify-center border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#a1a1aa] hover:bg-[#18181b]">
             Clear
           </button>
           {result && (
             <>
-              <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
+              <button onClick={handleSave} className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]">
                 <Save className="h-4 w-4" /> Save
               </button>
               <button
                 onClick={() => shareCard(`ohms-law-v${result.voltage}-i${result.current}-r${result.resistance}`)}
                 disabled={isGenerating || !shareCardData}
-                className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
               >
                 <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
               </button>

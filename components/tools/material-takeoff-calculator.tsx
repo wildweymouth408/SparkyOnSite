@@ -232,8 +232,8 @@ export function MaterialTakeoffCalculator() {
   const jobNote = `[MTO] ${inputs.circuits} ckts #${inputs.wireSize} ${inputs.wireType} ${inputs.numConductors}-wire — ${totalAllConductors.toLocaleString()} ft total${useConduit ? `, ${totalConduitFt} ft ${inputs.conduitType} ${conduitSize}"` : ''} — est. $${laborCost.toFixed(0)} labor`
 
   // ── Styles ─────────────────────────────────────────────────────────────
-  const INP  = 'h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none w-full'
-  const SEL  = 'h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none w-full appearance-none'
+  const INP  = 'h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20 w-full'
+  const SEL  = 'h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20 w-full appearance-none'
   const LBL  = 'text-[11px] uppercase tracking-wider text-[#a1a1aa]'
   const FLD  = 'flex flex-col gap-1'
 
@@ -439,7 +439,7 @@ export function MaterialTakeoffCalculator() {
       {hasResult && (
         <>
           {/* Wire Footage card */}
-          <div className="border border-[#27272a] bg-[#18181b] p-4">
+          <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
             <div className="mb-3 text-[11px] uppercase tracking-wider text-[#a1a1aa]">Wire Footage</div>
             <div className="flex flex-col gap-1.5 text-sm">
               <div className="flex justify-between">
@@ -464,7 +464,7 @@ export function MaterialTakeoffCalculator() {
 
           {/* Conduit card */}
           {useConduit && (
-            <div className="border border-[#27272a] bg-[#18181b] p-4">
+            <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
               <div className="mb-3 text-[11px] uppercase tracking-wider text-[#a1a1aa]">Conduit</div>
               <div className="flex flex-col gap-1.5 text-sm">
                 <div className="flex justify-between">
@@ -489,7 +489,7 @@ export function MaterialTakeoffCalculator() {
           )}
 
           {/* Hardware + Labor card */}
-          <div className="border border-[#27272a] bg-[#18181b] p-4">
+          <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
             <div className="mb-3 text-[11px] uppercase tracking-wider text-[#a1a1aa]">Hardware & Labor</div>
             <div className="flex flex-col gap-1.5 text-sm">
               <div className="flex justify-between">
@@ -551,21 +551,21 @@ export function MaterialTakeoffCalculator() {
           <div className="flex flex-col gap-2">
             <button
               onClick={handleCopy}
-              className="flex items-center justify-center gap-2 border border-[#f97316]/40 bg-[#f97316]/10 py-3 text-xs font-medium uppercase tracking-wider text-[#f97316] hover:bg-[#f97316]/20 transition-colors"
+              className="flex items-center justify-center gap-2 border border-[#f97316]/40 bg-[#f97316]/10 py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#f97316] hover:bg-[#f97316]/20 transition-colors"
             >
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               {copied ? 'Copied!' : 'Copy Summary'}
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]"
+              className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]"
             >
               <Save className="h-4 w-4" /> Save
             </button>
             <button
               onClick={() => shareCard(`material-takeoff-${inputs.circuits}circuits-${inputs.avgRunLength}ft`)}
               disabled={isGenerating || !shareCardData}
-              className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
+              className="flex items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
             >
               <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
             </button>

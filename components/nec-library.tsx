@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { Search, Mic, Bookmark, AlertTriangle, ChevronRight, X, Check, Zap, BookOpen, Filter } from 'lucide-react'
+import { Search, Mic, Bookmark, ChevronRight, X, Filter } from 'lucide-react'
 import Fuse from 'fuse.js'
 import type { IFuseOptions } from 'fuse.js'
 import { NEC_ARTICLES, NECArticle, CHAPTERS } from '@/lib/nec-data'
@@ -140,11 +140,11 @@ export default function NECLibrary() {
       </div>
 
       {/* Results count */}
-      <div className="px-1 mb-3 text-xs text-zinc-500">
+      <div className="px-1 mb-3 text-xs text-zinc-500 font-mono">
         {filteredArticles.length === NEC_ARTICLES.length ? (
-          <span>Showing all {NEC_ARTICLES.length} articles</span>
+          <span>{NEC_ARTICLES.length} articles</span>
         ) : (
-          <span>Showing {filteredArticles.length} of {NEC_ARTICLES.length} articles</span>
+          <span>{filteredArticles.length} articles found</span>
         )}
       </div>
 
@@ -204,28 +204,31 @@ function ArticleCard({ article, isBookmarked, onBookmark, onClick }: ArticleCard
         </button>
       </div>
       <div className="p-3">
-        <div className="flex items-center gap-1 text-xs text-zinc-400 mb-2">
-          <BookOpen className="h-3 w-3" />
-          <span>{article.content.length} sections</span>
-        </div>
         {article.content.slice(0, 2).map((section, idx) => (
           <div key={idx} className="mb-2 last:mb-0">
             {section.type === 'paragraph' && (
-              <div className="text-sm text-white field-mode:text-yellow-100 line-clamp-2">{section.text}</div>
+              <div className="text-xs text-zinc-400 field-mode:text-yellow-400/60 line-clamp-2 font-mono">{section.text}</div>
+            )}
+            {section.type === 'table' && (
+              <div className="text-xs text-zinc-500 font-mono uppercase tracking-wider">Table: {section.caption?.split('—')[0]?.trim()}</div>
             )}
             {section.type === 'violation' && (
               <div className="flex items-start gap-1.5">
-                <AlertTriangle className="h-3.5 w-3.5 text-red-500 mt-0.5 shrink-0" />
-                <span className="text-xs text-red-300">{section.scenario}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-red-500 mt-0.5 shrink-0">VIO</span>
+                <span className="text-xs text-zinc-400">{section.scenario}</span>
               </div>
             )}
           </div>
         ))}
-        {article.content.length > 2 && (
-          <div className="text-xs text-[#f97316] field-mode:text-yellow-300 mt-2">
-            + {article.content.length - 2} more sections
-          </div>
-        )}
+        <div className="flex items-center gap-3 mt-2 pt-2 border-t border-zinc-800/50">
+          <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider">{article.content.length} sections</span>
+          {article.content.some((s: any) => s.type === 'table') && (
+            <span className="text-[10px] font-mono text-orange-500/70 uppercase tracking-wider">+ tables</span>
+          )}
+          {article.content.some((s: any) => s.type === 'violation') && (
+            <span className="text-[10px] font-mono text-red-500/70 uppercase tracking-wider">+ violations</span>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -255,14 +258,14 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
         </div>
       </div>
       <div className="p-4">
-        <div className="mb-6">
-          <h2 className="text-sm uppercase tracking-wider text-zinc-400 mb-2">Scope</h2>
-          <p className="text-white field-mode:text-yellow-100">{article.scope}</p>
+        <div className="mb-6 bg-zinc-900/40 border border-zinc-800/60 rounded-lg p-3">
+          <h2 className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mb-1.5">Scope</h2>
+          <p className="text-zinc-300 field-mode:text-yellow-100 text-sm">{article.scope}</p>
         </div>
 
         <div className="mb-6">
-          <h2 className="text-sm uppercase tracking-wider text-zinc-400 mb-2">Content</h2>
-          <div className="space-y-4">
+          <h2 className="text-[10px] font-mono uppercase tracking-wider text-orange-400 mb-3">Code Sections</h2>
+          <div className="space-y-3">
             {article.content.map((section, idx) => (
               <SectionRenderer key={idx} section={section} />
             ))}
@@ -271,15 +274,15 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
 
         {article.relatedArticles && article.relatedArticles.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-sm uppercase tracking-wider text-zinc-400 mb-2">Related Articles</h2>
+            <h2 className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mb-2">Related Articles</h2>
             <div className="flex flex-wrap gap-2">
               {article.relatedArticles.map(art => (
-                <button
+                <span
                   key={art}
-                  className="px-3 py-1.5 bg-zinc-900 field-mode:bg-black text-[#f97316] field-mode:text-yellow-300 text-xs border border-zinc-800 field-mode:border-yellow-400/30 hover:border-orange-500"
+                  className="px-2.5 py-1 bg-zinc-900 text-orange-400 text-[11px] font-mono border border-zinc-800 rounded"
                 >
                   {art}
-                </button>
+                </span>
               ))}
             </div>
           </div>
@@ -287,14 +290,14 @@ function ArticleDetail({ article, onBack }: ArticleDetailProps) {
 
         {article.changes && article.changes.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-sm uppercase tracking-wider text-zinc-400 mb-2">NEC 2023 Changes</h2>
+            <h2 className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mb-2">NEC 2023 Changes</h2>
             <div className="space-y-2">
               {article.changes.map((change, idx) => (
-                <div key={idx} className={`p-3 border-l-4 ${change.type === 'new' ? 'border-[#f97316] bg-orange-900/20' : 'border-[#ffaa00] bg-yellow-900/20'}`}>
-                  <span className={`text-xs font-bold uppercase ${change.type === 'new' ? 'text-[#f97316]' : 'text-[#ffaa00]'}`}>
+                <div key={idx} className={`p-3 rounded-lg border-l-4 ${change.type === 'new' ? 'border-orange-500 bg-orange-900/20' : 'border-amber-500 bg-amber-900/20'}`}>
+                  <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${change.type === 'new' ? 'text-orange-400' : 'text-amber-400'}`}>
                     {change.type === 'new' ? 'New' : 'Revised'}
                   </span>
-                  <p className="text-white field-mode:text-yellow-100 mt-1">{change.text}</p>
+                  <p className="text-zinc-200 field-mode:text-yellow-100 text-sm mt-1">{change.text}</p>
                 </div>
               ))}
             </div>
@@ -309,63 +312,82 @@ function SectionRenderer({ section }: { section: any }) {
   switch (section.type) {
     case 'paragraph':
       return (
-        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border-l-2 border-[#f97316] field-mode:border-yellow-400">
+        <div className="border-l-2 border-orange-500/60 pl-3 py-1">
           {section.id && (
-            <span className="text-[#f97316] field-mode:text-yellow-300 text-xs font-mono font-bold">{section.id}</span>
+            <span className="text-orange-400 text-[10px] font-mono font-bold uppercase tracking-wider">{section.id}</span>
           )}
-          <p className="text-white field-mode:text-yellow-100 text-sm mt-1">{section.text}</p>
+          <p className="text-zinc-200 field-mode:text-yellow-100 text-sm mt-1 leading-relaxed">{section.text}</p>
           {section.plainEnglish && (
-            <p className="text-zinc-500 field-mode:text-yellow-400/40 text-xs italic mt-1">Plain English: {section.plainEnglish}</p>
+            <div className="mt-2 bg-zinc-900/60 border border-zinc-800/60 rounded px-3 py-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Plain English</span>
+              <p className="text-zinc-300 field-mode:text-yellow-400/70 text-xs mt-0.5 italic">{section.plainEnglish}</p>
+            </div>
           )}
           {section.application && (
-            <p className="text-[#f97316] field-mode:text-yellow-300/80 text-xs mt-1">Application: {section.application}</p>
+            <p className="text-orange-400/70 field-mode:text-yellow-300/80 text-[11px] mt-1.5 font-mono">→ {section.application}</p>
           )}
         </div>
       )
     case 'list':
       return (
-        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border-l-2 border-[#f97316]">
-          <ul className="list-disc pl-4 space-y-1">
+        <div className="border-l-2 border-orange-500/60 pl-3 py-1">
+          <ul className="space-y-1">
             {section.items.map((item: string, idx: number) => (
-              <li key={idx} className="text-white field-mode:text-yellow-100 text-sm">{item}</li>
+              <li key={idx} className="text-zinc-200 field-mode:text-yellow-100 text-sm flex gap-2">
+                <span className="text-orange-500 mt-1 shrink-0">·</span>
+                {item}
+              </li>
             ))}
           </ul>
         </div>
       )
     case 'violation':
       return (
-        <div className="p-3 bg-[#130d10] field-mode:bg-black border-l-2 border-red-500">
-          <div className="flex items-start gap-2">
-            <X className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+        <div className="bg-red-950/20 border border-red-900/40 rounded-lg p-3">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-red-500 border border-red-800/50 px-1.5 py-0.5 rounded">VIOLATION</span>
+          </div>
+          <p className="text-red-300 text-sm font-medium mb-2">{section.scenario}</p>
+          <div className="space-y-1.5">
             <div>
-              <p className="text-red-300 text-sm font-semibold">{section.scenario}</p>
-              <p className="text-red-400/80 text-xs mt-1">Consequence: {section.consequence}</p>
-              <div className="flex items-start gap-1.5 mt-2">
-                <Check className="h-4 w-4 text-[#f97316] mt-0.5 shrink-0" />
-                <p className="text-[#f97316] field-mode:text-yellow-300 text-xs">{section.fix}</p>
-              </div>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Consequence</span>
+              <p className="text-zinc-400 text-xs mt-0.5">{section.consequence}</p>
+            </div>
+            <div className="border-t border-red-900/30 pt-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-orange-500">Fix</span>
+              <p className="text-orange-300 field-mode:text-yellow-300 text-xs mt-0.5">{section.fix}</p>
             </div>
           </div>
         </div>
       )
     case 'table':
+      if (!section.rows || section.rows.length === 0) return null
+      const columns = Object.keys(section.rows[0])
       return (
-        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border border-zinc-800">
-          <div className="text-xs text-zinc-400 mb-2">Table: {section.caption || 'Data'}</div>
+        <div className="rounded-lg overflow-hidden border border-zinc-800">
+          {section.caption && (
+            <div className="bg-zinc-900 px-3 py-2 border-b border-zinc-800">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-orange-400">{section.caption}</span>
+            </div>
+          )}
           <div className="overflow-x-auto">
-            <table className="w-full text-xs">
+            <table className="w-full text-xs font-mono">
               <thead>
-                <tr className="border-b border-zinc-800 text-zinc-500">
-                  {Object.keys(section.rows[0] || {}).map(key => (
-                    <th key={key} className="text-left py-1">{key}</th>
+                <tr className="bg-zinc-900 border-b border-zinc-700">
+                  {columns.map((key, i) => (
+                    <th key={key} className={`text-left px-3 py-2 text-orange-400 font-mono uppercase text-[10px] tracking-wider whitespace-nowrap ${i === 0 ? 'border-l-2 border-orange-500' : ''}`}>
+                      {key}
+                    </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-900">
+              <tbody>
                 {section.rows.map((row: Record<string, string>, idx: number) => (
-                  <tr key={idx}>
-                    {Object.values(row).map((val, colIdx) => (
-                      <td key={colIdx} className="py-1.5 text-white field-mode:text-yellow-100">{val}</td>
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-zinc-900/30' : ''}>
+                    {columns.map((col, colIdx) => (
+                      <td key={col} className={`px-3 py-2 text-zinc-200 whitespace-nowrap ${colIdx === 0 ? 'border-l-2 border-orange-500/40 font-medium text-zinc-100' : 'text-zinc-300'}`}>
+                        {row[col]}
+                      </td>
                     ))}
                   </tr>
                 ))}
@@ -375,10 +397,6 @@ function SectionRenderer({ section }: { section: any }) {
         </div>
       )
     default:
-      return (
-        <div className="p-3 bg-[#0a0b0e] field-mode:bg-black border border-zinc-800">
-          <p className="text-white field-mode:text-yellow-100">{JSON.stringify(section)}</p>
-        </div>
-      )
+      return null
   }
 }

@@ -131,7 +131,7 @@ export function VoltageDropCalculator() {
             <select
               value={inputs.systemVoltage}
               onChange={e => setInputs(p => ({ ...p, systemVoltage: Number(e.target.value) }))}
-              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             >
               {SYSTEM_VOLTAGES.map(v => <option key={v} value={v}>{v}V</option>)}
             </select>
@@ -141,7 +141,7 @@ export function VoltageDropCalculator() {
             <select
               value={inputs.phase}
               onChange={e => setInputs(p => ({ ...p, phase: e.target.value as 'single' | 'three' }))}
-              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             >
               <option value="single">1-Phase</option>
               <option value="three">3-Phase</option>
@@ -172,7 +172,7 @@ export function VoltageDropCalculator() {
               max={currentMode === 'load' ? 6000 : 7500}
               onChange={e => handleDisplayedCurrentChange(Number(e.target.value))}
               placeholder={currentMode === 'load' ? '20' : '25'}
-              className={`h-12 border bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:outline-none ${currentError ? 'border-red-500 focus:border-red-500' : 'border-[#27272a] focus:border-[#f97316]'}`}
+              className={`h-12 border bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:outline-none focus:ring-1 focus:ring-orange-500/20 ${currentError ? 'border-red-500 focus:border-red-500' : 'border-[#27272a] focus:border-[#f97316]'}`}
             />
             <div className="flex flex-col gap-0.5">
               {!currentError && (
@@ -190,7 +190,7 @@ export function VoltageDropCalculator() {
               max={10000}
               onChange={e => setInputs(p => ({ ...p, distance: Number(e.target.value) }))}
               placeholder="100"
-              className={`h-12 border bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:outline-none ${distanceError ? 'border-red-500 focus:border-red-500' : 'border-[#27272a] focus:border-[#f97316]'}`}
+              className={`h-12 border bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:outline-none focus:ring-1 focus:ring-orange-500/20 ${distanceError ? 'border-red-500 focus:border-red-500' : 'border-[#27272a] focus:border-[#f97316]'}`}
             />
             {distanceError && <span className="text-[10px] text-red-400">{distanceError}</span>}
           </label>
@@ -202,7 +202,7 @@ export function VoltageDropCalculator() {
             <select
               value={inputs.wireSize}
               onChange={e => setInputs(p => ({ ...p, wireSize: e.target.value }))}
-              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             >
               {WIRE_SIZES.map(s => <option key={s} value={s}>#{s} AWG</option>)}
             </select>
@@ -212,7 +212,7 @@ export function VoltageDropCalculator() {
             <select
               value={inputs.material}
               onChange={e => setInputs(p => ({ ...p, material: e.target.value as 'copper' | 'aluminum' }))}
-              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             >
               <option value="copper">Copper</option>
               <option value="aluminum">Aluminum</option>
@@ -223,7 +223,7 @@ export function VoltageDropCalculator() {
 
       {/* Results */}
       {hasResult && result && (
-        <div className="border border-[#27272a] bg-[#18181b] p-4">
+        <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
           <div className="mb-3 flex items-center justify-between">
             <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Result</span>
             <span className={`flex items-center gap-1.5 border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
@@ -257,14 +257,14 @@ export function VoltageDropCalculator() {
           <div className="flex gap-2">
             <button
               onClick={handleSave}
-              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] transition-colors hover:bg-[#18181b]"
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] transition-colors hover:bg-[#18181b]"
             >
               <Save className="h-4 w-4" /> Save
             </button>
             <button
               onClick={() => shareCard(`voltage-drop-${inputs.systemVoltage}v-${inputs.current}a-${inputs.distance}ft`)}
               disabled={isGenerating || !shareCardData}
-              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] transition-colors hover:bg-[#18181b] disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] transition-colors hover:bg-[#18181b] disabled:opacity-50"
             >
               <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
             </button>

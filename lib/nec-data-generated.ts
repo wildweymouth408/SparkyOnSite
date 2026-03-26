@@ -424,6 +424,33 @@ export const NEC_ARTICLES_DATA = [
         "id": "310.16-General"
       },
       {
+        "type": "table",
+        "caption": "Table 310.16 — Ampacity of Insulated Conductors Rated 0–2000V in Raceway, Cable, or Earth (Based on Ambient Temp 30°C / 86°F)",
+        "rows": [
+          { "Size": "14 AWG", "Cu 60°C": "15*", "Cu 75°C": "15*", "Cu 90°C": "15*", "Al 60°C": "—", "Al 75°C": "—", "Al 90°C": "—" },
+          { "Size": "12 AWG", "Cu 60°C": "20*", "Cu 75°C": "20*", "Cu 90°C": "20*", "Al 60°C": "15*", "Al 75°C": "15*", "Al 90°C": "15*" },
+          { "Size": "10 AWG", "Cu 60°C": "30*", "Cu 75°C": "30*", "Cu 90°C": "30*", "Al 60°C": "25*", "Al 75°C": "25*", "Al 90°C": "25*" },
+          { "Size": "8 AWG",  "Cu 60°C": "40",  "Cu 75°C": "50",  "Cu 90°C": "55",  "Al 60°C": "30",  "Al 75°C": "40",  "Al 90°C": "45" },
+          { "Size": "6 AWG",  "Cu 60°C": "55",  "Cu 75°C": "65",  "Cu 90°C": "75",  "Al 60°C": "40",  "Al 75°C": "50",  "Al 90°C": "60" },
+          { "Size": "4 AWG",  "Cu 60°C": "70",  "Cu 75°C": "85",  "Cu 90°C": "95",  "Al 60°C": "55",  "Al 75°C": "65",  "Al 90°C": "75" },
+          { "Size": "3 AWG",  "Cu 60°C": "85",  "Cu 75°C": "100", "Cu 90°C": "115", "Al 60°C": "65",  "Al 75°C": "75",  "Al 90°C": "85" },
+          { "Size": "2 AWG",  "Cu 60°C": "95",  "Cu 75°C": "115", "Cu 90°C": "130", "Al 60°C": "75",  "Al 75°C": "90",  "Al 90°C": "100" },
+          { "Size": "1 AWG",  "Cu 60°C": "110", "Cu 75°C": "130", "Cu 90°C": "145", "Al 60°C": "85",  "Al 75°C": "100", "Al 90°C": "115" },
+          { "Size": "1/0",    "Cu 60°C": "125", "Cu 75°C": "150", "Cu 90°C": "170", "Al 60°C": "100", "Al 75°C": "120", "Al 90°C": "135" },
+          { "Size": "2/0",    "Cu 60°C": "145", "Cu 75°C": "175", "Cu 90°C": "195", "Al 60°C": "115", "Al 75°C": "135", "Al 90°C": "150" },
+          { "Size": "3/0",    "Cu 60°C": "165", "Cu 75°C": "200", "Cu 90°C": "225", "Al 60°C": "130", "Al 75°C": "155", "Al 90°C": "175" },
+          { "Size": "4/0",    "Cu 60°C": "195", "Cu 75°C": "230", "Cu 90°C": "260", "Al 60°C": "150", "Al 75°C": "180", "Al 90°C": "205" },
+          { "Size": "250 kcmil", "Cu 60°C": "215", "Cu 75°C": "255", "Cu 90°C": "290", "Al 60°C": "170", "Al 75°C": "205", "Al 90°C": "230" },
+          { "Size": "300 kcmil", "Cu 60°C": "240", "Cu 75°C": "285", "Cu 90°C": "320", "Al 60°C": "190", "Al 75°C": "230", "Al 90°C": "255" },
+          { "Size": "350 kcmil", "Cu 60°C": "260", "Cu 75°C": "310", "Cu 90°C": "350", "Al 60°C": "210", "Al 75°C": "250", "Al 90°C": "280" },
+          { "Size": "400 kcmil", "Cu 60°C": "280", "Cu 75°C": "335", "Cu 90°C": "380", "Al 60°C": "225", "Al 75°C": "270", "Al 90°C": "305" },
+          { "Size": "500 kcmil", "Cu 60°C": "320", "Cu 75°C": "380", "Cu 90°C": "430", "Al 60°C": "260", "Al 75°C": "310", "Al 90°C": "350" },
+          { "Size": "600 kcmil", "Cu 60°C": "355", "Cu 75°C": "420", "Cu 90°C": "475", "Al 60°C": "285", "Al 75°C": "340", "Al 90°C": "385" },
+          { "Size": "750 kcmil", "Cu 60°C": "400", "Cu 75°C": "475", "Cu 90°C": "535", "Al 60°C": "320", "Al 75°C": "385", "Al 90°C": "435" },
+          { "Size": "1000 kcmil","Cu 60°C": "455", "Cu 75°C": "545", "Cu 90°C": "615", "Al 60°C": "375", "Al 75°C": "445", "Al 90°C": "500" }
+        ]
+      },
+      {
         "type": "paragraph",
         "text": "Adjustment factors for more than three current-carrying conductors in raceway",
         "plainEnglish": "4-6 wires in conduit = 80% of table ampacity. 7-9 wires = 70%.",
@@ -509,6 +536,40 @@ export const NEC_ARTICLES_DATA = [
         "plainEnglish": "Cable clamps inside box count as 1 wire worth of space",
         "application": "Metal box calculations",
         "id": "314.16(B)(2)"
+      },
+      {
+        "type": "table",
+        "caption": "Table 314.16(A) — Metal Boxes — Maximum Volume",
+        "rows": [
+          { "Box Type": "4\" Sq × 1-1/4\"", "Volume (cu.in.)": "18.0" },
+          { "Box Type": "4\" Sq × 1-1/2\"", "Volume (cu.in.)": "21.0" },
+          { "Box Type": "4\" Sq × 2-1/8\"", "Volume (cu.in.)": "30.3" },
+          { "Box Type": "4-11/16\" Sq × 1-1/4\"", "Volume (cu.in.)": "25.5" },
+          { "Box Type": "4-11/16\" Sq × 1-1/2\"", "Volume (cu.in.)": "29.5" },
+          { "Box Type": "4-11/16\" Sq × 2-1/8\"", "Volume (cu.in.)": "42.0" },
+          { "Box Type": "3×2×1-1/2\" Device", "Volume (cu.in.)": "7.5" },
+          { "Box Type": "3×2×2\" Device", "Volume (cu.in.)": "10.0" },
+          { "Box Type": "3×2×2-1/4\" Device", "Volume (cu.in.)": "10.5" },
+          { "Box Type": "3×2×2-1/2\" Device", "Volume (cu.in.)": "12.5" },
+          { "Box Type": "3×2×2-3/4\" Device", "Volume (cu.in.)": "14.0" },
+          { "Box Type": "3×2×3-1/2\" Device", "Volume (cu.in.)": "18.0" },
+          { "Box Type": "4\" Oct × 1-1/4\"", "Volume (cu.in.)": "12.5" },
+          { "Box Type": "4\" Oct × 1-1/2\"", "Volume (cu.in.)": "15.5" },
+          { "Box Type": "4\" Oct × 2-1/8\"", "Volume (cu.in.)": "21.5" }
+        ]
+      },
+      {
+        "type": "table",
+        "caption": "Table 314.16(B) — Volume Allowance Required per Conductor",
+        "rows": [
+          { "Wire Size": "18 AWG", "Volume (cu.in.)": "1.50" },
+          { "Wire Size": "16 AWG", "Volume (cu.in.)": "1.75" },
+          { "Wire Size": "14 AWG", "Volume (cu.in.)": "2.00" },
+          { "Wire Size": "12 AWG", "Volume (cu.in.)": "2.25" },
+          { "Wire Size": "10 AWG", "Volume (cu.in.)": "2.50" },
+          { "Wire Size": "8 AWG",  "Volume (cu.in.)": "3.00" },
+          { "Wire Size": "6 AWG",  "Volume (cu.in.)": "5.00" }
+        ]
       },
       {
         "type": "violation",
@@ -1447,6 +1508,241 @@ export const NEC_ARTICLES_DATA = [
         "scenario": "Ignoring multiple conduits in same row for angle pull",
         "consequence": "Box too small, difficult pull",
         "fix": "Calculate per 314.28(B)"
+      }
+    ]
+  }
+  ,{
+    "id": "art-ch9-table1",
+    "articleNumber": "Ch9-T1",
+    "title": "Chapter 9, Table 1 — Conduit Fill Percentages",
+    "chapter": "Chapter 9: Tables",
+    "scope": "Maximum percent of cross-sectional area of conduit or tubing for conductors and cables",
+    "content": [
+      {
+        "type": "paragraph",
+        "text": "The number of conductors in a single conduit or tubing shall not exceed the percentages in Table 1",
+        "plainEnglish": "1 wire: use 53% of conduit area. 2 wires: 31%. 3 or more wires: 40%.",
+        "application": "All raceway conduit fill calculations",
+        "id": "Ch9-T1"
+      },
+      {
+        "type": "table",
+        "caption": "Table 1 — Percent of Cross Section of Conduit and Tubing for Conductors and Cables",
+        "rows": [
+          { "Number of Conductors": "1",  "Maximum Fill": "53%", "Notes": "Single wire allowed more room for pulling" },
+          { "Number of Conductors": "2",  "Maximum Fill": "31%", "Notes": "Two wires require more clearance" },
+          { "Number of Conductors": "3+", "Maximum Fill": "40%", "Notes": "Standard fill for multiple conductors" }
+        ]
+      },
+      {
+        "type": "violation",
+        "scenario": "4 conductors filling 50% of conduit area",
+        "consequence": "Exceeds 40% fill limit, conductor insulation damage during pulling",
+        "fix": "Upsize to next conduit trade size or reduce number of conductors per conduit"
+      }
+    ],
+    "relatedArticles": ["Ch9-T4", "Ch9-T5", "314.16"],
+    "keyPoints": [
+      {
+        "id": "Ch9-T1",
+        "text": "1 conductor: 53% fill. 2 conductors: 31% fill. 3+ conductors: 40% fill.",
+        "plainEnglish": "Three or more wires: never fill more than 40% of the conduit interior",
+        "application": "All conduit fill calculations"
+      }
+    ],
+    "commonViolations": [
+      {
+        "scenario": "4 conductors filling 50% of conduit area",
+        "consequence": "Exceeds 40% fill limit, conductor insulation damage during pulling",
+        "fix": "Upsize to next conduit trade size or reduce number of conductors per conduit"
+      }
+    ]
+  },
+  {
+    "id": "art-ch9-table4",
+    "articleNumber": "Ch9-T4",
+    "title": "Chapter 9, Table 4 — Conduit Internal Areas",
+    "chapter": "Chapter 9: Tables",
+    "scope": "Dimensions and percent area calculations for conduit and tubing",
+    "content": [
+      {
+        "type": "paragraph",
+        "text": "Internal cross-sectional areas of EMT, RMC, and PVC conduit by trade size",
+        "plainEnglish": "Total internal area of the conduit. Multiply by 40% fill limit for actual usable area.",
+        "application": "Conduit fill calculations — total area and usable area at 40% fill",
+        "id": "Ch9-T4"
+      },
+      {
+        "type": "table",
+        "caption": "Table 4 — Internal Area (sq.in.) of Conduit by Trade Size",
+        "rows": [
+          { "Trade Size": "1/2\"",   "EMT":  "0.304", "RMC":  "0.314", "PVC":  "0.285" },
+          { "Trade Size": "3/4\"",   "EMT":  "0.533", "RMC":  "0.533", "PVC":  "0.508" },
+          { "Trade Size": "1\"",     "EMT":  "0.864", "RMC":  "0.887", "PVC":  "0.832" },
+          { "Trade Size": "1-1/4\"", "EMT":  "1.496", "RMC":  "1.526", "PVC":  "1.453" },
+          { "Trade Size": "1-1/2\"", "EMT":  "2.036", "RMC":  "2.071", "PVC":  "1.986" },
+          { "Trade Size": "2\"",     "EMT":  "3.356", "RMC":  "3.408", "PVC":  "3.291" },
+          { "Trade Size": "2-1/2\"", "EMT":  "5.858", "RMC":  "4.866", "PVC":  "4.695" },
+          { "Trade Size": "3\"",     "EMT":  "8.846", "RMC":  "7.499", "PVC":  "7.268" },
+          { "Trade Size": "3-1/2\"", "EMT": "11.545", "RMC":  "9.521", "PVC":  "9.737" },
+          { "Trade Size": "4\"",     "EMT": "14.753", "RMC": "12.554", "PVC": "12.554" }
+        ]
+      }
+    ],
+    "relatedArticles": ["Ch9-T1", "Ch9-T5"],
+    "keyPoints": [
+      {
+        "id": "Ch9-T4",
+        "text": "Internal cross-sectional areas of conduit by trade size and type",
+        "plainEnglish": "Larger conduit trade size = more area. EMT vs RMC vs PVC have slightly different internal areas.",
+        "application": "Use with Table 1 fill percentages and Table 5 wire areas to calculate conduit fill"
+      }
+    ],
+    "commonViolations": []
+  },
+  {
+    "id": "art-ch9-table5",
+    "articleNumber": "Ch9-T5",
+    "title": "Chapter 9, Table 5 — Wire Cross-Sectional Areas",
+    "chapter": "Chapter 9: Tables",
+    "scope": "Dimensions of insulated conductors and fixture wires for conduit fill calculations",
+    "content": [
+      {
+        "type": "paragraph",
+        "text": "Cross-sectional area of insulated conductors by type and size for conduit fill",
+        "plainEnglish": "How much space does each wire take up inside a conduit? Use this table to add up all wire areas.",
+        "application": "Conduit fill calculations — wire area input for Table 1 fill percentage",
+        "id": "Ch9-T5"
+      },
+      {
+        "type": "table",
+        "caption": "Table 5 — Approximate Area (sq.in.) of Insulated Conductors",
+        "rows": [
+          { "Wire Size": "14 AWG", "THHN":   "0.0097", "THWN":   "0.0097", "XHHW":   "0.0139" },
+          { "Wire Size": "12 AWG", "THHN":   "0.0133", "THWN":   "0.0133", "XHHW":   "0.0181" },
+          { "Wire Size": "10 AWG", "THHN":   "0.0211", "THWN":   "0.0211", "XHHW":   "0.0243" },
+          { "Wire Size": "8 AWG",  "THHN":   "0.0366", "THWN":   "0.0366", "XHHW":   "0.0437" },
+          { "Wire Size": "6 AWG",  "THHN":   "0.0507", "THWN":   "0.0507", "XHHW":   "0.0590" },
+          { "Wire Size": "4 AWG",  "THHN":   "0.0824", "THWN":   "0.0824", "XHHW":   "0.0814" },
+          { "Wire Size": "3 AWG",  "THHN":   "0.0973", "THWN":   "0.0973", "XHHW":   "0.0962" },
+          { "Wire Size": "2 AWG",  "THHN":   "0.1158", "THWN":   "0.1158", "XHHW":   "0.1146" },
+          { "Wire Size": "1 AWG",  "THHN":   "0.1562", "THWN":   "0.1562", "XHHW":   "0.1534" },
+          { "Wire Size": "1/0",    "THHN":   "0.1855", "THWN":   "0.1855", "XHHW":   "0.1825" },
+          { "Wire Size": "2/0",    "THHN":   "0.2223", "THWN":   "0.2223", "XHHW":   "0.2190" },
+          { "Wire Size": "3/0",    "THHN":   "0.2679", "THWN":   "0.2679", "XHHW":   "0.2642" },
+          { "Wire Size": "4/0",    "THHN":   "0.3237", "THWN":   "0.3237", "XHHW":   "0.3197" },
+          { "Wire Size": "250 kcmil", "THHN": "0.3970", "THWN":  "0.3970", "XHHW":   "0.3904" },
+          { "Wire Size": "300 kcmil", "THHN": "0.4608", "THWN":  "0.4608", "XHHW":   "0.4536" },
+          { "Wire Size": "350 kcmil", "THHN": "0.5242", "THWN":  "0.5242", "XHHW":   "0.5166" },
+          { "Wire Size": "400 kcmil", "THHN": "0.5863", "THWN":  "0.5863", "XHHW":   "0.5782" },
+          { "Wire Size": "500 kcmil", "THHN": "0.7073", "THWN":  "0.7073", "XHHW":   "0.6984" },
+          { "Wire Size": "600 kcmil", "THHN": "0.8676", "THWN":  "0.8676", "XHHW":   "0.8709" },
+          { "Wire Size": "750 kcmil", "THHN": "1.0496", "THWN":  "1.0496", "XHHW":   "1.0532" }
+        ]
+      }
+    ],
+    "relatedArticles": ["Ch9-T1", "Ch9-T4"],
+    "keyPoints": [
+      {
+        "id": "Ch9-T5",
+        "text": "Approximate cross-sectional area of insulated conductors for conduit fill",
+        "plainEnglish": "Sum up all wire areas from this table, then compare to conduit area × fill limit",
+        "application": "Conduit fill calculations per Chapter 9 Table 1"
+      }
+    ],
+    "commonViolations": []
+  },
+  {
+    "id": "art-430-248-250",
+    "articleNumber": "430.248/250",
+    "title": "Tables 430.248 & 430.250 — Motor Full-Load Amps",
+    "chapter": "Chapter 4: Equipment",
+    "scope": "Full-load current values for sizing motor conductors, overcurrent protection, and controllers",
+    "content": [
+      {
+        "type": "paragraph",
+        "text": "Use table values (not nameplate FLA) for conductor sizing and overcurrent device selection",
+        "plainEnglish": "Size motor conductors and breakers from these NEC tables, NOT the motor nameplate. Conductors min 125% of FLA. Breaker max 250% of FLA.",
+        "application": "Motor branch circuit conductor sizing (430.22), OCPD sizing (430.52)",
+        "id": "430.248"
+      },
+      {
+        "type": "table",
+        "caption": "Table 430.248 — Single-Phase Motor Full-Load Amps",
+        "rows": [
+          { "HP":   "0.5", "115V":  "9.8", "200V":  "5.6", "208V":  "5.4", "230V":  "4.9" },
+          { "HP":  "0.75", "115V": "13.8", "200V":  "7.9", "208V":  "7.6", "230V":  "6.9" },
+          { "HP":     "1", "115V": "16.0", "200V":  "9.2", "208V":  "8.8", "230V":  "8.0" },
+          { "HP":   "1.5", "115V": "20.0", "200V": "11.5", "208V": "11.0", "230V": "10.0" },
+          { "HP":     "2", "115V": "24.0", "200V": "13.8", "208V": "13.2", "230V": "12.0" },
+          { "HP":     "3", "115V": "34.0", "200V": "19.6", "208V": "18.7", "230V": "17.0" },
+          { "HP":     "5", "115V": "56.0", "200V": "32.2", "208V": "30.8", "230V": "28.0" },
+          { "HP":   "7.5", "115V":    "—", "200V": "46.0", "208V": "44.0", "230V": "40.0" },
+          { "HP":    "10", "115V":    "—", "200V": "64.0", "208V": "61.0", "230V": "50.0" }
+        ]
+      },
+      {
+        "type": "table",
+        "caption": "Table 430.250 — Three-Phase Motor Full-Load Amps",
+        "rows": [
+          { "HP":   "0.5", "200V":  "2.5", "208V":  "2.4", "230V":  "2.2", "460V":  "1.1", "575V":  "0.9" },
+          { "HP":  "0.75", "200V":  "3.7", "208V":  "3.5", "230V":  "3.2", "460V":  "1.6", "575V":  "1.3" },
+          { "HP":     "1", "200V":  "4.8", "208V":  "4.6", "230V":  "4.2", "460V":  "2.1", "575V":  "1.7" },
+          { "HP":   "1.5", "200V":  "6.9", "208V":  "6.6", "230V":  "6.0", "460V":  "3.0", "575V":  "2.4" },
+          { "HP":     "2", "200V":  "7.8", "208V":  "7.5", "230V":  "6.8", "460V":  "3.4", "575V":  "2.7" },
+          { "HP":     "3", "200V": "11.0", "208V": "10.6", "230V":  "9.6", "460V":  "4.8", "575V":  "3.9" },
+          { "HP":     "5", "200V": "17.5", "208V": "16.7", "230V": "15.2", "460V":  "7.6", "575V":  "6.1" },
+          { "HP":   "7.5", "200V": "25.3", "208V": "24.2", "230V": "22.0", "460V": "11.0", "575V":  "9.0" },
+          { "HP":    "10", "200V": "32.2", "208V": "30.8", "230V": "28.0", "460V": "14.0", "575V": "11.0" },
+          { "HP":    "15", "200V": "48.3", "208V": "46.2", "230V": "42.0", "460V": "21.0", "575V": "17.0" },
+          { "HP":    "20", "200V": "62.1", "208V": "59.4", "230V": "54.0", "460V": "27.0", "575V": "22.0" },
+          { "HP":    "25", "200V": "78.2", "208V": "74.8", "230V": "68.0", "460V": "34.0", "575V": "27.0" },
+          { "HP":    "30", "200V": "92.0", "208V": "88.0", "230V": "80.0", "460V": "40.0", "575V": "32.0" },
+          { "HP":    "40", "200V":  "120", "208V":  "114", "230V":  "104", "460V": "52.0", "575V": "41.0" },
+          { "HP":    "50", "200V":  "150", "208V":  "143", "230V":  "130", "460V": "65.0", "575V": "52.0" },
+          { "HP":    "60", "200V":  "177", "208V":  "169", "230V":  "154", "460V": "77.0", "575V": "62.0" },
+          { "HP":    "75", "200V":  "221", "208V":  "211", "230V":  "192", "460V": "96.0", "575V": "77.0" },
+          { "HP":   "100", "200V":  "285", "208V":  "273", "230V":  "248", "460V":  "124", "575V": "99.0" }
+        ]
+      },
+      {
+        "type": "violation",
+        "scenario": "Using nameplate FLA instead of NEC table FLA for conductor sizing",
+        "consequence": "Conductors may be undersized for worst-case motor operation",
+        "fix": "Use NEC Table 430.248 (1-phase) or 430.250 (3-phase) for all conductor and OCPD sizing"
+      },
+      {
+        "type": "violation",
+        "scenario": "Motor branch circuit breaker sized at exactly 125% of FLA",
+        "consequence": "Motor will nuisance-trip on startup inrush current",
+        "fix": "Size inverse-time breaker at max 250% of FLA per NEC 430.52(C)(1). Fuse max 175%."
+      }
+    ],
+    "relatedArticles": ["430.22", "430.52", "310.16"],
+    "keyPoints": [
+      {
+        "id": "430.22",
+        "text": "Motor conductors shall have an ampacity of not less than 125% of the motor full-load current",
+        "plainEnglish": "Wire to motor = table FLA × 1.25 minimum",
+        "application": "Single motor branch circuit conductor sizing"
+      },
+      {
+        "id": "430.52",
+        "text": "Branch-circuit overcurrent device shall not exceed 250% of motor FLA for inverse-time breakers",
+        "plainEnglish": "Breaker = table FLA × 2.5 maximum (round up to standard size)",
+        "application": "Motor branch circuit breaker sizing"
+      }
+    ],
+    "commonViolations": [
+      {
+        "scenario": "Using nameplate FLA instead of NEC table FLA for conductor sizing",
+        "consequence": "Conductors may be undersized for worst-case motor operation",
+        "fix": "Use NEC Table 430.248 (1-phase) or 430.250 (3-phase) for all conductor and OCPD sizing"
+      },
+      {
+        "scenario": "Motor branch circuit breaker sized at exactly 125% of FLA",
+        "consequence": "Motor will nuisance-trip on startup inrush current",
+        "fix": "Size inverse-time breaker at max 250% of FLA per NEC 430.52(C)(1). Fuse max 175%."
       }
     ]
   }

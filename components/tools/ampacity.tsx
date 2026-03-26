@@ -107,7 +107,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
     passFailBadge: null,
   } : null
 
-  const sel = 'h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none'
+  const sel = 'h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20'
   const lbl = 'text-[11px] uppercase tracking-wider text-[#a1a1aa]'
 
   return (
@@ -169,7 +169,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
               onChange={e => setInputs(p => ({ ...p, ambientTemp: Number(e.target.value) }))}
               min={-50}
               max={150}
-              className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+              className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
             />
           </label>
         </div>
@@ -182,13 +182,13 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
             onChange={e => setInputs(p => ({ ...p, conductorsInRaceway: Number(e.target.value) }))}
             min={1}
             max={100}
-            className="h-12 border border-[#27272a] bg-[#18181b] px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none"
+            className="h-12 border border-[#27272a] bg-[#18181b] rounded-lg px-3 font-mono text-sm text-[#fafafa] focus:border-[#f97316] focus:outline-none focus:ring-1 focus:ring-orange-500/20"
           />
         </label>
       </div>
 
       {result && (
-        <div className="border border-[#27272a] bg-[#18181b] p-4">
+        <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
           <div className="mb-4">
             <span className="text-[11px] uppercase tracking-wider text-[#a1a1aa]">Ampacity Result</span>
           </div>
@@ -220,7 +220,7 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
 
       {/* Chart Visualization */}
       {result && !compact && (
-        <div className="border border-[#27272a] bg-[#18181b] p-4">
+        <div className="border border-[#27272a] bg-[#18181b] p-4 rounded-xl">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5 text-[#f97316]" />
@@ -319,14 +319,14 @@ export function AmpacityCalculator({ compact = false }: { compact?: boolean }) {
           <div className="flex gap-2">
             <button
               onClick={handleSave}
-              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]"
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b]"
             >
               <Save className="h-4 w-4" /> Save
             </button>
             <button
               onClick={() => shareCard(`ampacity-${inputs.wireSize}awg-${result.correctedAmpacity}a`)}
               disabled={isGenerating || !shareCardData}
-              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 border border-[#27272a] bg-[#1a1a1a] py-3 rounded-lg text-xs font-medium uppercase tracking-wider text-[#fafafa] hover:bg-[#18181b] disabled:opacity-50"
             >
               <Share2 className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Share'}
             </button>
