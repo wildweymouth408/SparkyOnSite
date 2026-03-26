@@ -5,7 +5,6 @@ import { Plus, Trash2, Eye, EyeOff, Upload, Award, X, Loader2 } from 'lucide-rea
 import { Skeleton } from '@/components/ui/skeleton'
 import { supabase } from '@/lib/supabase'
 import { uploadCertificate, getCertificateUrl, deleteCertificate } from '@/lib/certificates'
-import { encryptField, decryptField } from '@/lib/crypto'
 
 interface Credential {
   id: string
@@ -80,13 +79,24 @@ export function CredentialsTab() {
       setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true } : c))
       return
     }
-    decryptField(cred.license_number)
-      .then(decrypted => {
+    ;(async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        const res = await fetch('/api/credentials/decrypt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+          },
+          body: JSON.stringify({ credential_id: id }),
+        })
+        const json = await res.json()
+        const decrypted = res.ok ? (json.license ?? '') : 'Unable to decrypt'
         setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true, licenseDecrypted: decrypted } : c))
-      })
-      .catch(() => {
+      } catch {
         setCredentials(prev => prev.map(c => c.id === id ? { ...c, showLicense: true, licenseDecrypted: 'Unable to decrypt' } : c))
-      })
+      }
+    })()
   }
 
   async function handleSave() {
@@ -97,20 +107,26 @@ export function CredentialsTab() {
       if (form.file) {
         file_path = await uploadCertificate(userId, form.file)
       }
-      let encrypted_license: string | null = null
-      if (form.license_number.trim()) {
-        encrypted_license = await encryptField(form.license_number.trim())
-      }
-      const { error } = await supabase.from('credentials').insert({
-        user_id: userId,
-        name: form.name,
-        issuer: form.issuer,
-        issue_date: form.issue_date || null,
-        expiry_date: form.expiry_date || null,
-        license_number: encrypted_license,
-        file_path,
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/credentials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
+        body: JSON.stringify({
+          name: form.name,
+          issuer: form.issuer,
+          issue_date: form.issue_date || null,
+          expiry_date: form.expiry_date || null,
+          license_number: form.license_number || null,
+          file_path,
+        }),
       })
-      if (error) throw error
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}))
+        throw new Error(json.error ?? 'Failed to save credential')
+      }
       const { data } = await supabase
         .from('credentials')
         .select('*')

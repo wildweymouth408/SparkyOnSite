@@ -7,12 +7,11 @@ import {
   Plus, ChevronRight, AlertTriangle, CheckCircle, Zap,
 } from 'lucide-react'
 import { CalculatorDisclaimer } from '@/components/calculator-disclaimer'
-import { publicEnv } from '@/lib/env'
 
-// ─── Supabase client (client-side only) ──────────────────────────────────────
+// ─── Supabase client — use process.env directly to avoid lib/env module-load side-effects
 const supabase = createClient(
-  publicEnv.supabaseUrl,
-  publicEnv.supabaseAnonKey
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
 // ─── Types ────────────────────────────────────────────────────────────────────
