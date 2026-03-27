@@ -654,6 +654,7 @@ function CodeSection() {
   const [isListening, setIsListening] = useState(false)
   const [activeFilter, setActiveFilter] = useState<string | null>(null)
   const [bookmarked, setBookmarked] = useState<string[]>([])
+  const [expandedArticle, setExpandedArticle] = useState<string | null>(null)
 
   const startVoiceSearch = () => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
@@ -690,130 +691,152 @@ function CodeSection() {
 
   return (
     <div>
-      <div className="sticky top-0 bg-[#09090b] field-mode:bg-black z-10 pb-3 border-b border-[#18181b] field-mode:border-yellow-400/20 mb-4">
+      {/* Search + filter header */}
+      <div className="sticky top-0 bg-zinc-950 field-mode:bg-black z-10 pb-3 border-b border-zinc-800/60 field-mode:border-yellow-400/20 mb-4">
         <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a1a1aa] field-mode:text-yellow-400/50" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600" />
           <input type="text" placeholder="Search NEC articles..." value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 pl-9 pr-10 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#a1a1aa] focus:border-[#f97316] focus:outline-none" />
+            className="w-full bg-zinc-900 field-mode:bg-black border border-zinc-800 field-mode:border-yellow-400/30 pl-9 pr-10 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-zinc-600 focus:border-zinc-600 focus:outline-none" />
           <button onClick={startVoiceSearch}
-            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-[#f97316]'}`}>
+            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 ${isListening ? 'text-red-400 animate-pulse' : 'text-zinc-600 hover:text-zinc-400'}`}>
             <Mic className="h-4 w-4" />
           </button>
         </div>
-        <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+        <div className="flex gap-1.5 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           {["GFCI","AFCI","Grounding","Wire Size","Box Fill","Clearance"].map(f => (
             <button key={f} onClick={() => setActiveFilter(activeFilter === f ? null : f)}
-              className={`px-2.5 py-1 text-xs font-medium whitespace-nowrap transition-colors border ${activeFilter === f ? 'bg-[#f97316] text-[#09090b] border-[#f97316]' : 'bg-[#18181b] text-[#a1a1aa] border-[#27272a]'}`}>
+              className={`px-2.5 py-1 text-[10px] font-medium whitespace-nowrap transition-colors border ${
+                activeFilter === f
+                  ? 'border-zinc-400 text-zinc-100 bg-zinc-700'
+                  : 'border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-400'
+              }`}>
               {f}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Ampacity table — NEC 310.16 with 240.4(D) OCPD limits called out for 14/12/10 AWG */}
+      {/* Ampacity table — NEC 310.16 with 240.4(D) OCPD limits */}
       {(activeFilter === "Wire Size" || searchQuery.toLowerCase().includes("wire") || searchQuery.toLowerCase().includes("ampacity")) && (
-        <div className="mb-4 bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 p-3 overflow-x-auto">
-          <div className="flex items-center gap-2 mb-1">
-            <Zap className="h-4 w-4 text-[#f97316]" />
-            <span className="font-bold text-white field-mode:text-yellow-100 text-sm">Ampacity (310.16) — Copper</span>
+        <div className="mb-4 border border-zinc-800 overflow-hidden">
+          <div className="px-4 py-2.5 border-b border-zinc-800 bg-zinc-900/40">
+            <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">Ampacity Table — NEC 310.16 (Copper)</span>
           </div>
-          <div className="flex items-start gap-1.5 mb-2 bg-red-950/30 border border-red-900/40 p-2">
-            <AlertTriangle className="h-3 w-3 text-red-400 mt-0.5 shrink-0" />
-            <p className="text-[10px] text-red-300 leading-relaxed">
-              <span className="font-bold">NEC 240.4(D):</span> For 14/12/10 AWG, the Max OCPD (breaker) must not exceed the limit below — even though the conductor can carry more current. Wiring 14 AWG on a 20A breaker is a code violation and a fire hazard.
+          <div className="px-4 py-2.5 border-b border-zinc-800">
+            <p className="text-[11px] text-zinc-500 leading-relaxed">
+              <span className="font-semibold text-zinc-400">NEC 240.4(D):</span> For 14/12/10 AWG the max OCPD is capped below the wire's actual capacity. 14 AWG on a 20A breaker is a violation.
             </p>
           </div>
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-[#3f3f46] text-[#a1a1aa]">
-                <th className="text-left py-1">Size</th>
-                <th className="text-center py-1 text-[#f97316] field-mode:text-yellow-300">75°C Amp</th>
-                <th className="text-center py-1 text-red-400">Max OCPD</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#18181b]">
-              {ampacityTable.map(row => (
-                <tr key={row.size}>
-                  <td className="py-1.5 font-mono text-[#fafafa] field-mode:text-yellow-100">{row.size}</td>
-                  <td className="text-center py-1.5 text-[#fafafa] field-mode:text-yellow-100 font-mono">{row.copper["75°C"]}A</td>
-                  <td className="text-center py-1.5">
-                    {row.maxOCPD ? (
-                      <span className="inline-flex items-center gap-1 font-bold font-mono text-red-400">
-                        {row.maxOCPD}A
-                        <AlertTriangle className="h-3 w-3" />
-                      </span>
-                    ) : (
-                      <span className="text-[#a1a1aa] font-mono text-[10px]">—</span>
-                    )}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-zinc-800">
+                  <th className="text-left px-4 py-2 text-zinc-500 font-medium">Size</th>
+                  <th className="text-center px-3 py-2 text-zinc-500 font-medium">75°C</th>
+                  <th className="text-center px-3 py-2 text-zinc-500 font-medium">Max OCPD</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="text-[9px] text-[#71717a] field-mode:text-yellow-400/30 mt-2">NEC 310.16 (conductor ampacity) · NEC 240.4(D) (small conductor OCPD limit)</p>
+              </thead>
+              <tbody className="divide-y divide-zinc-800/50">
+                {ampacityTable.map(row => (
+                  <tr key={row.size}>
+                    <td className="px-4 py-2 font-mono text-zinc-200 field-mode:text-yellow-100">{row.size}</td>
+                    <td className="text-center px-3 py-2 font-mono text-zinc-300">{row.copper["75°C"]}A</td>
+                    <td className="text-center px-3 py-2 font-mono">
+                      {row.maxOCPD
+                        ? <span className="font-bold text-zinc-200">{row.maxOCPD}A</span>
+                        : <span className="text-zinc-700">—</span>
+                      }
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
-      {/* Article cards */}
-      <div className="space-y-4">
-        {filteredArticles.map(article => (
-          <div key={article.article} className="bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 overflow-hidden">
-            <div className="bg-[#161b24] field-mode:bg-black p-3 border-b border-[#27272a] field-mode:border-yellow-400/20 flex items-start justify-between">
-              <div>
-                <span className="text-[#f97316] field-mode:text-yellow-300 font-bold text-sm font-mono">{article.article}</span>
-                <h3 className="text-white field-mode:text-yellow-100 font-semibold text-sm mt-0.5">{article.title}</h3>
-                <p className="text-[#71717a] field-mode:text-yellow-400/50 text-xs mt-0.5">{article.scope}</p>
-              </div>
-              <button onClick={() => setBookmarked(prev =>
-                prev.includes(article.article) ? prev.filter(a => a !== article.article) : [...prev, article.article])}>
-                <Bookmark className={`h-4 w-4 ${bookmarked.includes(article.article) ? 'fill-[#f97316] text-[#f97316]' : 'text-[#a1a1aa]'}`} />
+      {/* Article accordion */}
+      <div className="border border-zinc-800/60 divide-y divide-zinc-800/60">
+        {filteredArticles.length === 0 && (
+          <div className="px-4 py-8 text-center text-xs text-zinc-600">No articles match your search.</div>
+        )}
+        {filteredArticles.map(article => {
+          const isOpen = expandedArticle === article.article
+          return (
+            <div key={article.article}>
+              {/* Collapsed row */}
+              <button
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-zinc-900/40 active:bg-zinc-900/60 transition-colors"
+                onClick={() => setExpandedArticle(isOpen ? null : article.article)}
+              >
+                <span className="font-mono font-bold text-sm text-white w-[4.5rem] shrink-0 leading-none">{article.article}</span>
+                <span className="flex-1 text-sm text-zinc-400 truncate">{article.title}</span>
+                <ChevronRight className={`h-4 w-4 text-zinc-600 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
               </button>
-            </div>
-            <div className="p-3 space-y-2">
-              {article.keyPoints.map(kp => (
-                <div key={kp.id} className="bg-[#0a0b0e] field-mode:bg-black p-2.5 border-l-2 border-[#f97316] field-mode:border-yellow-400">
-                  <span className="text-[#f97316] field-mode:text-yellow-300 text-xs font-mono font-bold">{kp.id}</span>
-                  <p className="text-white field-mode:text-yellow-100 text-sm font-medium mt-1">{kp.plainEnglish}</p>
-                  <p className="text-[#a1a1aa] field-mode:text-yellow-400/40 text-xs italic mt-0.5">"{kp.text}"</p>
-                  <p className="text-[#f97316] field-mode:text-yellow-300/80 text-xs mt-1">→ {kp.application}</p>
-                </div>
-              ))}
-            </div>
-            {article.commonViolations.length > 0 && (
-              <div className="p-3 bg-[#130d10] field-mode:bg-black border-t border-[#27272a] field-mode:border-yellow-400/20">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <AlertTriangle className="h-3.5 w-3.5 text-red-400" />
-                  <span className="text-xs uppercase text-red-400 font-bold">Common Violations</span>
-                </div>
-                {article.commonViolations.map((v, idx) => (
-                  <div key={idx} className="mb-2 last:mb-0">
-                    <div className="flex items-start gap-1.5">
-                      <X className="h-3.5 w-3.5 text-red-500 mt-0.5 shrink-0" />
-                      <p className="text-red-300 text-xs">{v.scenario}</p>
+
+              {/* Expandable body */}
+              <div className={`grid transition-[grid-template-rows] duration-200 ease-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+                <div className="overflow-hidden">
+                  <div className="border-t border-zinc-800/60">
+                    {/* Scope */}
+                    <div className="px-4 pt-3 pb-2">
+                      <p className="text-xs text-zinc-500 leading-relaxed">{article.scope}</p>
                     </div>
-                    <div className="flex items-start gap-1.5 mt-1 pl-5">
-                      <Check className="h-3.5 w-3.5 text-[#f97316] mt-0.5 shrink-0" />
-                      <p className="text-[#f97316] field-mode:text-yellow-300 text-xs">{v.fix}</p>
+
+                    {/* Key points */}
+                    <div className="px-4 pb-3 space-y-3">
+                      {article.keyPoints.map(kp => (
+                        <div key={kp.id} className="border-l border-zinc-800 pl-3 space-y-1">
+                          <span className="font-mono text-[10px] text-zinc-600 uppercase">{kp.id}</span>
+                          <p className="text-sm text-zinc-200 field-mode:text-yellow-100 leading-relaxed">{kp.plainEnglish}</p>
+                          <p className="text-[11px] text-zinc-500 italic leading-relaxed">"{kp.text}"</p>
+                          {kp.application && (
+                            <p className="text-[11px] text-zinc-500">→ {kp.application}</p>
+                          )}
+                          {kp.exceptions && kp.exceptions.length > 0 && kp.exceptions.map((ex, i) => (
+                            <p key={i} className="text-[10px] text-zinc-600 pl-2 border-l border-zinc-800">Exception: {ex}</p>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Common violations */}
+                    {article.commonViolations.length > 0 && (
+                      <div className="border-t border-zinc-800/60 px-4 py-3 space-y-2.5">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-600">Common Violations</span>
+                        {article.commonViolations.map((v, idx) => (
+                          <div key={idx} className="space-y-1">
+                            <p className="text-xs text-zinc-400 leading-relaxed">{v.scenario}</p>
+                            <p className="text-[11px] text-zinc-500 pl-3 border-l border-zinc-800 leading-relaxed">Fix: {v.fix}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Footer: related articles + bookmark */}
+                    <div className="border-t border-zinc-800/60 px-4 py-2.5 flex items-center justify-between">
+                      <div className="flex flex-wrap gap-1.5">
+                        {article.relatedArticles.map(art => (
+                          <button key={art}
+                            onClick={(e) => { e.stopPropagation(); setSearchQuery(art); setActiveFilter(null) }}
+                            className="px-2 py-0.5 text-[10px] font-mono text-zinc-600 border border-zinc-800 hover:border-zinc-600 hover:text-zinc-400 transition-colors">
+                            {art}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setBookmarked(prev => prev.includes(article.article) ? prev.filter(a => a !== article.article) : [...prev, article.article]) }}
+                        className="ml-2 shrink-0 p-1">
+                        <Bookmark className={`h-4 w-4 transition-colors ${bookmarked.includes(article.article) ? 'fill-zinc-300 text-zinc-300' : 'text-zinc-700 hover:text-zinc-500'}`} />
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-            {article.relatedArticles.length > 0 && (
-              <div className="p-3 border-t border-[#27272a] field-mode:border-yellow-400/20">
-                <div className="flex flex-wrap gap-1.5">
-                  {article.relatedArticles.map(art => (
-                    <button key={art} onClick={() => { setSearchQuery(art); setActiveFilter(null) }}
-                      className="flex items-center gap-0.5 px-2 py-1 bg-[#0a0b0e] field-mode:bg-black text-[#f97316] field-mode:text-yellow-300 text-xs border border-[#27272a] field-mode:border-yellow-400/30 hover:border-[#f97316]">
-                      {art} <ChevronRight className="h-3 w-3" />
-                    </button>
-                  ))}
                 </div>
               </div>
-            )}
-          </div>
-        ))}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -827,7 +850,7 @@ const SEVERITY_LABEL = { critical: 'CRITICAL', major: 'MAJOR', minor: 'MINOR' }
 
 function InspectSection() {
   const [activeCategory, setActiveCategory] = useState('All')
-  const [expandedId, setExpandedId] = useState<string | null>('subpanel-bond')
+  const [expandedId, setExpandedId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
 
   const filtered = useMemo(() => {
@@ -848,126 +871,108 @@ function InspectSection() {
   return (
     <div>
       <div className="mb-4">
-        <div className="flex items-center gap-2 mb-1">
-          <ShieldAlert className="h-4 w-4 text-[#ef4444]" />
-          <span className="text-sm font-bold text-[#ef4444] uppercase tracking-wider">Inspection Failures</span>
-        </div>
-        <p className="text-[10px] text-[#a1a1aa]">Most common commercial inspection write-ups. Know before the inspector shows up.</p>
+        <p className="text-[10px] text-zinc-500">Most common commercial inspection write-ups.</p>
       </div>
 
       <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a1a1aa] field-mode:text-yellow-400/50" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600" />
         <input type="text" placeholder="Search violations..." value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          className="w-full bg-[#18181b] field-mode:bg-black border border-[#27272a] field-mode:border-yellow-400/30 pl-9 pr-3 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-[#a1a1aa] focus:border-[#ef4444] focus:outline-none" />
+          className="w-full bg-zinc-900 field-mode:bg-black border border-zinc-800 field-mode:border-yellow-400/30 pl-9 pr-3 py-2.5 text-sm text-white field-mode:text-yellow-100 placeholder-zinc-600 focus:border-zinc-600 focus:outline-none" />
       </div>
 
-      <div className="flex gap-2 overflow-x-auto mb-4 pb-1" style={{ scrollbarWidth: 'none' }}>
+      <div className="flex gap-1.5 overflow-x-auto mb-4 pb-1" style={{ scrollbarWidth: 'none' }}>
         {CATEGORIES.map(cat => (
           <button key={cat} onClick={() => setActiveCategory(cat)}
-            className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap border transition-colors ${activeCategory === cat ? 'border-[#ef4444] text-[#ef4444] bg-[#ef444410]' : 'border-[#27272a] text-[#a1a1aa]'}`}>
+            className={`px-2.5 py-1 text-[10px] font-medium whitespace-nowrap border transition-colors ${
+              activeCategory === cat
+                ? 'border-zinc-400 text-zinc-100 bg-zinc-700'
+                : 'border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-400'
+            }`}>
             {cat}
           </button>
         ))}
       </div>
 
-      <div className="flex gap-3 mb-4">
+      {/* Severity legend */}
+      <div className="flex gap-4 mb-4">
         {(['critical','major','minor'] as const).map(s => (
           <div key={s} className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: SEVERITY_COLOR[s] }} />
-            <span className="text-[9px] uppercase tracking-wider text-[#a1a1aa]">{SEVERITY_LABEL[s]}</span>
+            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: SEVERITY_COLOR[s] }} />
+            <span className="text-[9px] uppercase tracking-wider text-zinc-600">{SEVERITY_LABEL[s]}</span>
           </div>
         ))}
       </div>
 
-      <div className="space-y-3">
+      <div className="border border-zinc-800/60 divide-y divide-zinc-800/60">
+        {filtered.length === 0 && (
+          <div className="px-4 py-8 text-center text-xs text-zinc-600">No violations match your search.</div>
+        )}
         {filtered.map(item => {
           const isExpanded = expandedId === item.id
           return (
-            <div key={item.id} className="border overflow-hidden" style={{ borderColor: isExpanded ? SEVERITY_COLOR[item.severity] : '#27272a' }}>
-              <button className="w-full p-3 text-left bg-[#18181b] field-mode:bg-black flex items-start gap-3"
-                onClick={() => setExpandedId(isExpanded ? null : item.id)}>
-                <div className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: SEVERITY_COLOR[item.severity] }} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-white field-mode:text-yellow-100">{item.title}</span>
-                    <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 border"
-                      style={{ color: SEVERITY_COLOR[item.severity], borderColor: SEVERITY_COLOR[item.severity] + '40' }}>
-                      {SEVERITY_LABEL[item.severity]}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[10px] font-mono text-[#a1a1aa] field-mode:text-yellow-400/40">{item.nec}</span>
-                    <span className="text-[10px] text-[#71717a]">·</span>
-                    <span className="text-[10px] text-[#a1a1aa] field-mode:text-yellow-400/40">{item.category}</span>
-                  </div>
-                </div>
-                <div className="text-[#a1a1aa] field-mode:text-yellow-400/40 shrink-0">
-                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </div>
+            <div key={item.id}>
+              {/* Collapsed row */}
+              <button
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-zinc-900/40 active:bg-zinc-900/60 transition-colors"
+                onClick={() => setExpandedId(isExpanded ? null : item.id)}
+              >
+                <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-0.5" style={{ backgroundColor: SEVERITY_COLOR[item.severity] }} />
+                <span className="flex-1 text-sm text-white field-mode:text-yellow-100 truncate">{item.title}</span>
+                <span className="font-mono text-[10px] text-zinc-600 shrink-0 hidden sm:block">{item.nec}</span>
+                <ChevronRight className={`h-4 w-4 text-zinc-600 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
               </button>
 
-              {isExpanded && (
-                <div className="border-t border-[#18181b]">
-                  {item.has_diagram && (
-                    <div className="grid grid-cols-2 border-b border-[#18181b]">
-                      <div className="p-3 border-r border-[#18181b] bg-[#130d10] field-mode:bg-black">
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <X className="h-3 w-3 text-[#ef4444]" />
-                          <span className="text-[9px] font-bold uppercase tracking-wider text-[#ef4444]">Fails</span>
+              {/* Expandable body */}
+              <div className={`grid transition-[grid-template-rows] duration-200 ease-out ${isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+                <div className="overflow-hidden">
+                  <div className="border-t border-zinc-800/60">
+                    {/* NEC ref + category */}
+                    <div className="px-4 pt-3 pb-2 flex items-center gap-2 sm:hidden">
+                      <span className="font-mono text-[10px] text-zinc-600">{item.nec}</span>
+                      <span className="text-zinc-800">·</span>
+                      <span className="text-[10px] text-zinc-600">{item.category}</span>
+                    </div>
+                    <div className="px-4 pt-3 pb-2 hidden sm:flex items-center gap-2">
+                      <span className="text-[10px] text-zinc-600">{item.category}</span>
+                    </div>
+
+                    {/* Diagrams */}
+                    {item.has_diagram && (
+                      <div className="px-4 pb-3 grid grid-cols-2 gap-2">
+                        <div className="border border-zinc-800 p-2">
+                          <p className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 mb-2">Fails</p>
+                          {getDiagram(item.id, true)}
                         </div>
-                        {getDiagram(item.id, true)}
-                      </div>
-                      <div className="p-3 bg-[#0d1310] field-mode:bg-black">
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <Check className="h-3 w-3 text-[#f97316]" />
-                          <span className="text-[9px] font-bold uppercase tracking-wider text-[#f97316]">Passes</span>
+                        <div className="border border-zinc-800 p-2">
+                          <p className="text-[9px] font-mono uppercase tracking-wider text-zinc-600 mb-2">Passes</p>
+                          {getDiagram(item.id, false)}
                         </div>
-                        {getDiagram(item.id, false)}
+                      </div>
+                    )}
+
+                    {/* Content sections */}
+                    <div className="divide-y divide-zinc-800/60">
+                      <div className="px-4 py-3">
+                        <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-600 mb-1.5">What Fails</p>
+                        <p className="text-xs text-zinc-400 field-mode:text-yellow-400/60 leading-relaxed">{item.what_fails}</p>
+                      </div>
+                      <div className="px-4 py-3">
+                        <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-600 mb-1.5">Why It Fails</p>
+                        <p className="text-xs text-zinc-400 field-mode:text-yellow-100/70 leading-relaxed">{item.why_it_fails}</p>
+                      </div>
+                      <div className="px-4 py-3">
+                        <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-600 mb-1.5">What Passes</p>
+                        <p className="text-xs text-zinc-300 field-mode:text-yellow-100 leading-relaxed">{item.what_passes}</p>
+                      </div>
+                      <div className="px-4 py-3">
+                        <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-600 mb-1.5">Inspector's Note</p>
+                        <p className="text-xs text-zinc-500 field-mode:text-yellow-100/60 leading-relaxed italic">"{item.inspector_note}"</p>
                       </div>
                     </div>
-                  )}
-
-                  {!item.has_diagram && (
-                    <div className="mx-3 mt-3 border border-dashed border-[#27272a] field-mode:border-yellow-400/20 p-3 bg-[#0a0b0e] field-mode:bg-black">
-                      <div className="text-[9px] uppercase tracking-wider text-[#71717a] field-mode:text-yellow-400/40 mb-1">Photo Reference</div>
-                      <div className="text-[10px] text-[#a1a1aa] field-mode:text-yellow-400/40 italic leading-relaxed">{item.photo_prompt}</div>
-                    </div>
-                  )}
-
-                  <div className="p-3 border-t border-[#18181b] bg-[#130d10] field-mode:bg-black">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <X className="h-3.5 w-3.5 text-[#ef4444] shrink-0" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#ef4444]">What Fails</span>
-                    </div>
-                    <p className="text-xs text-[#cc8888] leading-relaxed">{item.what_fails}</p>
-                  </div>
-
-                  <div className="p-3 border-t border-[#18181b] bg-[#18181b] field-mode:bg-black">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <AlertTriangle className="h-3.5 w-3.5 text-[#f97316] shrink-0" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#f97316]">Why It Fails</span>
-                    </div>
-                    <p className="text-xs text-[#a1a1aa] field-mode:text-yellow-100/70 leading-relaxed">{item.why_it_fails}</p>
-                  </div>
-
-                  <div className="p-3 border-t border-[#18181b] bg-[#0d1310] field-mode:bg-black">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <Check className="h-3.5 w-3.5 text-[#f97316] shrink-0" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#f97316]">What Passes</span>
-                    </div>
-                    <p className="text-xs text-[#88cc99] leading-relaxed">{item.what_passes}</p>
-                  </div>
-
-                  <div className="p-3 border-t border-[#18181b] bg-[#09090b] field-mode:bg-black">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <Star className="h-3.5 w-3.5 text-[#f97316] shrink-0" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#f97316]">Inspector's Note</span>
-                    </div>
-                    <p className="text-xs text-[#8899aa] field-mode:text-yellow-100/60 leading-relaxed italic">"{item.inspector_note}"</p>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           )
         })}
@@ -1091,15 +1096,14 @@ export function ReferenceTab() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-0 mb-5 border border-[#27272a] field-mode:border-yellow-400/30">
+      <div className="flex mb-5 border border-zinc-800 field-mode:border-yellow-400/30 divide-x divide-zinc-800">
         {sections.map(s => (
           <button key={s.id} onClick={() => setSection(s.id)}
-            className="flex-1 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-all"
-            style={{
-              color: section === s.id ? '#09090b' : s.color,
-              backgroundColor: section === s.id ? s.color : 'transparent',
-              borderRight: s.id !== 'symbols' ? '1px solid #27272a' : 'none'
-            }}>
+            className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-colors ${
+              section === s.id
+                ? 'bg-zinc-800 text-white'
+                : 'text-zinc-600 hover:text-zinc-400 hover:bg-zinc-900/50'
+            }`}>
             {s.label}
           </button>
         ))}
