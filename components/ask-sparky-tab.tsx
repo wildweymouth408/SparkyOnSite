@@ -58,6 +58,10 @@ export function AskSparkyTab() {
   const [userId, setUserId] = useState<string | null>(null)
 
 
+  const [messagesUsed, setMessagesUsed] = useState<number | null>(null)
+  const [dailyLimit, setDailyLimit] = useState<number | null>(null)
+  const [hasPro, setHasPro] = useState(false)
+
   const [isListening, setIsListening] = useState(false)
   const [voiceSupported, setVoiceSupported] = useState(false)
   const [transcript, setTranscript] = useState('')
@@ -251,6 +255,13 @@ export function AskSparkyTab() {
       const reply = data.reply || 'Something went wrong. Try again.'
       setMessages(prev => [...prev, { role: 'assistant', content: reply }])
 
+      // Update usage counters from server response
+      if (data.messagesUsed !== undefined && data.messagesUsed !== null) {
+        setMessagesUsed(data.messagesUsed)
+        setDailyLimit(data.dailyLimit)
+      }
+      if (data.hasPro !== undefined) setHasPro(data.hasPro)
+
     } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
@@ -285,9 +296,18 @@ export function AskSparkyTab() {
 
       {/* Top bar */}
       <div className="flex items-center justify-between mb-3 px-1">
-        <div className={`flex items-center gap-1.5 text-[10px] uppercase tracking-wider ${fm.topBar}`}>
-          <Zap className="h-3 w-3 text-orange-500" />
-          Ask Sparky AI
+        <div className="flex items-center gap-3">
+          <div className={`flex items-center gap-1.5 text-[10px] uppercase tracking-wider ${fm.topBar}`}>
+            <Zap className="h-3 w-3 text-[#f97316]" />
+            Ask Sparky AI
+          </div>
+          {!hasPro && messagesUsed !== null && dailyLimit !== null && (
+            <span className={`text-[10px] uppercase tracking-wider ${
+              messagesUsed >= dailyLimit ? 'text-red-400' : 'text-[#71717a]'
+            }`}>
+              {dailyLimit - messagesUsed} of {dailyLimit} left today
+            </span>
+          )}
         </div>
         {speechSupported && (
           <button

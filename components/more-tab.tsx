@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { LogOut, Bell, Sun, Moon, Zap, User, ChevronRight, Info, Wallet, FileText, Shield, ExternalLink } from 'lucide-react'
+import { LogOut, Bell, Sun, Moon, Zap, User, ChevronRight, Info, Wallet, FileText, Shield, ExternalLink, Tag, CheckCircle2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { CredentialsTab } from './credentials-tab'
 
@@ -22,6 +22,11 @@ export function MoreTab() {
   const [showAbout, setShowAbout] = useState(false)
   const [showWallet, setShowWallet] = useState(false)
 
+  const [promoCode, setPromoCode] = useState('')
+  const [promoLoading, setPromoLoading] = useState(false)
+  const [promoMessage, setPromoMessage] = useState<{ text: string; ok: boolean } | null>(null)
+  const [activePromo, setActivePromo] = useState<{ code: string; expires_at: string } | null>(null)
+
   useEffect(() => {
     async function loadProfile() {
       const { data: { user } } = await supabase.auth.getUser()
@@ -35,6 +40,7 @@ export function MoreTab() {
       if (data) setProfile({ ...data, email: user.email })
     }
     loadProfile()
+    loadActivePromo()
 
     const savedNotifications = localStorage.getItem('sparky_notifications')
     if (savedNotifications !== null) setNotifications(JSON.parse(savedNotifications))
@@ -44,6 +50,80 @@ export function MoreTab() {
 
 
   }, [])
+
+  async function loadActivePromo() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const { data } = await supabase
+      .from('user_promos')
+      .select('code, expires_at')
+      .eq('user_id', user.id)
+      .gt('expires_at', new Date().toISOString())
+      .order('expires_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (data) setActivePromo(data)
+  }
+
+  async function handleRedeemPromo() {
+    const code = promoCode.trim().toUpperCase()
+    if (!code) return
+    setPromoLoading(true)
+    setPromoMessage(null)
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      setPromoMessage({ text: 'Sign in to redeem a promo code.', ok: false })
+      setPromoLoading(false)
+      return
+    }
+
+    // Verify code exists
+    const { data: codeRow } = await supabase
+      .from('promo_codes')
+      .select('code, duration_days')
+      .eq('code', code)
+      .maybeSingle()
+
+    if (!codeRow) {
+      setPromoMessage({ text: 'Invalid promo code.', ok: false })
+      setPromoLoading(false)
+      return
+    }
+
+    // Check if already used by this user
+    const { data: existing } = await supabase
+      .from('user_promos')
+      .select('code')
+      .eq('user_id', user.id)
+      .eq('code', code)
+      .maybeSingle()
+
+    if (existing) {
+      setPromoMessage({ text: 'You've already used this code.', ok: false })
+      setPromoLoading(false)
+      return
+    }
+
+    const now = new Date()
+    const expiresAt = new Date(now.getTime() + codeRow.duration_days * 24 * 60 * 60 * 1000)
+
+    const { error } = await supabase.from('user_promos').insert({
+      user_id: user.id,
+      code,
+      activated_at: now.toISOString(),
+      expires_at: expiresAt.toISOString(),
+    })
+
+    if (error) {
+      setPromoMessage({ text: 'Could not activate code. Try again.', ok: false })
+    } else {
+      setPromoMessage({ text: `Beta access activated! Expires ${expiresAt.toLocaleDateString()}.`, ok: true })
+      setActivePromo({ code, expires_at: expiresAt.toISOString() })
+      setPromoCode('')
+    }
+    setPromoLoading(false)
+  }
 
   async function handleSignOut() {
     setSigningOut(true)
@@ -116,6 +196,54 @@ export function MoreTab() {
         {showWallet && (
           <div className="rounded border border-[#27272a] bg-[#0d1014] px-3 py-4">
             <CredentialsTab />
+          </div>
+        )}
+      </div>
+
+      {/* Beta Access */}
+      <div className="flex flex-col gap-1">
+        <span className="text-[10px] font-medium uppercase tracking-widest text-[#71717a] px-1 mb-1">
+          Beta Access
+        </span>
+
+        {activePromo ? (
+          <div className="flex items-center gap-3 rounded border border-[#f97316]/30 bg-[#f97316]/8 px-4 py-3">
+            <CheckCircle2 className="h-4 w-4 text-[#f97316] shrink-0" />
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm text-[#fafafa] font-medium">Beta access active</span>
+              <span className="text-[11px] text-[#a1a1aa]">
+                Code {activePromo.code} · Expires {new Date(activePromo.expires_at).toLocaleDateString()}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2 rounded border border-[#27272a] bg-[#13161a] px-4 py-3">
+            <div className="flex items-center gap-2">
+              <Tag className="h-4 w-4 text-[#f97316] shrink-0" />
+              <span className="text-sm text-[#ccc]">Enter Promo Code</span>
+            </div>
+            <div className="flex gap-2">
+              <input
+                value={promoCode}
+                onChange={e => setPromoCode(e.target.value.toUpperCase())}
+                onKeyDown={e => e.key === 'Enter' && handleRedeemPromo()}
+                placeholder="BETA001"
+                className="flex-1 h-9 px-3 text-sm font-mono bg-[#0d1014] border border-[#3f3f46] text-[#fafafa] placeholder-[#52525b] focus:outline-none focus:border-[#f97316]"
+                disabled={promoLoading}
+              />
+              <button
+                onClick={handleRedeemPromo}
+                disabled={promoLoading || !promoCode.trim()}
+                className="h-9 px-4 text-xs font-bold uppercase tracking-wider bg-[#f97316] text-black disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {promoLoading ? '...' : 'Redeem'}
+              </button>
+            </div>
+            {promoMessage && (
+              <p className={`text-[11px] ${promoMessage.ok ? 'text-green-400' : 'text-red-400'}`}>
+                {promoMessage.text}
+              </p>
+            )}
           </div>
         )}
       </div>

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { env } from '@/lib/env'
-import { canUseAskSparky } from '@/lib/usage-server'
 
 const client = new Anthropic()
 
@@ -186,6 +185,8 @@ ${CONDUIT_EXACT_QUOTES}
 ${ENERGIZED_WORK_REFUSAL}`
 }
 
+const FREE_TIER_DAILY_LIMIT = 5
+
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
@@ -204,41 +205,69 @@ export async function POST(req: NextRequest) {
       env.supabaseServiceRoleKey
     )
 
+    // Block unauthenticated requests
+    if (!sessionToken) {
+      return NextResponse.json(
+        { reply: 'Please sign in to use Ask Sparky.', rateLimited: false, unauthenticated: true },
+        { status: 401 }
+      )
+    }
+
     // Derive verifiedUserId exclusively from the cryptographically-verified session
     let verifiedUserId: string | null = null
-    if (sessionToken) {
-      const { data: { user } } = await anonSupabase.auth.getUser(sessionToken)
-      verifiedUserId = user?.id ?? null
-    }
+    const { data: { user } } = await anonSupabase.auth.getUser(sessionToken)
+    verifiedUserId = user?.id ?? null
 
     if (!verifiedUserId) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+      return NextResponse.json(
+        { reply: 'Please sign in to use Ask Sparky.', rateLimited: false, unauthenticated: true },
+        { status: 401 }
+      )
     }
 
-    // Fetch user profile for dynamic system prompt (only if session is authenticated)
-    let profile = null
-    if (verifiedUserId) {
-      const { data } = await serviceSupabase
-        .from('profiles')
-        .select('name, role, years_exp')
-        .eq('id', verifiedUserId)
-        .single()
-      profile = data
-    }
+    // Check if user has active promo (beta/pro access)
+    const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD UTC
+    const { data: activePromo } = await serviceSupabase
+      .from('user_promos')
+      .select('expires_at')
+      .eq('user_id', verifiedUserId)
+      .gt('expires_at', new Date().toISOString())
+      .limit(1)
+      .maybeSingle()
 
-    // Check usage limit for Ask Sparky
-    if (verifiedUserId) {
-      const { allowed, remaining } = await canUseAskSparky(verifiedUserId, true);
-      if (!allowed) {
-        return NextResponse.json(
-          { error: 'Free tier limit exceeded. Upgrade to Pro for unlimited Ask Sparky queries.' },
-          { status: 402 }
-        );
+    const hasPro = !!activePromo
+
+    // Rate limiting for free tier
+    let messagesUsedToday = 0
+    if (!hasPro) {
+      const { data: usageRow } = await serviceSupabase
+        .from('ai_usage')
+        .select('message_count')
+        .eq('user_id', verifiedUserId)
+        .eq('date', today)
+        .maybeSingle()
+
+      messagesUsedToday = usageRow?.message_count ?? 0
+
+      if (messagesUsedToday >= FREE_TIER_DAILY_LIMIT) {
+        return NextResponse.json({
+          reply: `You've used your ${FREE_TIER_DAILY_LIMIT} free Sparky messages today. Upgrade to Pro for unlimited access.`,
+          rateLimited: true,
+          messagesUsed: messagesUsedToday,
+          dailyLimit: FREE_TIER_DAILY_LIMIT,
+        }, { status: 429 })
       }
     }
 
+    // Fetch user profile for dynamic system prompt
+    const { data: profileData } = await serviceSupabase
+      .from('profiles')
+      .select('name, role, years_exp')
+      .eq('id', verifiedUserId)
+      .single()
+
     // Build role-aware system prompt
-    const systemPrompt = buildSystemPrompt(profile)
+    const systemPrompt = buildSystemPrompt(profileData)
 
     // Call Claude
     const response = await client.messages.create({
@@ -253,24 +282,31 @@ export async function POST(req: NextRequest) {
 
     const reply = response.content[0].type === 'text' ? response.content[0].text : ''
 
-    // Save the latest user message + assistant reply using only the verified session identity
-    if (verifiedUserId && messages.length > 0) {
+    // Increment usage counter for free tier
+    if (!hasPro) {
+      await serviceSupabase.rpc('increment_ai_usage', {
+        p_user_id: verifiedUserId,
+        p_date: today,
+      })
+      messagesUsedToday += 1
+    }
+
+    // Save the latest user message + assistant reply
+    if (messages.length > 0) {
       const lastUserMessage = messages[messages.length - 1]
       await serviceSupabase.from('conversations').insert([
-        {
-          user_id: verifiedUserId,
-          role: lastUserMessage.role,
-          content: lastUserMessage.content,
-        },
-        {
-          user_id: verifiedUserId,
-          role: 'assistant',
-          content: reply,
-        },
+        { user_id: verifiedUserId, role: lastUserMessage.role, content: lastUserMessage.content },
+        { user_id: verifiedUserId, role: 'assistant', content: reply },
       ])
     }
 
-    return NextResponse.json({ reply })
+    return NextResponse.json({
+      reply,
+      rateLimited: false,
+      messagesUsed: hasPro ? null : messagesUsedToday,
+      dailyLimit: hasPro ? null : FREE_TIER_DAILY_LIMIT,
+      hasPro,
+    })
   } catch (error) {
     console.error('Ask Sparky API error:', error)
     return NextResponse.json(
