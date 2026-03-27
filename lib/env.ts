@@ -4,11 +4,25 @@
  */
 
 /**
- * Get a required environment variable.
- * Throws an error if the variable is not defined or is an empty string.
+ * Get a required environment variable (server-side only).
+ * Uses dynamic lookup — only safe in server contexts where process.env is real.
+ * Do NOT use for NEXT_PUBLIC_* variables; Next.js cannot statically replace
+ * dynamic property access at build time.
  */
 export function getRequiredEnv(key: string): string {
   const value = process.env[key];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+  return value;
+}
+
+/**
+ * Validate a public env var value that was read via static access.
+ * The caller must pass process.env.NEXT_PUBLIC_* as a literal so Next.js
+ * can inline the value at build time.
+ */
+function requirePublicEnv(key: string, value: string | undefined): string {
   if (!value) {
     throw new Error(`Missing required environment variable: ${key}`);
   }
@@ -20,8 +34,8 @@ export function getRequiredEnv(key: string): string {
  * Safe to use on both client and server.
  */
 export const publicEnv = {
-  supabaseUrl: getRequiredEnv('NEXT_PUBLIC_SUPABASE_URL'),
-  supabaseAnonKey: getRequiredEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
+  supabaseUrl: requirePublicEnv('NEXT_PUBLIC_SUPABASE_URL', process.env.NEXT_PUBLIC_SUPABASE_URL),
+  supabaseAnonKey: requirePublicEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
   stripePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '',
   stripeMonthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID ?? '',
   stripeYearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID ?? '',
