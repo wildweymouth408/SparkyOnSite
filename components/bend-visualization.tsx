@@ -32,13 +32,13 @@ const C = {
   bg:         '#0f172a',
   grid:       '#1e293b',
   // Pipe layers (drawn outer → inner for 3-D cylinder look)
-  p1:         '#060c14',   // outer shadow
-  p2:         '#0d1a2e',   // deep body
-  p3:         '#1e3347',   // dark body
-  p4:         '#33506a',   // mid body
-  p5:         '#4e7090',   // lighter mid
-  p6:         '#8cb4d0',   // main steel (blued steel)
-  pH:         '#dff0ff',   // specular highlight
+  p1:         '#0d1520',   // outer shadow
+  p2:         '#1e293b',   // deep body
+  p3:         '#334155',   // dark body
+  p4:         '#475569',   // mid body
+  p5:         '#64748b',   // lighter mid
+  p6:         '#94a3b8',   // main steel grey
+  pH:         '#e2e8f0',   // specular highlight
   // Annotations
   dim:        '#334155',   // dimension lines
   dimTxt:     '#64748b',   // muted label text
@@ -46,8 +46,8 @@ const C = {
   mark:       '#f87171',   // arrow/star marks (red)
   tick:       '#fbbf24',   // bend tick marks (amber)
   // Obstacle
-  obs:        '#1a2535',
-  obsStroke:  '#2d4060',
+  obs:        '#1e293b',
+  obsStroke:  '#334155',
 }
 
 // ── Reusable SVG primitives ────────────────────────────────────────────────────
@@ -67,20 +67,22 @@ function GridBG({ w, h }: { w: number; h: number }) {
   )
 }
 
-/** Clean 2-D outline conduit — technical-drawing style (no fake 3-D gradient).
- *  Outer wall stroke → dark body fill → single thin centre highlight. */
+/** Cylindrical-looking conduit: 6 stacked strokes, dark outer → bright highlight */
 function Pipe({ d }: { d: string }) {
-  const cap: React.SVGAttributes<SVGPathElement> = {
-    fill: 'none', strokeLinecap: 'round', strokeLinejoin: 'round',
+  const base: React.SVGAttributes<SVGPathElement> = {
+    fill: 'none',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
   }
   return (
     <>
-      {/* Outer wall border */}
-      <path d={d} {...cap} stroke="#475569" strokeWidth={13} />
-      {/* Dark body fill */}
-      <path d={d} {...cap} stroke="#0f172a" strokeWidth={9} />
-      {/* Single thin highlight line down the top of the tube */}
-      <path d={d} {...cap} stroke="#64748b" strokeWidth={1.5} />
+      <path d={d} {...base} stroke={C.p1} strokeWidth={16} />
+      <path d={d} {...base} stroke={C.p2} strokeWidth={13} />
+      <path d={d} {...base} stroke={C.p3} strokeWidth={11} />
+      <path d={d} {...base} stroke={C.p4} strokeWidth={9}  />
+      <path d={d} {...base} stroke={C.p5} strokeWidth={7}  />
+      <path d={d} {...base} stroke={C.p6} strokeWidth={5}  />
+      <path d={d} {...base} stroke={C.pH} strokeWidth={1.5}/>
     </>
   )
 }
@@ -315,21 +317,19 @@ export function BendVisualization({
       <svg viewBox={`0 0 ${vw} ${vh}`} className="w-full" style={{ maxHeight: '185px', display: 'block', borderRadius: '8px' }}>
         <GridBG w={vw} h={vh} />
 
-        {/* Round obstacle — solid circle like a pipe/conduit being crossed */}
+        {/* Round obstacle — solid ellipse like a pipe/conduit being crossed */}
         {(() => {
           const saddleHNum = parseFloat(String(saddleH))
-          // Scale: humpH px = full obstacle height; cap at humpH/2 radius
           const PX_PER_IN = humpH / 6        // ≈10.3 px/in
           const ry = !isNaN(saddleHNum) && saddleHNum > 0
             ? Math.min(humpH / 2 - 2, Math.max(8, (saddleHNum * PX_PER_IN) / 2))
             : humpH / 2 - 4
-          const rx = ry * 2.4               // wider than tall — looks like a round duct/pipe
-          const cy = yRun - ry              // sits on the floor line
+          const rx = ry * 2.4
+          const cy = yRun - ry
           return (
             <>
               <ellipse cx={centerX} cy={cy} rx={rx} ry={ry}
                 fill="#374151" stroke="#4b5563" strokeWidth="1.5" />
-              {/* Subtle top-arc highlight to read as cylindrical */}
               <ellipse cx={centerX} cy={cy - ry * 0.3} rx={rx * 0.55} ry={ry * 0.18}
                 fill="none" stroke="#6b7280" strokeWidth="1" opacity="0.6" />
               <text x={centerX} y={cy + 4} fill="#9ca3af" fontSize="7"
@@ -389,10 +389,8 @@ export function BendVisualization({
     const boxWidth = calcValues.distance ?? '—'
 
     // Obstacle: width = exactly b2→b3; height proportional to input.
-    // The SVG pipe rise is riseH px. Treat riseH as the visual cap (≈6" max obstacle).
-    // This gives a fixed px/inch scale so obsH actually varies with the height input.
-    const riseH    = yRun - yTop                        // 72px total rise
-    const PX_PER_IN = riseH / 6                         // 12 px per inch
+    const riseH     = yRun - yTop                        // 72px total rise
+    const PX_PER_IN = riseH / 6                          // 12 px per inch
     const heightNum = parseFloat(String(height))
     const obsH = !isNaN(heightNum) && heightNum > 0
       ? Math.min(riseH, Math.max(8, Math.round(heightNum * PX_PER_IN)))
@@ -403,7 +401,7 @@ export function BendVisualization({
       <svg viewBox={`0 0 ${vw} ${vh}`} className="w-full" style={{ maxHeight: '185px', display: 'block', borderRadius: '8px' }}>
         <GridBG w={vw} h={vh} />
 
-        {/* Obstacle — width = b2→b3, height proportional to rise */}
+        {/* Obstacle — left edge = b2x, right edge = b3x (exact mark positions) */}
         <rect
           x={b2x} y={obsY}
           width={b3x - b2x} height={obsH}
@@ -699,90 +697,80 @@ export function BendVisualization({
   }
 
   // ── Corner Bend ──────────────────────────────────────────────────────────────
-  // Horizontal pipe enters from left, bends 90° upward at floor/wall corner,
-  // exits going straight up the wall. Classic job-site corner bend view.
   if (type === 'corner') {
-    const vw = 310, vh = 220
-    const R     = 38           // visual bend radius
-    const floorY = 178         // floor line y
-    const wallX  = 238         // wall line x (right side)
-    const tailStartX = 14
+    const vw = 320, vh = 220
+    const cornerX = 160, cornerY = 140
+    const angle = Number(calcValues.cornerAngle ?? 90)
+    const radius = Number(calcValues.cornerRadius ?? 0)
+    const bendAngle = angle / 2
+    const angleRad = (angle * Math.PI) / 180
+    const bendRad = (bendAngle * Math.PI) / 180
+    
+    // Calculate points for the corner
+    const legLength = 80
+    const startX = cornerX - legLength * Math.cos(bendRad)
+    const startY = cornerY + legLength * Math.sin(bendRad)
+    const endX = cornerX + legLength * Math.cos(bendRad)
+    const endY = cornerY + legLength * Math.sin(bendRad)
 
-    // Arc: horizontal run ends at bendX, curves up to (wallX, floorY - R)
-    const bendX   = wallX - R              // 200 — start of arc on floor
-    const arcEndY = floorY - R             // 140 — top of arc / start of vertical
-    const c1x = bendX + K * R, c1y = floorY
-    const c2x = wallX,          c2y = floorY - K * R
-    const stubTopY = 22
-
-    const d = [
-      `M ${tailStartX},${floorY}`,
-      `L ${bendX},${floorY}`,
-      `C ${c1x},${c1y} ${c2x},${c2y} ${wallX},${arcEndY}`,
-      `L ${wallX},${stubTopY}`,
-    ].join(' ')
-
-    const stub   = Number(calcValues.stub   ?? 12)
-    const takeup = Number(calcValues.takeup ?? 6)
-    const mark   = Number((calcValues.mark  ?? Math.max(0, stub - takeup)).toString())
-
-    // Mark A position along horizontal run
-    const rawMx = tailStartX + (mark / stub) * (bendX - tailStartX)
-    const mx    = Math.max(tailStartX + 8, Math.min(bendX - 8, rawMx))
+    let d = ''
+    if (radius > 0) {
+      // Arc for radiused corner
+      const arcStartX = cornerX - radius * Math.cos(bendRad)
+      const arcStartY = cornerY + radius * Math.sin(bendRad)
+      const arcEndX = cornerX + radius * Math.cos(bendRad)
+      const arcEndY = cornerY + radius * Math.sin(bendRad)
+      
+      d = `M ${startX},${startY} L ${arcStartX},${arcStartY} A ${radius},${radius} 0 0 1 ${arcEndX},${arcEndY} L ${endX},${endY}`
+    } else {
+      // Sharp corner with two straight segments
+      d = `M ${startX},${startY} L ${cornerX},${cornerY} L ${endX},${endY}`
+    }
 
     return (
       <svg viewBox={`0 0 ${vw} ${vh}`} className="w-full" style={{ maxHeight: '210px', display: 'block', borderRadius: '8px' }}>
         <GridBG w={vw} h={vh} />
 
-        {/* Floor line */}
-        <line x1={0} y1={floorY + 12} x2={vw} y2={floorY + 12} stroke={C.grid} strokeWidth="1" />
-        <text x={vw / 2} y={floorY + 22} fill={C.dimTxt} fontSize="7"
-          textAnchor="middle" fontFamily="ui-monospace, monospace">FLOOR</text>
-
-        {/* Wall line */}
-        <line x1={wallX + 10} y1={0} x2={wallX + 10} y2={floorY + 12}
-          stroke={C.grid} strokeWidth="1" />
-        <text
-          x={wallX + 20} y={vh / 2}
-          fill={C.dimTxt} fontSize="7" textAnchor="middle"
-          fontFamily="ui-monospace, monospace"
-          transform={`rotate(90, ${wallX + 20}, ${vh / 2})`}
-        >WALL</text>
-
-        {/* Corner marker */}
-        <rect x={wallX + 4} y={floorY + 2} width={8} height={8}
-          fill="none" stroke={C.dimTxt} strokeWidth="0.8" />
+        {/* Wall lines */}
+        <line x1={cornerX - 100} y1={cornerY} x2={cornerX} y2={cornerY} stroke={C.grid} strokeWidth="1" strokeDasharray="4,3" />
+        <line x1={cornerX} y1={cornerY} x2={cornerX} y2={cornerY - 100} stroke={C.grid} strokeWidth="1" strokeDasharray="4,3" />
 
         <Pipe d={d} />
 
-        {/* Tick at bend start (mark B — start of arc) */}
-        <Tick x={bendX} y={floorY} vertical size={13} color={C.tick} />
-        <text x={bendX} y={floorY + 26} fill={C.tick} fontSize="8"
-          textAnchor="middle" fontFamily="ui-monospace, monospace">B</text>
+        {/* Bend marks for sharp corner */}
+        {radius === 0 && (
+          <>
+            <Tick x={cornerX} y={cornerY} vertical={false} size={12} color={C.tick} />
+            <text x={cornerX} y={cornerY - 15} fill={C.tick} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+              {frontMark}
+            </text>
+          </>
+        )}
 
-        {/* Red arrow mark A on horizontal run */}
-        <line x1={mx} y1={floorY - 14} x2={mx} y2={floorY + 14}
-          stroke={C.mark} strokeWidth={1.5} />
-        <text x={mx} y={floorY + 26} fill={C.mark} fontSize="8"
-          textAnchor="middle" fontFamily="ui-monospace, monospace">A {frontMark}</text>
-        <text x={mx} y={floorY + 36} fill={C.mark} fontSize="10"
-          textAnchor="middle" fontFamily="ui-monospace, monospace" fontWeight="bold">
-          {mark}"
+        {/* Angle arc */}
+        <path d={`M ${cornerX - 30},${cornerY} A 30,30 0 0 1 ${cornerX},${cornerY - 30}`} 
+          fill="none" stroke={C.dim} strokeWidth="0.8" strokeDasharray="2,2" />
+        <text x={cornerX - 20} y={cornerY - 20} fill={C.dimTxt} fontSize="9" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {angle}°
         </text>
 
-        {/* 90° arc indicator */}
-        <path d={`M ${bendX - 22},${floorY} A 22,22 0 0 1 ${bendX},${floorY - 22}`}
-          fill="none" stroke={C.dim} strokeWidth="0.8" strokeDasharray="2,2" />
-        <text x={bendX - 16} y={floorY - 14} fill={C.dimTxt} fontSize="8"
-          textAnchor="middle" fontFamily="ui-monospace, monospace">90°</text>
+        {/* Radius dimension if applicable */}
+        {radius > 0 && (
+          <Dim x1={cornerX} y1={cornerY} x2={cornerX + radius * Math.cos(bendRad)} y2={cornerY - radius * Math.sin(bendRad)}
+            label={`R${radius}"`} offset={8} side={1} fontSize={8} />
+        )}
 
-        {/* Stub height dim (right of vertical run) */}
-        <Dim x1={wallX} y1={stubTopY} x2={wallX} y2={floorY}
-          label={`${stub}"`} offset={32} side={-1} />
+        {/* Bend angle labels */}
+        <text x={cornerX - 40} y={cornerY + 40} fill={C.dimTxt} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {bendAngle}° bend
+        </text>
+        <text x={cornerX + 40} y={cornerY + 40} fill={C.dimTxt} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {bendAngle}° bend
+        </text>
 
-        {/* Take-up note */}
-        <Dim x1={mx} y1={floorY} x2={bendX} y2={floorY}
-          label={`take-up ${takeup}"`} offset={22} side={1} fontSize={9} />
+        <text x={vw / 2} y={vh - 10} fill={C.dimTxt} fontSize="9" textAnchor="middle" fontFamily="ui-monospace, monospace">
+          {radius > 0 ? `${radius}" radius corner` : 'sharp corner'} · {angle}° total
+        </text>
       </svg>
     )
   }
