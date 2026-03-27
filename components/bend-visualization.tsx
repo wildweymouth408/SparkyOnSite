@@ -390,11 +390,15 @@ export function BendVisualization({
     const height   = calcValues.height   ?? '—'
     const boxWidth = calcValues.distance ?? '—'
 
-    // Obstacle: width = exactly b2→b3 span; height proportional to rise
-    const riseH = yRun - yTop  // 72px = full conduit rise
+    // Obstacle: width = exactly b2→b3; height proportional to input.
+    // The SVG pipe rise is riseH px. Treat riseH as the visual cap (≈6" max obstacle).
+    // This gives a fixed px/inch scale so obsH actually varies with the height input.
+    const riseH    = yRun - yTop                        // 72px total rise
+    const PX_PER_IN = riseH / 6                         // 12 px per inch
     const heightNum = parseFloat(String(height))
-    // Scale: the conduit rise visually equals riseH px; obstacle is same height
-    const obsH = !isNaN(heightNum) ? Math.min(riseH, Math.max(12, heightNum * (riseH / Math.max(heightNum, 1)))) : riseH
+    const obsH = !isNaN(heightNum) && heightNum > 0
+      ? Math.min(riseH, Math.max(8, Math.round(heightNum * PX_PER_IN)))
+      : riseH
     const obsY = yRun - obsH
 
     return (
