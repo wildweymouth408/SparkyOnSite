@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { env } from '@/lib/env'
-
-const client = new Anthropic()
 
 // Conduit bending reference data embedded in every system prompt
 const CONDUIT_BENDING_REFERENCE = `
@@ -269,18 +266,40 @@ export async function POST(req: NextRequest) {
     // Build role-aware system prompt
     const systemPrompt = buildSystemPrompt(profileData)
 
-    // Call Claude
-    const response = await client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages: messages.map((m: { role: string; content: string }) => ({
-        role: m.role,
-        content: m.content,
-      })),
+    // Call DeepSeek
+    const deepseekKey = process.env.DEEPSEEK_API_KEY
+    if (!deepseekKey) {
+      console.error('Ask Sparky: DEEPSEEK_API_KEY environment variable is not set')
+      throw new Error('DEEPSEEK_API_KEY not configured')
+    }
+
+    const dsRes = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${deepseekKey}`,
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        max_tokens: 1024,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...messages.map((m: { role: string; content: string }) => ({
+            role: m.role as 'user' | 'assistant',
+            content: m.content,
+          })),
+        ],
+      }),
     })
 
-    const reply = response.content[0].type === 'text' ? response.content[0].text : ''
+    if (!dsRes.ok) {
+      const errorBody = await dsRes.text()
+      console.error(`Ask Sparky: DeepSeek API returned ${dsRes.status}:`, errorBody)
+      throw new Error(`DeepSeek API error ${dsRes.status}`)
+    }
+
+    const dsData = await dsRes.json()
+    const reply: string = dsData.choices?.[0]?.message?.content ?? ''
 
     // Increment usage counter for free tier
     if (!hasPro) {
@@ -308,7 +327,8 @@ export async function POST(req: NextRequest) {
       hasPro,
     })
   } catch (error) {
-    console.error('Ask Sparky API error:', error)
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('Ask Sparky API error:', msg, error)
     return NextResponse.json(
       { reply: 'Something went wrong on my end. Check your connection and try again.' },
       { status: 500 }

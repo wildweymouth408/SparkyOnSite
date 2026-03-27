@@ -32,13 +32,13 @@ const C = {
   bg:         '#0f172a',
   grid:       '#1e293b',
   // Pipe layers (drawn outer → inner for 3-D cylinder look)
-  p1:         '#0d1520',   // outer shadow
-  p2:         '#1e293b',   // deep body
-  p3:         '#334155',   // dark body
-  p4:         '#475569',   // mid body
-  p5:         '#64748b',   // lighter mid
-  p6:         '#94a3b8',   // main steel grey
-  pH:         '#e2e8f0',   // specular highlight
+  p1:         '#060c14',   // outer shadow
+  p2:         '#0d1a2e',   // deep body
+  p3:         '#1e3347',   // dark body
+  p4:         '#33506a',   // mid body
+  p5:         '#4e7090',   // lighter mid
+  p6:         '#8cb4d0',   // main steel (blued steel)
+  pH:         '#dff0ff',   // specular highlight
   // Annotations
   dim:        '#334155',   // dimension lines
   dimTxt:     '#64748b',   // muted label text
@@ -46,8 +46,8 @@ const C = {
   mark:       '#f87171',   // arrow/star marks (red)
   tick:       '#fbbf24',   // bend tick marks (amber)
   // Obstacle
-  obs:        '#1e293b',
-  obsStroke:  '#334155',
+  obs:        '#1a2535',
+  obsStroke:  '#2d4060',
 }
 
 // ── Reusable SVG primitives ────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ function GridBG({ w, h }: { w: number; h: number }) {
   )
 }
 
-/** Cylindrical-looking conduit: 6 stacked strokes, dark outer → bright highlight */
+/** Cylindrical-looking conduit: layered strokes, dark outer → bright centre highlight */
 function Pipe({ d }: { d: string }) {
   const base: React.SVGAttributes<SVGPathElement> = {
     fill: 'none',
@@ -76,13 +76,13 @@ function Pipe({ d }: { d: string }) {
   }
   return (
     <>
-      <path d={d} {...base} stroke={C.p1} strokeWidth={16} />
-      <path d={d} {...base} stroke={C.p2} strokeWidth={13} />
-      <path d={d} {...base} stroke={C.p3} strokeWidth={11} />
-      <path d={d} {...base} stroke={C.p4} strokeWidth={9}  />
-      <path d={d} {...base} stroke={C.p5} strokeWidth={7}  />
-      <path d={d} {...base} stroke={C.p6} strokeWidth={5}  />
-      <path d={d} {...base} stroke={C.pH} strokeWidth={1.5}/>
+      <path d={d} {...base} stroke={C.p1} strokeWidth={22} />
+      <path d={d} {...base} stroke={C.p2} strokeWidth={18} />
+      <path d={d} {...base} stroke={C.p3} strokeWidth={15} />
+      <path d={d} {...base} stroke={C.p4} strokeWidth={12} />
+      <path d={d} {...base} stroke={C.p5} strokeWidth={9}  />
+      <path d={d} {...base} stroke={C.p6} strokeWidth={6}  />
+      <path d={d} {...base} stroke={C.pH} strokeWidth={2}  />
     </>
   )
 }
@@ -317,13 +317,26 @@ export function BendVisualization({
       <svg viewBox={`0 0 ${vw} ${vh}`} className="w-full" style={{ maxHeight: '185px', display: 'block', borderRadius: '8px' }}>
         <GridBG w={vw} h={vh} />
 
-        {/* Obstacle box rendered BEHIND conduit */}
-        <rect
-          x={b1x + 6} y={topY + 16}
-          width={b3x - b1x - 12} height={yRun - topY - 8}
-          fill={C.obs} stroke={C.obsStroke} strokeWidth="1" rx="3"
+        {/* Round obstacle (pipe/conduit) rendered BEHIND conduit */}
+        {/* Outer shadow layer */}
+        <ellipse
+          cx={centerX} cy={(topY + yRun) / 2 + 6}
+          rx={(b3x - b1x) / 2 - 6} ry={(yRun - topY) / 2 - 2}
+          fill={C.obs} stroke={C.obsStroke} strokeWidth="1.5"
         />
-        <text x={centerX} y={(topY + yRun) / 2 + 8} fill={C.dimTxt} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+        {/* Mid sheen layer */}
+        <ellipse
+          cx={centerX} cy={(topY + yRun) / 2 + 6}
+          rx={(b3x - b1x) / 2 - 10} ry={(yRun - topY) / 2 - 5}
+          fill="none" stroke="#253545" strokeWidth="4"
+        />
+        {/* Top highlight — simulates curved surface */}
+        <ellipse
+          cx={centerX} cy={(topY + yRun) / 2 - 2}
+          rx={(b3x - b1x) / 2 - 18} ry={5}
+          fill="none" stroke="#3a5570" strokeWidth="2" opacity="0.7"
+        />
+        <text x={centerX} y={(topY + yRun) / 2 + 20} fill={C.dimTxt} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
           obstacle
         </text>
 
@@ -377,17 +390,24 @@ export function BendVisualization({
     const height   = calcValues.height   ?? '—'
     const boxWidth = calcValues.distance ?? '—'
 
+    // Obstacle: width = exactly b2→b3 span; height proportional to rise
+    const riseH = yRun - yTop  // 72px = full conduit rise
+    const heightNum = parseFloat(String(height))
+    // Scale: the conduit rise visually equals riseH px; obstacle is same height
+    const obsH = !isNaN(heightNum) ? Math.min(riseH, Math.max(12, heightNum * (riseH / Math.max(heightNum, 1)))) : riseH
+    const obsY = yRun - obsH
+
     return (
       <svg viewBox={`0 0 ${vw} ${vh}`} className="w-full" style={{ maxHeight: '185px', display: 'block', borderRadius: '8px' }}>
         <GridBG w={vw} h={vh} />
 
-        {/* Obstacle */}
+        {/* Obstacle — width = b2→b3, height proportional to rise */}
         <rect
-          x={b1x + 5} y={yRun - 52}
-          width={b4x - b1x - 10} height={57}
-          fill={C.obs} stroke={C.obsStroke} strokeWidth="1" rx="3"
+          x={b2x} y={obsY}
+          width={b3x - b2x} height={obsH}
+          fill={C.obs} stroke={C.obsStroke} strokeWidth="1" rx="2"
         />
-        <text x={(b1x + b4x) / 2} y={yRun - 28} fill={C.dimTxt} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
+        <text x={(b2x + b3x) / 2} y={obsY + obsH / 2 + 3} fill={C.dimTxt} fontSize="8" textAnchor="middle" fontFamily="ui-monospace, monospace">
           obstacle
         </text>
 
