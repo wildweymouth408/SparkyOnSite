@@ -734,14 +734,14 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
           </div>
           <button
             onClick={() => setShowNewJob(true)}
-            className={`flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-2.5 py-1.5 transition-colors ${
+            className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3 py-1.5 transition-colors ${
               fieldMode
-                ? 'text-yellow-400 border border-yellow-400/30 hover:border-yellow-400'
-                : 'text-[#f97316] border border-[#f97316]/30 hover:border-[#f97316]'
+                ? 'bg-yellow-400 text-black hover:bg-yellow-300'
+                : 'bg-[#f97316] text-white hover:bg-[#ff7b20]'
             }`}
           >
-            <Plus className="h-3 w-3" />
-            Add
+            <Plus className="h-3.5 w-3.5" />
+            New Job
           </button>
         </div>
 
