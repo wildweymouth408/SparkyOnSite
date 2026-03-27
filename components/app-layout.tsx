@@ -15,6 +15,7 @@ import {
   Briefcase,
   Users,
   Trophy,
+  ChevronDown,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -38,6 +39,7 @@ const PUBLIC_PATHS = ['/', '/login', '/signup', '/pricing', '/privacy', '/terms'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [calcOpen, setCalcOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading, signOut } = useAuth();
@@ -118,39 +120,67 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
-            return (
-              <React.Fragment key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={cn(
-                    'flex items-center gap-3 pl-[14px] pr-4 py-2.5 rounded-lg text-sm',
-                    'transition-all duration-150 min-h-[44px] border-l-2',
-                    active
-                      ? 'border-orange-500 text-orange-400 bg-orange-500/5'
-                      : 'border-transparent text-zinc-400 hover:text-white hover:bg-zinc-800/60 hover:border-zinc-700',
-                  )}
-                >
-                  <Icon className="w-[18px] h-[18px] shrink-0" />
-                  <span>{item.name}</span>
-                </Link>
+            const isCalc = item.href === '/calculators';
 
-                {/* Calculator submenu — visible when Calculators is active */}
-                {item.href === '/calculators' && active && (
-                  <div className="flex flex-col gap-0.5 mb-1">
-                    {CALC_SUB_ITEMS.map((sub) => (
-                      <Link
-                        key={sub.tool}
-                        href={`/calculators?tool=${sub.tool}`}
-                        onClick={() => setSidebarOpen(false)}
-                        className="flex items-center pl-10 pr-4 py-1.5 rounded-md text-xs text-zinc-500 hover:text-white hover:bg-zinc-800/40 transition-colors duration-150"
-                      >
-                        {sub.label}
-                      </Link>
-                    ))}
-                  </div>
+            if (isCalc) {
+              return (
+                <React.Fragment key={item.href}>
+                  <button
+                    onClick={() => setCalcOpen(v => !v)}
+                    className={cn(
+                      'flex items-center gap-3 pl-[14px] pr-4 py-2.5 rounded-lg text-sm w-full text-left',
+                      'transition-all duration-150 min-h-[44px] border-l-2',
+                      active
+                        ? 'border-orange-500 text-orange-400 bg-orange-500/5'
+                        : 'border-transparent text-zinc-400 hover:text-white hover:bg-zinc-800/60 hover:border-zinc-700',
+                    )}
+                  >
+                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="flex-1">{item.name}</span>
+                    <ChevronDown
+                      className={cn(
+                        'w-4 h-4 shrink-0 transition-transform duration-200',
+                        calcOpen && 'rotate-180',
+                      )}
+                    />
+                  </button>
+
+                  {calcOpen && (
+                    <div className="flex flex-col gap-0.5 mb-1">
+                      {CALC_SUB_ITEMS.map((sub) => (
+                        <button
+                          key={sub.tool}
+                          onClick={() => {
+                            router.push(`/calculators?tool=${sub.tool}`);
+                            setSidebarOpen(false);
+                          }}
+                          className="flex items-center pl-10 pr-4 py-2 rounded-md text-xs text-zinc-500 hover:text-white hover:bg-zinc-800/40 transition-colors duration-150 w-full text-left min-h-[36px]"
+                        >
+                          {sub.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </React.Fragment>
+              );
+            }
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setSidebarOpen(false)}
+                className={cn(
+                  'flex items-center gap-3 pl-[14px] pr-4 py-2.5 rounded-lg text-sm',
+                  'transition-all duration-150 min-h-[44px] border-l-2',
+                  active
+                    ? 'border-orange-500 text-orange-400 bg-orange-500/5'
+                    : 'border-transparent text-zinc-400 hover:text-white hover:bg-zinc-800/60 hover:border-zinc-700',
                 )}
-              </React.Fragment>
+              >
+                <Icon className="w-[18px] h-[18px] shrink-0" />
+                <span>{item.name}</span>
+              </Link>
             );
           })}
         </nav>
