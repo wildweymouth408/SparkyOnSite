@@ -252,12 +252,17 @@ export function BendDiagram({
     const sH   = calcValues.height        ?? calcValues.saddleHeight ?? 2
     const oDst = calcValues.outerDistance ?? '—'
 
+    // Obstacle circle: fills the gap between ground (yR) and pipe peak (topY)
+    // so the top of the circle meets the underside of the pipe and the bottom sits on the ground.
+    const radius = (yR - topY) / 2   // (152 - 84) / 2 = 34
+    const circleCy = yR - radius      // 118 → top=84=topY, bottom=152=yR
+
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
         <rect width={W} height={H} fill={C.bg} />
-        {/* Obstacle: circle/ellipse proportional to saddle height */}
-        <ellipse cx={cx} cy={yR + 5} rx={Math.max(20, Math.min(50, 15 + Number(sH) * 5))} ry={Math.max(8, Math.min(20, 5 + Number(sH) * 2))}
-          fill="#374151" stroke="none" />
+        {/* Obstacle: perfect circle proportional to saddle height */}
+        <circle cx={cx} cy={circleCy} r={radius}
+          fill="#374151" stroke="#4b5563" strokeWidth="1.2" />
         <text x={cx} y={yR + 25} fill={C.dim} fontSize="7"
           textAnchor="middle" fontFamily="ui-monospace,monospace">obstacle</text>
         <Ground x1={0} y={yR + 12} x2={W} uid="gS3" />
