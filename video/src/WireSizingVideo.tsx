@@ -91,20 +91,6 @@ export const WireSizingVideo: React.FC = () => {
       {/* Scene 1: Hook */}
       <Sequence from={SCENE.HOOK} durationInFrames={5 * fps}>
         <AbsoluteFill style={{ opacity: fadeIn(SCENE.HOOK) }}>
-          {/* Avatar top left */}
-          <div style={{
-            position: 'absolute',
-            top: '5%',
-            left: '5%',
-            width: 120,
-            height: 120,
-            borderRadius: '50%',
-            overflow: 'hidden',
-            border: '3px solid #f97316',
-            boxShadow: '0 5px 20px rgba(249, 115, 22, 0.5)',
-          }}>
-            <Img src={staticFile('avatars/avatar-electrician.png')} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-          </div>
           <div style={{
             position: 'absolute',
             top: '20%',
