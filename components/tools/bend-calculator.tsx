@@ -162,7 +162,7 @@ export function BendCalculator() {
         break
     }
     return base
-  }, [bendType, calculations, offsetHeight, angle, stubLength, takeup, saddleHeight, saddle3Angle, saddle4Angle, backToBackDistance, rollingRise, rollingRun, kickOffset, kickAngle])
+  }, [bendType, calculations, offsetHeight, angle, stubLength, takeup, saddleHeight, backToBackDistance, rollingRise, rollingRun, kickOffset, kickAngle])
 
   // ── UI ──────────────────────────────────────────────────────────────────────
 
