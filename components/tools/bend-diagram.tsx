@@ -252,10 +252,11 @@ export function BendDiagram({
     const sH   = calcValues.height        ?? calcValues.saddleHeight ?? 2
     const oDst = calcValues.outerDistance ?? '—'
 
-    // Obstacle circle: fills the gap between ground (yR) and pipe peak (topY)
-    // so the top of the circle meets the underside of the pipe and the bottom sits on the ground.
-    const radius = (yR - topY) / 2   // (152 - 84) / 2 = 34
-    const circleCy = yR - radius      // 118 → top=84=topY, bottom=152=yR
+    // Obstacle circle sits under mark B, fully visible below the pipe arc.
+    // Bottom at yR (aligned with pipe runs). Radius < 30 keeps the top
+    // below the pipe arc's bottom edge (topY + ~8px half-stroke) so nothing overlaps.
+    const radius = 26
+    const circleCy = yR - radius  // top=100, bottom=152=yR, pipe arc bottom ≈ 92 → 8px gap
 
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
