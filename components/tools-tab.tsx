@@ -24,7 +24,6 @@ import {
   Settings,
   HardHat,
   Clock,
-  ChevronRight,
   ClipboardList,
   LayoutGrid,
 } from 'lucide-react'
@@ -134,10 +133,10 @@ function MotorFLACalculator() {
       </div>
 
       {fla > 0 ? (
-        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-[var(--color-accent)] p-4 space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Full Load Amps</span><span className="font-bold text-[var(--color-accent)] font-mono">{fla} A</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Wire (125% FLA)</span><span className="font-bold text-[var(--color-accent)] font-mono">{(fla * 1.25).toFixed(1)} A min</span></div>
-          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Breaker (250% FLA)</span><span className="font-bold text-[var(--color-accent)] font-mono">{(fla * 2.5).toFixed(1)} A max</span></div>
+        <div className="bg-[#0a0b0e] border border-[#1a3025] border-l-4 border-l-(--color-accent) p-4 space-y-2">
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Full Load Amps</span><span className="font-bold text-(--color-accent) font-mono">{fla} A</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Wire (125% FLA)</span><span className="font-bold text-(--color-accent) font-mono">{(fla * 1.25).toFixed(1)} A min</span></div>
+          <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Breaker (250% FLA)</span><span className="font-bold text-(--color-accent) font-mono">{(fla * 2.5).toFixed(1)} A max</span></div>
           <div className="flex justify-between text-sm"><span className="text-[#a1a1aa]">Overload (115%)</span><span className="font-mono text-[#fafafa]">{(fla * 1.15).toFixed(2)} A</span></div>
           <div className="text-[10px] text-[#71717a] pt-1">NEC 430.22 (wire) · 430.52 (breaker) · 430.32 (overload)</div>
         </div>
@@ -150,62 +149,56 @@ function MotorFLACalculator() {
 
 // ── Inline Construction Calculator ───────────────────────────────────────────
 
+interface LineItem {
+  id: number
+  description: string
+  qty: string
+  unitCost: string
+  laborHrs: string
+}
+
+let nextId = 1
+
+function emptyLine(): LineItem {
+  return { id: nextId++, description: '', qty: '', unitCost: '', laborHrs: '' }
+}
+
 function ConstructionCalculator() {
-  const [materialName, setMaterialName] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [unitCost, setUnitCost] = useState('')
-  const [laborHours, setLaborHours] = useState('')
-  const [laborRate, setLaborRate] = useState('50')
+  const [items, setItems] = useState<LineItem[]>([emptyLine()])
+  const [laborRate, setLaborRate] = useState('85')
   const [taxRate, setTaxRate] = useState('8')
-  const [showResults, setShowResults] = useState(false)
 
-  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-3 py-2.5 text-sm text-[#fafafa] focus:border-[var(--color-primary)] focus:outline-none rounded'
-  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1.5'
+  const inp = 'w-full bg-[#0a0b0e] border border-[#27272a] px-2 py-2 text-sm text-[#fafafa] focus:border-[var(--color-primary)] focus:outline-none'
+  const lbl = 'block text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-1'
 
-  const materialCost = parseFloat(quantity || '0') * parseFloat(unitCost || '0')
-  const laborCost    = parseFloat(laborHours || '0') * parseFloat(laborRate || '0')
-  const subtotal     = materialCost + laborCost
-  const tax          = subtotal * (parseFloat(taxRate || '0') / 100)
-  const total        = subtotal + tax
-
-  const handleCalculate = () => {
-    if (quantity && unitCost && laborHours) setShowResults(true)
+  function updateItem(id: number, field: keyof LineItem, value: string) {
+    setItems(prev => prev.map(it => it.id === id ? { ...it, [field]: value } : it))
   }
 
-  const handleClear = () => {
-    setMaterialName(''); setQuantity(''); setUnitCost('')
-    setLaborHours(''); setLaborRate('50'); setTaxRate('8')
-    setShowResults(false)
+  function removeItem(id: number) {
+    setItems(prev => prev.length > 1 ? prev.filter(it => it.id !== id) : prev)
   }
 
-  const row = 'flex justify-between text-sm py-2 border-b border-[#27272a]'
+  const itemTotals = items.map(it => {
+    const mat = parseFloat(it.qty || '0') * parseFloat(it.unitCost || '0')
+    const lab = parseFloat(it.laborHrs || '0') * parseFloat(laborRate || '0')
+    return { mat, lab, total: mat + lab }
+  })
+
+  const materialTotal = itemTotals.reduce((s, t) => s + t.mat, 0)
+  const laborTotal    = itemTotals.reduce((s, t) => s + t.lab, 0)
+  const subtotal      = materialTotal + laborTotal
+  const tax           = subtotal * (parseFloat(taxRate || '0') / 100)
+  const grandTotal    = subtotal + tax
 
   return (
     <div className="flex flex-col gap-4 p-1">
-      <div className="flex flex-col gap-3">
+
+      {/* Global settings */}
+      <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className={lbl}>Material Name</label>
-          <input type="text" className={inp} value={materialName} onChange={e => setMaterialName(e.target.value)} placeholder="e.g. Copper Wire, Conduit…" />
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className={lbl}>Quantity</label>
-            <input type="number" className={inp} value={quantity} onChange={e => setQuantity(e.target.value)} placeholder="10" min="0" />
-          </div>
-          <div>
-            <label className={lbl}>Unit Cost ($)</label>
-            <input type="number" className={inp} value={unitCost} onChange={e => setUnitCost(e.target.value)} placeholder="50.00" min="0" step="0.01" />
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className={lbl}>Labor Hours</label>
-            <input type="number" className={inp} value={laborHours} onChange={e => setLaborHours(e.target.value)} placeholder="5" min="0" step="0.5" />
-          </div>
-          <div>
-            <label className={lbl}>Labor Rate ($/hr)</label>
-            <input type="number" className={inp} value={laborRate} onChange={e => setLaborRate(e.target.value)} min="0" step="1" />
-          </div>
+          <label className={lbl}>Labor Rate ($/hr)</label>
+          <input type="number" className={inp} value={laborRate} onChange={e => setLaborRate(e.target.value)} min="0" step="1" />
         </div>
         <div>
           <label className={lbl}>Tax Rate (%)</label>
@@ -213,45 +206,84 @@ function ConstructionCalculator() {
         </div>
       </div>
 
-      <button
-        onClick={handleCalculate}
-        disabled={!quantity || !unitCost || !laborHours}
-        className="w-full py-3 bg-[var(--color-primary)] text-black font-bold text-sm rounded disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
-      >
-        Calculate
-      </button>
+      {/* Line items */}
+      <div>
+        <div className="grid grid-cols-[1fr_52px_64px_52px_28px] gap-1.5 mb-1.5">
+          <span className={lbl}>Description</span>
+          <span className={lbl}>Qty</span>
+          <span className={lbl}>Unit $</span>
+          <span className={lbl}>Hrs</span>
+          <span />
+        </div>
 
-      {showResults && (
-        <div className="bg-[#0a0b0e] border-2 border-[var(--color-primary)] rounded p-4 space-y-0">
-          <div className="text-[10px] uppercase tracking-wider text-[#a1a1aa] mb-3">Estimate</div>
-          <div className={row}>
-            <span className="text-[#a1a1aa]">{materialName || 'Material'} Cost</span>
-            <span className="font-mono text-[#fafafa]">${materialCost.toFixed(2)}</span>
+        <div className="flex flex-col gap-1.5">
+          {items.map((item, idx) => (
+            <div key={item.id} className="grid grid-cols-[1fr_52px_64px_52px_28px] gap-1.5 items-center">
+              <input
+                type="text"
+                className={inp}
+                value={item.description}
+                onChange={e => updateItem(item.id, 'description', e.target.value)}
+                placeholder={`Item ${idx + 1}`}
+              />
+              <input type="number" className={inp} value={item.qty} onChange={e => updateItem(item.id, 'qty', e.target.value)} placeholder="1" min="0" />
+              <input type="number" className={inp} value={item.unitCost} onChange={e => updateItem(item.id, 'unitCost', e.target.value)} placeholder="0.00" min="0" step="0.01" />
+              <input type="number" className={inp} value={item.laborHrs} onChange={e => updateItem(item.id, 'laborHrs', e.target.value)} placeholder="0" min="0" step="0.5" />
+              <button
+                onClick={() => removeItem(item.id)}
+                className="flex items-center justify-center text-[#52525b] hover:text-[#ef4444] transition-colors text-lg leading-none"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => setItems(prev => [...prev, emptyLine()])}
+          className="mt-2 flex items-center gap-1.5 text-(--color-primary) text-xs font-semibold hover:opacity-80 transition-opacity"
+        >
+          <span className="text-base leading-none">+</span> Add Line Item
+        </button>
+      </div>
+
+      {/* Running total */}
+      <div className="bg-[#0a0b0e] border border-[#27272a] border-l-2 border-l-(--color-primary)">
+        <div className="px-4 py-2 border-b border-[#27272a]">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-(--color-primary)">Estimate Summary</span>
+        </div>
+        <div className="px-4 py-3 space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-[#a1a1aa]">Materials</span>
+            <span className="font-mono text-[#fafafa]">${materialTotal.toFixed(2)}</span>
           </div>
-          <div className={row}>
-            <span className="text-[#a1a1aa]">Labor Cost</span>
-            <span className="font-mono text-[#fafafa]">${laborCost.toFixed(2)}</span>
+          <div className="flex justify-between text-sm">
+            <span className="text-[#a1a1aa]">Labor ({laborRate}/hr)</span>
+            <span className="font-mono text-[#fafafa]">${laborTotal.toFixed(2)}</span>
           </div>
-          <div className={row}>
+          <div className="flex justify-between text-sm border-t border-[#27272a] pt-2">
             <span className="text-[#a1a1aa]">Subtotal</span>
             <span className="font-mono text-[#fafafa]">${subtotal.toFixed(2)}</span>
           </div>
-          <div className={row}>
+          <div className="flex justify-between text-sm">
             <span className="text-[#a1a1aa]">Tax ({taxRate}%)</span>
             <span className="font-mono text-[#fafafa]">${tax.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-base font-bold pt-3">
-            <span className="text-[var(--color-primary)]">Total</span>
-            <span className="font-mono text-[var(--color-primary)]">${total.toFixed(2)}</span>
-          </div>
-          <button
-            onClick={handleClear}
-            className="w-full mt-4 py-2.5 bg-[#27272a] text-[#fafafa] text-sm font-semibold rounded hover:bg-[#3f3f46] transition-colors"
-          >
-            Clear
-          </button>
         </div>
-      )}
+        <div className="px-4 py-3 border-t border-[#27272a] bg-[#0d0e11]">
+          <div className="flex justify-between items-baseline">
+            <span className="text-sm font-bold text-(--color-primary) uppercase tracking-wider">Total</span>
+            <span className="font-mono text-2xl font-bold text-(--color-primary)">${grandTotal.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+
+      <button
+        onClick={() => { setItems([emptyLine()]); setLaborRate('85'); setTaxRate('8') }}
+        className="w-full py-2.5 bg-[#27272a] text-[#fafafa] text-sm font-semibold hover:bg-[#3f3f46] transition-colors"
+      >
+        Clear All
+      </button>
     </div>
   )
 }

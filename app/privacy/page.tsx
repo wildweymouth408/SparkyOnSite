@@ -76,11 +76,10 @@ export default function PrivacyPolicy() {
         </ul>
         <p className="text-muted-foreground leading-relaxed mt-2">
           To exercise any of these rights, email us at{" "}
-          <a href="mailto:wildweymouth408@gmail.com" className="underline">
-            wildweymouth408@gmail.com
+          <a href="mailto:ianw@sparkyonsite.com" className="underline">
+            ianw@sparkyonsite.com
           </a>{" "}
           with the subject line &quot;Privacy Request.&quot; We&apos;ll respond within 45 days.
-          {/* TODO: Replace with sparky@[domain] before launch */}
         </p>
       </section>
 
@@ -105,8 +104,8 @@ export default function PrivacyPolicy() {
         <h2 className="text-base font-semibold mb-2">Contact</h2>
         <p className="text-muted-foreground leading-relaxed">
           Privacy questions:{" "}
-          <a href="mailto:wildweymouth408@gmail.com" className="underline">
-            wildweymouth408@gmail.com
+          <a href="mailto:ianw@sparkyonsite.com" className="underline">
+            ianw@sparkyonsite.com
           </a>
         </p>
       </section>

@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import { Zap, CalculatorIcon, BookOpen, MessageCircle, Lock } from 'lucide-react';
 
@@ -134,9 +133,9 @@ export default function Home() {
           &copy; {new Date().getFullYear()} SparkyOnsite. All rights reserved.
         </p>
         <div className="flex gap-8 justify-center">
-          <Link href="/privacy" className="hover:text-zinc-400 transition-colors">Privacy</Link>
-          <Link href="/terms" className="hover:text-zinc-400 transition-colors">Terms</Link>
-          <a href="#" className="hover:text-zinc-400 transition-colors">Contact</a>
+          <Link href="/privacy" className="hover:text-zinc-400 transition-colors">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-zinc-400 transition-colors">Terms of Service</Link>
+          <a href="mailto:ianw@sparkyonsite.com" className="hover:text-zinc-400 transition-colors">Contact</a>
         </div>
       </footer>
     </div>

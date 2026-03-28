@@ -2,9 +2,8 @@
 
 import { useState, useMemo } from 'react'
 import {
-  Search, Mic, Bookmark, AlertTriangle, Check, X, Zap, ChevronRight,
-  Calculator, Star, BookOpen, ChevronDown, ChevronUp, Clock,
-  Grid3X3, Settings, Bell, Cable, Speaker, Flame, ShieldAlert
+  Search, Mic, Bookmark, Zap, ChevronRight,
+  Settings, Cable, Speaker, Flame,
 } from 'lucide-react'
 
 // ─── TYPES ───────────────────────────────────────────────────────────────────
@@ -647,7 +646,6 @@ const ampacityTable: { size: string; copper: { "60°C": number; "75°C": number;
   { size: "4/0 AWG", copper: { "60°C": 195, "75°C": 230, "90°C": 260 } },
 ]
 
-const wireVolumes: Record<string, number> = { "14": 2.00, "12": 2.25, "10": 2.50, "8": 3.00, "6": 5.00 }
 
 function CodeSection() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -770,15 +768,15 @@ function CodeSection() {
                 className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-zinc-900/40 active:bg-zinc-900/60 transition-colors"
                 onClick={() => setExpandedArticle(isOpen ? null : article.article)}
               >
-                <span className="font-mono font-bold text-sm text-white w-[4.5rem] shrink-0 leading-none">{article.article}</span>
-                <span className="flex-1 text-sm text-zinc-400 truncate">{article.title}</span>
+                <span className="font-mono font-bold text-sm text-amber-400 w-18 shrink-0 leading-none">{article.article}</span>
+                <span className="flex-1 text-sm text-zinc-300 truncate">{article.title}</span>
                 <ChevronRight className={`h-4 w-4 text-zinc-600 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
               </button>
 
               {/* Expandable body */}
               <div className={`grid transition-[grid-template-rows] duration-200 ease-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                 <div className="overflow-hidden">
-                  <div className="border-t border-zinc-800/60">
+                  <div className="border-t border-orange-500/30">
                     {/* Scope */}
                     <div className="px-4 pt-3 pb-2">
                       <p className="text-xs text-zinc-500 leading-relaxed">{article.scope}</p>
@@ -787,8 +785,8 @@ function CodeSection() {
                     {/* Key points */}
                     <div className="px-4 pb-3 space-y-3">
                       {article.keyPoints.map(kp => (
-                        <div key={kp.id} className="border-l border-zinc-800 pl-3 space-y-1">
-                          <span className="font-mono text-[10px] text-zinc-600 uppercase">{kp.id}</span>
+                        <div key={kp.id} className="border-l-2 border-orange-500/40 pl-3 space-y-1">
+                          <span className="font-mono text-[10px] text-amber-500 uppercase">{kp.id}</span>
                           <p className="text-sm text-zinc-200 field-mode:text-yellow-100 leading-relaxed">{kp.plainEnglish}</p>
                           <p className="text-[11px] text-zinc-500 italic leading-relaxed">"{kp.text}"</p>
                           {kp.application && (
@@ -804,7 +802,7 @@ function CodeSection() {
                     {/* Common violations */}
                     {article.commonViolations.length > 0 && (
                       <div className="border-t border-zinc-800/60 px-4 py-3 space-y-2.5">
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-600">Common Violations</span>
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-orange-500">Common Violations</span>
                         {article.commonViolations.map((v, idx) => (
                           <div key={idx} className="space-y-1">
                             <p className="text-xs text-zinc-400 leading-relaxed">{v.scenario}</p>
@@ -1101,7 +1099,7 @@ export function ReferenceTab() {
           <button key={s.id} onClick={() => setSection(s.id)}
             className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-colors ${
               section === s.id
-                ? 'bg-zinc-800 text-white'
+                ? 'bg-zinc-900 text-orange-400 border-b-2 border-orange-500'
                 : 'text-zinc-600 hover:text-zinc-400 hover:bg-zinc-900/50'
             }`}>
             {s.label}

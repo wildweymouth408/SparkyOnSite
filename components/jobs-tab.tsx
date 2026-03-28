@@ -1,135 +1,163 @@
-              <Phone className="h-4 w-4" />
-              <span>{selectedJob.customerPhone}</span>
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Plus, HardHat, MapPin, Calendar, ChevronRight, X } from 'lucide-react'
+import { getJobs, saveJob, deleteJob, type Job } from '@/lib/storage'
+import { generateId } from '@/lib/storage'
+
+const STATUS_STYLES: Record<Job['status'], string> = {
+  'on-track': 'bg-emerald-500/15 text-emerald-400',
+  'at-risk':  'bg-orange-500/15 text-orange-400',
+  'complete': 'bg-zinc-700/60 text-zinc-400',
+}
+const STATUS_LABEL: Record<Job['status'], string> = {
+  'on-track': 'On Track',
+  'at-risk':  'At Risk',
+  'complete': 'Complete',
+}
+
+const COLORS = ['#f97316', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#f59e0b']
+
+interface NewJobForm {
+  name: string
+  address: string
+  status: Job['status']
+  color: string
+}
+
+const EMPTY_FORM: NewJobForm = { name: '', address: '', status: 'on-track', color: COLORS[0] }
+
+export function JobsTab() {
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [showForm, setShowForm] = useState(false)
+  const [form, setForm] = useState<NewJobForm>(EMPTY_FORM)
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null)
+
+  useEffect(() => {
+    setJobs(getJobs())
+  }, [])
+
+  function createJob() {
+    if (!form.name.trim() || !form.address.trim()) return
+    const job: Job = {
+      id: generateId(),
+      name: form.name.trim(),
+      address: form.address.trim(),
+      status: form.status,
+      color: form.color,
+      crew: [],
+      tasks: [],
+      notes: [],
+      calculations: [],
+      createdAt: new Date().toISOString(),
+    }
+    saveJob(job)
+    const updated = getJobs()
+    setJobs(updated)
+    setForm(EMPTY_FORM)
+    setShowForm(false)
+  }
+
+  function removeJob(id: string) {
+    deleteJob(id)
+    setJobs(getJobs())
+    if (selectedJob?.id === id) setSelectedJob(null)
+  }
+
+  // ── Detail view ────────────────────────────────────────────────────────────
+
+  if (selectedJob) {
+    return (
+      <div className="min-h-screen bg-zinc-950 text-white">
+        <div className="sticky top-0 z-10 bg-zinc-950 border-b border-zinc-800 px-4 py-3 flex items-center gap-3">
+          <button onClick={() => setSelectedJob(null)} className="text-orange-400 text-sm font-semibold">
+            ← Jobs
+          </button>
+          <span className="text-zinc-600">/</span>
+          <span className="text-sm text-white truncate">{selectedJob.name}</span>
+        </div>
+
+        <div className="px-4 py-6 max-w-2xl mx-auto space-y-5">
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">{selectedJob.name}</h1>
+              <div className="flex items-center gap-1.5 text-zinc-400 text-sm mt-1">
+                <MapPin className="h-3.5 w-3.5" />
+                {selectedJob.address}
+              </div>
+            </div>
+            <span className={`px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wider ${STATUS_STYLES[selectedJob.status]}`}>
+              {STATUS_LABEL[selectedJob.status]}
+            </span>
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-zinc-500">Created</span>
+              <span>{new Date(selectedJob.createdAt).toLocaleDateString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-zinc-500">Tasks</span>
+              <span>{selectedJob.tasks.length}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-zinc-500">Crew</span>
+              <span>{selectedJob.crew.length} members</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-zinc-500">Calculations</span>
+              <span>{selectedJob.calculations.length}</span>
             </div>
           </div>
 
-          {/* Job Info Grid */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-[#1a1c22] p-4 rounded border border-[#27272a]">
-              <div className="flex items-center gap-2 mb-2">
-                <Calendar className="h-4 w-4 text-[#f97316]" />
-                <span className="text-sm text-[#a1a1aa]">Start Date</span>
-              </div>
-              <span className="font-medium">
-                {new Date(selectedJob.startDate).toLocaleDateString()}
-              </span>
-            </div>
-            
-            <div className="bg-[#1a1c22] p-4 rounded border border-[#27272a]">
-              <div className="flex items-center gap-2 mb-2">
-                <HardHat className="h-4 w-4 text-[#f97316]" />
-                <span className="text-sm text-[#a1a1aa]">Job Type</span>
-              </div>
-              <span 
-                className="font-medium"
-                style={{ color: getJobTypeColor(selectedJob.jobType) }}
-              >
-                {JOB_TYPES.find(t => t.value === selectedJob.jobType)?.label || selectedJob.jobType}
-              </span>
-            </div>
-            
-            <div className="bg-[#1a1c22] p-4 rounded border border-[#27272a]">
-              <div className="flex items-center gap-2 mb-2">
-                <DollarSign className="h-4 w-4 text-[#f97316]" />
-                <span className="text-sm text-[#a1a1aa]">Quote Amount</span>
-              </div>
-              <span className="font-medium">${selectedJob.quoteAmount.toLocaleString()}</span>
-            </div>
-            
-            <div className="bg-[#1a1c22] p-4 rounded border border-[#27272a]">
-              <div className="flex items-center gap-2 mb-2">
-                <FileText className="h-4 w-4 text-[#f97316]" />
-                <span className="text-sm text-[#a1a1aa]">Estimated Hours</span>
-              </div>
-              <span className="font-medium">{selectedJob.estimatedHours} hours</span>
-            </div>
-          </div>
-
-          {/* Notes */}
-          {selectedJob.notes && (
-            <div className="mb-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#a1a1aa] mb-2">Notes</h3>
-              <div className="bg-[#1a1c22] p-4 rounded border border-[#27272a] whitespace-pre-wrap">
-                {selectedJob.notes}
+          {selectedJob.notes.length > 0 && (
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+              <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-3">Notes</h3>
+              <div className="space-y-2">
+                {selectedJob.notes.map((note, i) => (
+                  <p key={i} className="text-sm text-zinc-300">{note}</p>
+                ))}
               </div>
             </div>
           )}
 
-          {/* Photos Section */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#a1a1aa]">Job Photos</h3>
-              <span className="text-xs text-[#71717a]">{jobPhotos.length} photos</span>
-            </div>
-            
-            {jobPhotos.length === 0 ? (
-              <div className="border-2 border-dashed border-[#27272a] rounded-lg p-8 text-center">
-                <Camera className="h-12 w-12 mx-auto mb-4 text-[#71717a]" />
-                <p className="text-sm text-[#a1a1aa] mb-2">No photos yet</p>
-                <p className="text-xs text-[#71717a]">Add photos to document the job progress</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {jobPhotos.map(photo => (
-                  <div key={photo.id} className="relative group">
-                    <img
-                      src={photo.url}
-                      alt={photo.caption || 'Job photo'}
-                      className="w-full h-48 object-cover rounded border border-[#27272a]"
-                    />
-                    <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => window.open(photo.url, '_blank')}
-                        className="p-2 bg-white/20 rounded hover:bg-white/30"
-                      >
-                        <Eye className="h-4 w-4 text-white" />
-                      </button>
-                      <button
-                        onClick={() => deletePhoto(photo.id)}
-                        className="p-2 bg-red-500/20 rounded hover:bg-red-500/30"
-                      >
-                        <Trash2 className="h-4 w-4 text-white" />
-                      </button>
-                    </div>
-                    {photo.caption && (
-                      <p className="text-xs text-[#a1a1aa] mt-1 truncate">{photo.caption}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <button
+            onClick={() => removeJob(selectedJob.id)}
+            className="w-full py-3 border border-red-500/30 text-red-400 text-sm font-semibold rounded-xl hover:bg-red-500/10 transition-colors"
+          >
+            Delete Job
+          </button>
         </div>
       </div>
     )
   }
 
-  // ─── JOBS LIST VIEW ────────────────────────────────────────────────────────
+  // ── List view ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex flex-col h-full bg-[#09090b] text-[#fafafa]">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[#27272a]">
+    <div className="min-h-screen bg-zinc-950 text-white">
+      <div className="sticky top-0 z-10 bg-zinc-950 border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
         <h1 className="text-lg font-bold">Jobs</h1>
         <button
-          onClick={() => setShowNewJobForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#f97316] text-white text-sm font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20]"
+          onClick={() => setShowForm(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 text-black text-sm font-bold rounded-lg hover:bg-orange-600 transition-colors"
         >
           <Plus className="h-4 w-4" />
           New Job
         </button>
       </div>
 
-      {/* Jobs List */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="px-4 py-4 max-w-2xl mx-auto">
         {jobs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center p-8">
-            <HardHat className="h-16 w-16 mb-4 text-[#71717a]" />
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="p-4 bg-orange-500/10 rounded-2xl mb-4">
+              <HardHat className="h-10 w-10 text-orange-400" />
+            </div>
             <h3 className="text-lg font-bold mb-2">No jobs yet</h3>
-            <p className="text-sm text-[#a1a1aa] mb-6">Create your first job to get started</p>
+            <p className="text-sm text-zinc-500 mb-6 max-w-xs">Create your first job to track work, crew, and calculations in one place.</p>
             <button
-              onClick={() => setShowNewJobForm(true)}
-              className="px-6 py-3 bg-[#f97316] text-white font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20]"
+              onClick={() => setShowForm(true)}
+              className="px-6 py-2.5 bg-orange-500 text-black font-bold rounded-lg hover:bg-orange-600 transition-colors"
             >
               Create First Job
             </button>
@@ -137,213 +165,104 @@
         ) : (
           <div className="space-y-3">
             {jobs.map(job => (
-              <div
+              <button
                 key={job.id}
                 onClick={() => setSelectedJob(job)}
-                className="bg-[#1a1c22] p-4 rounded border border-[#27272a] hover:border-[#f97316] cursor-pointer transition-colors"
+                className="w-full text-left bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:border-orange-500/40 hover:shadow-[0_0_16px_rgba(249,115,22,0.1)] transition-all duration-200"
               >
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-bold text-lg">{job.title}</h3>
-                  <span 
-                    className="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded"
-                    style={{ backgroundColor: getStatusColor(job.status) + '20', color: getStatusColor(job.status) }}
-                  >
-                    {JOB_STATUSES.find(s => s.value === job.status)?.label || job.status}
-                  </span>
-                </div>
-                
-                <div className="flex items-center gap-2 text-sm text-[#a1a1aa] mb-2">
-                  <MapPin className="h-3 w-3" />
-                  <span className="truncate">{job.address}</span>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <User className="h-3 w-3 text-[#71717a]" />
-                      <span>{job.customerName}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3 text-[#71717a]" />
-                      <span>{new Date(job.startDate).toLocaleDateString()}</span>
-                    </div>
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-2.5 h-2.5 rounded-full shrink-0 mt-0.5" style={{ backgroundColor: job.color }} />
+                    <span className="font-semibold text-white">{job.name}</span>
                   </div>
-                  
-                  <div className="flex items-center gap-1 font-bold">
-                    <DollarSign className="h-3 w-3" />
-                    <span>${job.quoteAmount.toLocaleString()}</span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${STATUS_STYLES[job.status]}`}>
+                      {STATUS_LABEL[job.status]}
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-zinc-600" />
                   </div>
                 </div>
-              </div>
+                <div className="flex items-center gap-4 text-xs text-zinc-500 pl-5">
+                  <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{job.address}</span>
+                  <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{new Date(job.createdAt).toLocaleDateString()}</span>
+                </div>
+              </button>
             ))}
           </div>
         )}
       </div>
 
       {/* New Job Modal */}
-      {showNewJobForm && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={() => setShowNewJobForm(false)}>
-          <div 
-            className="w-full bg-[#09090b] border-t border-[#27272a] p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto"
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-end bg-black/70" onClick={() => setShowForm(false)}>
+          <div
+            className="w-full bg-zinc-950 border-t border-zinc-800 rounded-t-2xl p-5 space-y-4 max-h-[85vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold uppercase tracking-wider text-[#fafafa]">New Job</span>
-              <button onClick={() => setShowNewJobForm(false)}>
-                <X className="h-5 w-5 text-[#a1a1aa]" />
-              </button>
+              <h2 className="text-base font-bold">New Job</h2>
+              <button onClick={() => setShowForm(false)}><X className="h-5 w-5 text-zinc-500" /></button>
             </div>
-            
-            <div className="space-y-4">
+
+            <div className="space-y-3">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                  Job Title *
-                </label>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1.5">Job Name</label>
                 <input
                   type="text"
-                  value={newJob.title}
-                  onChange={e => setNewJob({...newJob, title: e.target.value})}
-                  className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white placeholder-[#71717a]"
-                  placeholder="e.g., Smith Residence Rewire"
+                  value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  placeholder="e.g. Smith Residence Panel Upgrade"
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:border-orange-500 focus:outline-none"
                 />
               </div>
-              
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                  Address *
-                </label>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1.5">Address</label>
                 <input
                   type="text"
-                  value={newJob.address}
-                  onChange={e => setNewJob({...newJob, address: e.target.value})}
-                  className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white placeholder-[#71717a]"
-                  placeholder="e.g., 123 Main St, San Jose, CA"
+                  value={form.address}
+                  onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
+                  placeholder="123 Main St, City, CA"
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:border-orange-500 focus:outline-none"
                 />
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                    Customer Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={newJob.customerName}
-                    onChange={e => setNewJob({...newJob, customerName: e.target.value})}
-                    className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white placeholder-[#71717a]"
-                    placeholder="John Smith"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                    Job Type
-                  </label>
-                  <select
-                    value={newJob.jobType}
-                    onChange={e => setNewJob({...newJob, jobType: e.target.value as any})}
-                    className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white"
-                  >
-                    {JOB_TYPES.map(type => (
-                      <option key={type.value} value={type.value}>{type.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                    Customer Phone
-                  </label>
-                  <input
-                    type="tel"
-                    value={newJob.customerPhone}
-                    onChange={e => setNewJob({...newJob, customerPhone: e.target.value})}
-                    className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white placeholder-[#71717a]"
-                    placeholder="(555) 123-4567"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                    Customer Email
-                  </label>
-                  <input
-                    type="email"
-                    value={newJob.customerEmail}
-                    onChange={e => setNewJob({...newJob, customerEmail: e.target.value})}
-                    className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white placeholder-[#71717a]"
-                    placeholder="customer@example.com"
-                  />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    value={newJob.startDate}
-                    onChange={e => setNewJob({...newJob, startDate: e.target.value})}
-                    className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                    Estimated Hours
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={newJob.estimatedHours}
-                    onChange={e => setNewJob({...newJob, estimatedHours: parseInt(e.target.value) || 8})}
-                    className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white"
-                  />
-                </div>
-              </div>
-              
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                  Quote Amount ($)
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={newJob.quoteAmount}
-                  onChange={e => setNewJob({...newJob, quoteAmount: parseFloat(e.target.value) || 0})}
-                  className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white"
-                />
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1.5">Status</label>
+                <select
+                  value={form.status}
+                  onChange={e => setForm(f => ({ ...f, status: e.target.value as Job['status'] }))}
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-orange-500 focus:outline-none"
+                >
+                  <option value="on-track">On Track</option>
+                  <option value="at-risk">At Risk</option>
+                  <option value="complete">Complete</option>
+                </select>
               </div>
-              
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#a1a1aa] mb-1">
-                  Notes
-                </label>
-                <textarea
-                  value={newJob.notes}
-                  onChange={e => setNewJob({...newJob, notes: e.target.value})}
-                  className="w-full px-3 py-2 bg-[#1a1c22] border border-[#27272a] rounded text-white placeholder-[#71717a] min-h-[100px]"
-                  placeholder="Job details, special instructions, materials needed..."
-                />
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1.5">Color</label>
+                <div className="flex gap-2">
+                  {COLORS.map(c => (
+                    <button
+                      key={c}
+                      onClick={() => setForm(f => ({ ...f, color: c }))}
+                      className="w-8 h-8 rounded-full border-2 transition-all"
+                      style={{ backgroundColor: c, borderColor: form.color === c ? '#fff' : 'transparent' }}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-            
-            <div className="flex gap-3 pt-4 border-t border-[#27272a]">
+
+            <div className="flex gap-3 pt-2">
               <button
-                onClick={() => setShowNewJobForm(false)}
-                className="flex-1 px-4 py-3 border border-[#27272a] text-white text-sm font-bold uppercase tracking-wider rounded hover:border-[#a1a1aa]"
+                onClick={() => setShowForm(false)}
+                className="flex-1 py-3 border border-zinc-700 text-white text-sm font-bold rounded-lg hover:bg-zinc-800 transition-colors"
               >
                 Cancel
               </button>
               <button
-                onClick={() => saveJob(newJob)}
-                disabled={!newJob.title || !newJob.address || !newJob.customerName}
-                className="flex-1 px-4 py-3 bg-[#f97316] text-white text-sm font-bold uppercase tracking-wider rounded hover:bg-[#ff7b20] disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={createJob}
+                disabled={!form.name.trim() || !form.address.trim()}
+                className="flex-1 py-3 bg-orange-500 text-black text-sm font-bold rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Create Job
               </button>
