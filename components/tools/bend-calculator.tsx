@@ -44,6 +44,8 @@ export function BendCalculator() {
   const [angle, setAngle] = useState<number>(30)
   const [stubLength, setStubLength] = useState<number>(12)
   const [saddleHeight, setSaddleHeight] = useState<number>(2)
+  const [saddle3Angle, setSaddle3Angle] = useState<number>(22.5)
+  const [saddle4Angle, setSaddle4Angle] = useState<number>(45)
   const [backToBackDistance, setBackToBackDistance] = useState<number>(24)
   const [rollingRise, setRollingRise] = useState<number>(6)
   const [rollingRun, setRollingRun] = useState<number>(8)
@@ -67,20 +69,20 @@ export function BendCalculator() {
           markPosition: Math.max(0, stubLength - takeup).toFixed(1),
           takeup,
         }
-      case 'saddle3':
-        // 3-point saddle: center 45°, outer 22.5°
-        const outerMult = BEND_MULTIPLIERS[22.5]?.multiplier ?? 2.6
+      case 'saddle3': {
+        const s3 = BEND_MULTIPLIERS[saddle3Angle] ?? { multiplier: 2.6, shrinkage: 3 / 16 }
         return {
-          outerDistance: (saddleHeight * outerMult).toFixed(2),
-          shrinkage: (saddleHeight * (3 / 16)).toFixed(3),
+          outerDistance: (saddleHeight * s3.multiplier).toFixed(2),
+          shrinkage: (saddleHeight * s3.shrinkage).toFixed(3),
         }
-      case 'saddle4':
-        // 4-point saddle: all 45°
-        const saddleMult = BEND_MULTIPLIERS[45]?.multiplier ?? 1.414
+      }
+      case 'saddle4': {
+        const s4 = BEND_MULTIPLIERS[saddle4Angle] ?? { multiplier: 1.414, shrinkage: 3 / 8 }
         return {
-          distanceBetweenBends: (saddleHeight * saddleMult).toFixed(2),
-          shrinkage: (saddleHeight * (3 / 8)).toFixed(3),
+          distanceBetweenBends: (saddleHeight * s4.multiplier).toFixed(2),
+          shrinkage: (saddleHeight * s4.shrinkage).toFixed(3),
         }
+      }
       case 'back2back':
         return {
           backToBackDistance,
@@ -100,7 +102,7 @@ export function BendCalculator() {
       default:
         return {}
     }
-  }, [bendType, offsetHeight, multiplier, shrinkage, stubLength, takeup, saddleHeight, backToBackDistance, rollingRise, rollingRun, kickOffset, kickMultiplier, kickShrinkage])
+  }, [bendType, offsetHeight, multiplier, shrinkage, stubLength, takeup, saddleHeight, saddle3Angle, saddle4Angle, backToBackDistance, rollingRise, rollingRun, kickOffset, kickMultiplier, kickShrinkage])
 
   // Map bend type to visualization type
   const vizType: BendVizType = useMemo(() => {
@@ -122,22 +124,24 @@ export function BendCalculator() {
     switch (bendType) {
       case 'offset':
         base.height = offsetHeight
-        base.distance = calculations.distanceBetweenBends
-        base.shrinkage = calculations.totalShrinkage
+        base.distance = calculations.distanceBetweenBends ?? ''
+        base.shrinkage = calculations.totalShrinkage ?? ''
         base.angle = angle
         break
       case '90':
         base.stub = stubLength
         base.takeup = takeup
-        base.mark = calculations.markPosition
+        base.mark = calculations.markPosition ?? ''
         break
       case 'saddle3':
         base.height = saddleHeight
-        base.outerDistance = calculations.outerDistance
+        base.outerDistance = calculations.outerDistance ?? ''
+        base.angle = saddle3Angle
         break
       case 'saddle4':
         base.height = saddleHeight
-        base.distance = calculations.distanceBetweenBends
+        base.distance = calculations.distanceBetweenBends ?? ''
+        base.angle = saddle4Angle
         break
       case 'back2back':
         base.b2bDistance = backToBackDistance
@@ -145,20 +149,20 @@ export function BendCalculator() {
       case 'rollingOffset':
         base.rise = rollingRise
         base.run = rollingRun
-        base.travel = calculations.travel
-        base.distance = calculations.distanceBetweenBends
-        base.shrinkage = calculations.totalShrinkage
+        base.travel = calculations.travel ?? ''
+        base.distance = calculations.distanceBetweenBends ?? ''
+        base.shrinkage = calculations.totalShrinkage ?? ''
         base.angle = angle
         break
       case 'kickWith90':
         base.kickOffset = kickOffset
         base.kickAngle = kickAngle
-        base.kickDistance = calculations.kickDistance
-        base.kickShrinkage = calculations.kickShrinkage
+        base.kickDistance = calculations.kickDistance ?? ''
+        base.kickShrinkage = calculations.kickShrinkage ?? ''
         break
     }
     return base
-  }, [bendType, calculations, offsetHeight, angle, stubLength, takeup, saddleHeight, backToBackDistance, rollingRise, rollingRun, kickOffset, kickAngle])
+  }, [bendType, calculations, offsetHeight, angle, stubLength, takeup, saddleHeight, saddle3Angle, saddle4Angle, backToBackDistance, rollingRise, rollingRun, kickOffset, kickAngle])
 
   // ── UI ──────────────────────────────────────────────────────────────────────
 
@@ -270,32 +274,58 @@ export function BendCalculator() {
           )}
 
           {bendType === 'saddle3' && (
-            <div>
-              <label className={labelCls}>Obstacle Height (inches)</label>
-              <input
-                type="number"
-                value={saddleHeight}
-                onChange={e => setSaddleHeight(Number(e.target.value))}
-                className={inputCls}
-                step={0.25}
-                min={0.5}
-                max={12}
-              />
+            <div className="space-y-4">
+              <div>
+                <label className={labelCls}>Obstacle Height (inches)</label>
+                <input
+                  type="number"
+                  value={saddleHeight}
+                  onChange={e => setSaddleHeight(Number(e.target.value))}
+                  className={inputCls}
+                  step={0.25}
+                  min={0.5}
+                  max={12}
+                />
+              </div>
+              <div>
+                <label className={labelCls}>Bend Angle</label>
+                <select
+                  value={saddle3Angle}
+                  onChange={e => setSaddle3Angle(Number(e.target.value))}
+                  className={inputCls}
+                >
+                  <option value={22.5}>22.5° / 45° / 22.5° (standard)</option>
+                  <option value={30}>30° / 60° / 30°</option>
+                </select>
+              </div>
             </div>
           )}
 
           {bendType === 'saddle4' && (
-            <div>
-              <label className={labelCls}>Obstacle Height (inches)</label>
-              <input
-                type="number"
-                value={saddleHeight}
-                onChange={e => setSaddleHeight(Number(e.target.value))}
-                className={inputCls}
-                step={0.25}
-                min={0.5}
-                max={12}
-              />
+            <div className="space-y-4">
+              <div>
+                <label className={labelCls}>Obstacle Height (inches)</label>
+                <input
+                  type="number"
+                  value={saddleHeight}
+                  onChange={e => setSaddleHeight(Number(e.target.value))}
+                  className={inputCls}
+                  step={0.25}
+                  min={0.5}
+                  max={12}
+                />
+              </div>
+              <div>
+                <label className={labelCls}>Bend Angle</label>
+                <select
+                  value={saddle4Angle}
+                  onChange={e => setSaddle4Angle(Number(e.target.value))}
+                  className={inputCls}
+                >
+                  <option value={45}>45° (standard)</option>
+                  <option value={30}>30°</option>
+                </select>
+              </div>
             </div>
           )}
 

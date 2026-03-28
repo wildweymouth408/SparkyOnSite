@@ -71,9 +71,9 @@ function Mark({ x, y, label, above = false, onHoriz = true }: {
         textAnchor="middle" dominantBaseline="middle"
         fontFamily="ui-monospace,monospace">{label}</text>
       <text x={onHoriz ? x : lx} y={onHoriz ? ly : y}
-        fill={C.ora} fontSize="11" fontWeight="700"
+        fill="#000" stroke={C.ora} strokeWidth="2.5" fontSize="11" fontWeight="700"
         textAnchor="middle" dominantBaseline="middle"
-        fontFamily="ui-monospace,monospace">{label}</text>
+        fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>{label}</text>
     </g>
   )
 }
@@ -103,8 +103,10 @@ function Dim({ x1, y1, x2, y2, label, off = 22, side = 1, fs = 10 }: {
         stroke={C.dim} strokeWidth={1} />
       <line x1={x2+ox-nx*tl} y1={y2+oy-ny*tl} x2={x2+ox+nx*tl} y2={y2+oy+ny*tl}
         stroke={C.dim} strokeWidth={1} />
-      <text x={lx} y={ly} fill={C.ora} fontSize={fs} textAnchor="middle"
-        dominantBaseline="middle" fontFamily="ui-monospace,monospace" fontWeight="600">
+      <text x={lx} y={ly} fill="#000" stroke={C.ora} strokeWidth="2.5" fontSize={fs}
+        textAnchor="middle" dominantBaseline="middle"
+        fontFamily="ui-monospace,monospace" fontWeight="700"
+        style={{ paintOrder: 'stroke' }}>
         {label}
       </text>
     </g>
@@ -129,9 +131,9 @@ function ArcLabel({ cx, cy, r, a1, a2, label }: {
       <path d={`M ${sx},${sy} A ${r},${r} 0 ${large},${sweep} ${ex},${ey}`}
         fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth={1.2}
         strokeDasharray="3,2" />
-      <text x={tx} y={ty} fill={C.ora} fontSize="10" fontWeight="700"
-        textAnchor="middle" dominantBaseline="middle"
-        fontFamily="ui-monospace,monospace">{label}</text>
+      <text x={tx} y={ty} fill="#000" stroke={C.ora} strokeWidth="2.5" fontSize="10"
+        fontWeight="700" textAnchor="middle" dominantBaseline="middle"
+        fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>{label}</text>
     </g>
   )
 }
@@ -186,10 +188,12 @@ export function BendDiagram({
         {/* Take-up bracket below pipe */}
         <Dim x1={mx} y1={tailY} x2={bendX} y2={tailY} label={`-${takeup}"`} off={28} side={1} fs={9} />
         {/* Mark A annotation */}
-        <text x={mx - 2} y={tailY - 32} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace">place {frontMark}</text>
-        <text x={mx - 2} y={tailY - 20} fill={C.ora} fontSize="10" fontWeight="bold"
-          textAnchor="middle" fontFamily="ui-monospace,monospace">{mark}" from end</text>
+        <text x={mx - 2} y={tailY - 32}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>place {frontMark}</text>
+        <text x={mx - 2} y={tailY - 20}
+          fill="#000" stroke={C.ora} strokeWidth="2.5" fontSize="10" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>{mark}" from end</text>
         {/* Rotated stub label */}
         <text x={ex + 56} y={(stubTopY + tailY) / 2} fill={C.dim} fontSize="7"
           textAnchor="middle" fontFamily="ui-monospace,monospace"
@@ -230,8 +234,9 @@ export function BendDiagram({
         {/* Angle arc at first bend — arc from 0° (right) upward by ang° (neg in SVG) */}
         <ArcLabel cx={b1} cy={yL} r={30} a1={-(ang)} a2={0} label={`${ang}°`} />
         {/* Shrinkage footer */}
-        <text x={W / 2} y={H - 7} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace" opacity="0.8">
+        <text x={W / 2} y={H - 7}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>
           shrinkage ≈ {shk}"
         </text>
       </svg>
@@ -240,7 +245,7 @@ export function BendDiagram({
 
   // ── 3-Pt Saddle ─────────────────────────────────────────────────────────────
   if (type === 'saddle3') {
-    const W = 400, H = 198
+    const W = 400, H = 215
     const yR = 152, cx = 200, humpH = 68, topY = yR - humpH
     const b1 = cx - 102, b3 = cx + 102
     const cL = (cx - b1) * 0.5, cR = (b3 - cx) * 0.5
@@ -249,19 +254,18 @@ export function BendDiagram({
       + `C ${cx+cR*0.62},${topY} ${b3-cR},${yR} ${b3},${yR} `
       + `L 388,${yR}`
 
-    const sH   = calcValues.height        ?? calcValues.saddleHeight ?? 2
-    const oDst = calcValues.outerDistance ?? '—'
+    const sH     = calcValues.height        ?? calcValues.saddleHeight ?? 2
+    const oDst   = calcValues.outerDistance ?? '—'
+    const outerAng = Number(calcValues.angle ?? 22.5)
+    const centerAng = outerAng * 2
 
-    // Obstacle circle sits under mark B, fully visible below the pipe arc.
-    // Bottom at yR (aligned with pipe runs). Radius < 30 keeps the top
-    // below the pipe arc's bottom edge (topY + ~8px half-stroke) so nothing overlaps.
     const radius = 26
-    const circleCy = yR - radius  // top=100, bottom=152=yR, pipe arc bottom ≈ 92 → 8px gap
+    const circleCy = yR - radius
 
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
         <rect width={W} height={H} fill={C.bg} />
-        {/* Obstacle: perfect circle proportional to saddle height */}
+        {/* Obstacle circle */}
         <circle cx={cx} cy={circleCy} r={radius}
           fill="#374151" stroke="#4b5563" strokeWidth="1.2" />
         <text x={cx} y={yR + 25} fill={C.dim} fontSize="7"
@@ -271,30 +275,30 @@ export function BendDiagram({
         <Mark x={b1} y={yR} label="A" above={false} onHoriz />
         <Mark x={cx} y={topY} label="B" above={true} onHoriz />
         <Mark x={b3} y={yR} label="C" above={false} onHoriz />
-        {/* Saddle height — from top of circle to ground */}
+        {/* Saddle height — top of circle to ground */}
         <Dim x1={cx} y1={circleCy - radius} x2={cx} y2={yR} label={`${sH}"`} off={34} side={-1} />
-        {/* ¼" clearance tip */}
-        <text x={cx} y={topY - 30} fill={C.dim} fontSize="7" textAnchor="middle"
-          fontFamily="ui-monospace,monospace">pipe bottom ≈ ¼" above obstacle</text>
-        {/* Outer distances */}
-        <Dim x1={b1} y1={yR - 22} x2={cx} y2={yR - 22}
+        {/* Outer distances — raised to clear angle arcs */}
+        <Dim x1={b1} y1={yR - 46} x2={cx} y2={yR - 46}
           label={`${oDst}"`} off={10} side={-1} fs={9} />
-        <Dim x1={cx} y1={yR - 22} x2={b3} y2={yR - 22}
+        <Dim x1={cx} y1={yR - 46} x2={b3} y2={yR - 46}
           label={`${oDst}"`} off={10} side={-1} fs={9} />
-        {/* Angle labels */}
-        <text x={b1} y={yR - 30} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace">22.5°</text>
-        <text x={cx} y={topY - 18} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace">45°</text>
-        <text x={b3} y={yR - 30} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace">22.5°</text>
+        {/* Angle arcs — A and C match offset style; B center text to the side */}
+        <ArcLabel cx={b1} cy={yR} r={28} a1={-outerAng} a2={0} label={`${outerAng}°`} />
+        <ArcLabel cx={b3} cy={yR} r={28} a1={180} a2={180 + outerAng} label={`${outerAng}°`} />
+        <text x={cx + 44} y={topY + 4}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          textAnchor="start" dominantBaseline="middle"
+          fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>{centerAng}°</text>
+        {/* Footer tip */}
+        <text x={W / 2} y={H - 5} fill={C.dim} fontSize="7" textAnchor="middle"
+          fontFamily="ui-monospace,monospace">pipe bottom ≈ ¼" above obstacle height</text>
       </svg>
     )
   }
 
   // ── 4-Pt Saddle ─────────────────────────────────────────────────────────────
   if (type === 'saddle4') {
-    const W = 400, H = 198
+    const W = 400, H = 215
     const yR = 152, yT = 82
     const b1 = 70, b2 = 148, b3 = 252, b4 = 330
     const cpd1 = (b2 - b1) * 0.55, cpd2 = (b4 - b3) * 0.55
@@ -304,8 +308,9 @@ export function BendDiagram({
       + `C ${b3+cpd2},${yT} ${b4-cpd2},${yR} ${b4},${yR} `
       + `L 388,${yR}`
 
-    const sH   = calcValues.height   ?? '—'
-    const bDst = calcValues.distance ?? '—'
+    const sH     = calcValues.height   ?? '—'
+    const bDst   = calcValues.distance ?? '—'
+    const bendAng = Number(calcValues.angle ?? 45)
 
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
@@ -321,17 +326,25 @@ export function BendDiagram({
         <Mark x={b2} y={yT} label="B" above={true} onHoriz />
         <Mark x={b3} y={yT} label="C" above={true} onHoriz />
         <Mark x={b4} y={yR} label="D" above={false} onHoriz />
+        {/* Height dim on left outside the bends */}
         <Dim x1={b1 - 14} y1={yT} x2={b1 - 14} y2={yR} label={`${sH}"`} off={12} side={-1} />
-        <Dim x1={b2} y1={yT - 18} x2={b3} y2={yT - 18}
+        {/* B-to-C distance dim — raised to clear B/C mark labels */}
+        <Dim x1={b2} y1={yT - 32} x2={b3} y2={yT - 32}
           label={`${bDst}"`} off={10} side={-1} fs={9} />
-        {(['45°','45°','45°','45°'] as string[]).map((lbl, i) => {
-          const xs = [b1, b2, b3, b4]
-          const ys = [yR + 22, yT - 24, yT - 24, yR + 22]
-          return (
-            <text key={i} x={xs[i]} y={ys[i]} fill={C.ora} fontSize="8"
-              textAnchor="middle" fontFamily="ui-monospace,monospace">{lbl}</text>
-          )
-        })}
+        {/* Angle arcs: A and D like offset bends; B and C beside marks */}
+        <ArcLabel cx={b1} cy={yR} r={24} a1={-bendAng} a2={0} label={`${bendAng}°`} />
+        <ArcLabel cx={b4} cy={yR} r={24} a1={180} a2={180 + bendAng} label={`${bendAng}°`} />
+        <text x={b2 - 30} y={yT}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          textAnchor="end" dominantBaseline="middle"
+          fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>{bendAng}°</text>
+        <text x={b3 + 30} y={yT}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          textAnchor="start" dominantBaseline="middle"
+          fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>{bendAng}°</text>
+        {/* Footer tip */}
+        <text x={W / 2} y={H - 5} fill={C.dim} fontSize="7" textAnchor="middle"
+          fontFamily="ui-monospace,monospace">pipe bottom ≈ ¼" above obstacle height</text>
       </svg>
     )
   }
@@ -361,13 +374,15 @@ export function BendDiagram({
         <Mark x={s2} y={(yB + yT) / 2 + 20} label="B" onHoriz={false} above={false} />
         {/* Back-to-back dimension */}
         <Dim x1={s1} y1={yB} x2={s2} y2={yB} label={`${b2bDist}"`} off={14} side={-1} />
-        <text x={(s1+s2)/2} y={yB + 40} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace" opacity="0.8">back-to-back distance</text>
+        <text x={(s1+s2)/2} y={yB + 22} fill={C.dim} fontSize="9" textAnchor="middle"
+          fontFamily="ui-monospace,monospace">back-to-back distance</text>
         {/* 90° labels */}
-        <text x={s1 - 18} y={yT + 10} fill={C.ora} fontSize="9"
-          fontFamily="ui-monospace,monospace">90°</text>
-        <text x={s2 + 6}  y={yT + 10} fill={C.ora} fontSize="9"
-          fontFamily="ui-monospace,monospace">90°</text>
+        <text x={s1 - 18} y={yT + 10}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>90°</text>
+        <text x={s2 + 6}  y={yT + 10}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>90°</text>
       </svg>
     )
   }
@@ -404,13 +419,16 @@ export function BendDiagram({
         <Mark x={xMarkA} y={yLow} label="A" above={false} onHoriz />
         <Mark x={xMarkB} y={yHigh} label="B" above={true}  onHoriz />
         {/* Labels */}
-        <text x={(xMarkA + xMarkB) / 2} y={yLow + 17} fill={C.ora} fontSize="10"
-          textAnchor="middle" fontFamily="ui-monospace,monospace">roll: {run}"</text>
-        <text x={xMarkB + 22} y={(yLow + yHigh) / 2} fill={C.ora} fontSize="10"
-          fontFamily="ui-monospace,monospace" dominantBaseline="middle">rise: {rise}"</text>
+        <text x={(xMarkA + xMarkB) / 2} y={yLow + 17}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="10" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>roll: {run}"</text>
+        <text x={xMarkB + 22} y={(yLow + yHigh) / 2}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="10" fontWeight="700"
+          fontFamily="ui-monospace,monospace" dominantBaseline="middle" style={{ paintOrder: 'stroke' }}>rise: {rise}"</text>
         {/* Travel label along hypotenuse */}
-        <text x={mx} y={my - 14} fill={C.wht} fontSize="10" textAnchor="middle"
-          fontFamily="ui-monospace,monospace"
+        <text x={mx} y={my - 14}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="10" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}
           transform={`rotate(${tAngle},${mx},${my})`}>travel: {travel}"</text>
       </svg>
     )
@@ -484,12 +502,14 @@ export function BendDiagram({
         {/* Circle end cap at stub top */}
         <circle cx={stubX} cy={stubTopY} r={7} fill="none" stroke={C.pH} strokeWidth={1.5} />
         {/* Footer */}
-        <text x={W / 2} y={H - 16} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace">
+        <text x={W / 2} y={H - 16}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>
           mark A: {kDist}" from end · {kickDeg}° kick
         </text>
-        <text x={W / 2} y={H - 4} fill={C.ora} fontSize="8" textAnchor="middle"
-          fontFamily="ui-monospace,monospace" opacity="0.7">
+        <text x={W / 2} y={H - 4}
+          fill="#000" stroke={C.ora} strokeWidth="1.5" fontSize="8" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>
           kick offset: {kOff}" · shrinkage: {shk}"
         </text>
       </svg>
@@ -564,8 +584,9 @@ export function BendDiagram({
         <ArcLabel cx={b1Base} cy={yBase} r={26} a1={-ang} a2={0} label={`${ang}°`} />
 
         {/* Footer */}
-        <text x={W / 2} y={H - 7} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace" opacity="0.85">
+        <text x={W / 2} y={H - 7}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>
           adj per conduit: {adj}" · {nCond} conduits · {sp}" ctc spacing
         </text>
       </svg>
@@ -643,8 +664,8 @@ export function BendDiagram({
             <path d={`M ${cX},${cY} L ${cX},${cY - Rpx}`}
               stroke={C.dim} strokeWidth={0.7} strokeDasharray="2,2" />
             <text x={cX - Rpx / 2 - 4} y={cY - Rpx / 2 - 4}
-              fill={C.ora} fontSize="10" textAnchor="middle" fontWeight="600"
-              fontFamily="ui-monospace,monospace">R={R}"</text>
+              fill="#000" stroke={C.ora} strokeWidth="2" fontSize="10" fontWeight="700"
+              textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>R={R}"</text>
           </>
         )}
 
@@ -653,12 +674,14 @@ export function BendDiagram({
           label="dist to corner" off={24} side={1} fs={8} />
 
         {/* Footer: arc length and shrinkage */}
-        <text x={W / 2} y={H - 18} fill={C.ora} fontSize="9" textAnchor="middle"
-          fontFamily="ui-monospace,monospace" opacity="0.85">
+        <text x={W / 2} y={H - 18}
+          fill="#000" stroke={C.ora} strokeWidth="2" fontSize="9" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>
           arc length: {arcLen}" · shrinkage: {shk}"
         </text>
-        <text x={W / 2} y={H - 6} fill={C.ora} fontSize="8" textAnchor="middle"
-          fontFamily="ui-monospace,monospace" opacity="0.7">
+        <text x={W / 2} y={H - 6}
+          fill="#000" stroke={C.ora} strokeWidth="1.5" fontSize="8" fontWeight="700"
+          textAnchor="middle" fontFamily="ui-monospace,monospace" style={{ paintOrder: 'stroke' }}>
           each bend: {bendAng}° · {ang}° total corner
         </text>
       </svg>
