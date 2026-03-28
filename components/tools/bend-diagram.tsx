@@ -255,10 +255,10 @@ export function BendDiagram({
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
         <rect width={W} height={H} fill={C.bg} />
-        {/* Obstacle: dashed rect the conduit saddles over */}
-        <rect x={cx - 42} y={yR - 6} width={84} height={26}
-          fill="#0c0c11" stroke={C.dim} strokeWidth="1.2" strokeDasharray="5,3" rx="3" />
-        <text x={cx} y={yR + 10} fill={C.dim} fontSize="7"
+        {/* Obstacle: circle/ellipse proportional to saddle height */}
+        <ellipse cx={cx} cy={yR + 5} rx={Math.max(20, Math.min(50, 15 + Number(sH) * 5))} ry={Math.max(8, Math.min(20, 5 + Number(sH) * 2))}
+          fill="#374151" stroke="none" />
+        <text x={cx} y={yR + 25} fill={C.dim} fontSize="7"
           textAnchor="middle" fontFamily="ui-monospace,monospace">obstacle</text>
         <Ground x1={0} y={yR + 12} x2={W} uid="gS3" />
         <Pipe d={d} />
@@ -301,9 +301,10 @@ export function BendDiagram({
     return (
       <svg viewBox={`0 0 ${W} ${H}`} style={style}>
         <rect width={W} height={H} fill={C.bg} />
-        <rect x={b1 + 6} y={yR - 58} width={b4 - b1 - 12} height={62}
+        {/* Obstacle: exact width between marks B and C */}
+        <rect x={b2} y={yR - 58} width={b3 - b2} height={62}
           fill="#16161c" stroke="#2a2a36" strokeWidth="1" rx="3" />
-        <text x={(b1+b4)/2} y={yR - 28} fill={C.dim} fontSize="8"
+        <text x={(b2+b3)/2} y={yR - 28} fill={C.dim} fontSize="8"
           textAnchor="middle" fontFamily="ui-monospace,monospace">obstacle</text>
         <Ground x1={0} y={yR + 12} x2={W} uid="gS4" />
         <Pipe d={d} />
