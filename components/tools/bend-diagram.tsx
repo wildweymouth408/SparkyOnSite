@@ -271,8 +271,11 @@ export function BendDiagram({
         <Mark x={b1} y={yR} label="A" above={false} onHoriz />
         <Mark x={cx} y={topY} label="B" above={true} onHoriz />
         <Mark x={b3} y={yR} label="C" above={false} onHoriz />
-        {/* Saddle height */}
-        <Dim x1={cx} y1={topY} x2={cx} y2={yR} label={`${sH}"`} off={34} side={-1} />
+        {/* Saddle height — from top of circle to ground */}
+        <Dim x1={cx} y1={circleCy - radius} x2={cx} y2={yR} label={`${sH}"`} off={34} side={-1} />
+        {/* ¼" clearance tip */}
+        <text x={cx} y={topY - 30} fill={C.dim} fontSize="7" textAnchor="middle"
+          fontFamily="ui-monospace,monospace">pipe bottom ≈ ¼" above obstacle</text>
         {/* Outer distances */}
         <Dim x1={b1} y1={yR - 22} x2={cx} y2={yR - 22}
           label={`${oDst}"`} off={10} side={-1} fs={9} />
