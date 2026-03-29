@@ -266,22 +266,18 @@ export async function POST(req: NextRequest) {
     // Build role-aware system prompt
     const systemPrompt = buildSystemPrompt(profileData)
 
-    // Call DeepSeek
-    const deepseekKey = process.env.DEEPSEEK_API_KEY
-    if (!deepseekKey) {
-      console.error('Ask Sparky: DEEPSEEK_API_KEY environment variable is not set')
-      throw new Error('DEEPSEEK_API_KEY not configured')
-    }
+    // Call Ollama (local zero‑cost inference)
+    const ollamaEndpoint = process.env.OLLAMA_ENDPOINT || 'http://127.0.0.1:11434'
+    const ollamaModel = process.env.OLLAMA_MODEL || 'qwen2.5:7b-instruct-q4_K_M'
 
-    const dsRes = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    const ollamaRes = await fetch(`${ollamaEndpoint}/api/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${deepseekKey}`,
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
-        max_tokens: 1024,
+        model: ollamaModel,
+        stream: false,
         messages: [
           { role: 'system', content: systemPrompt },
           ...messages.map((m: { role: string; content: string }) => ({
@@ -289,17 +285,21 @@ export async function POST(req: NextRequest) {
             content: m.content,
           })),
         ],
+        options: {
+          temperature: 0.7,
+          max_tokens: 1024,
+        },
       }),
     })
 
-    if (!dsRes.ok) {
-      const errorBody = await dsRes.text()
-      console.error(`Ask Sparky: DeepSeek API returned ${dsRes.status}:`, errorBody)
-      throw new Error(`DeepSeek API error ${dsRes.status}`)
+    if (!ollamaRes.ok) {
+      const errorBody = await ollamaRes.text()
+      console.error(`Ask Sparky: Ollama API returned ${ollamaRes.status}:`, errorBody)
+      throw new Error(`Ollama API error ${ollamaRes.status}`)
     }
 
-    const dsData = await dsRes.json()
-    const reply: string = dsData.choices?.[0]?.message?.content ?? ''
+    const ollamaData = await ollamaRes.json()
+    const reply: string = ollamaData.message?.content ?? ''
 
     // Increment usage counter for free tier
     if (!hasPro) {
