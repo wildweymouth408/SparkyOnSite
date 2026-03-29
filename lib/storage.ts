@@ -9,6 +9,7 @@ export interface UserSettings {
   company: string
   darkMode: boolean
   notifications: boolean
+  unitsPreference: 'imperial' | 'metric'
 }
 
 export interface CrewMember {
@@ -89,6 +90,7 @@ const DEFAULT_SETTINGS: UserSettings = {
   company: '',
   darkMode: true,
   notifications: false,
+  unitsPreference: 'imperial',
 }
 
 export function getSettings(): UserSettings {

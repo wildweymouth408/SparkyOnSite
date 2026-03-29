@@ -16,6 +16,7 @@ import {
   Users,
   Trophy,
   ChevronDown,
+  User,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -79,6 +80,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { name: 'Friends',       href: '/friends',       icon: Users },
     { name: 'Leaderboard',   href: '/leaderboard',   icon: Trophy },
     { name: 'Credentials',   href: '/credentials',   icon: Lock },
+    { name: 'Profile',       href: '/profile',       icon: User },
   ];
 
   const isActive = (href: string) =>
